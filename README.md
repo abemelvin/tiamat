@@ -28,9 +28,14 @@
 
 ## 2 Purpose and scope
 
+---
+
 ### 2.1 Justification
 
+---
+
 ### 2.2 Deliverables
+
 * Mock network
 * Range infrastructure
 * Scenario injects
@@ -38,21 +43,35 @@
 * Researcher instructions
 * Maintainer instructions
 
+---
+
 ### 2.3 Exclusions
 
+---
+
 ### 2.4 Assumptions
+
+---
 
 ## 3 Stakeholders
 
 ### 3.1 Researcher
 
+---
+
 ### 3.2 Maintainer
 
+---
+
 ### 3.3 Developer
+
+---
 
 ## 4 Project
 
 ### 4.1 Problem description
+
+---
 
 ### 4.2 Solution overview
 
