@@ -2,10 +2,10 @@
 
 ## Table of contents
 
-1. Document information   
-1.1 Version   
-1.2 Contributors   
-1.3 References
+1. [Document information](https://github.com/abemelvin/tiamat#1-document-information)   
+1.1 [Version](https://github.com/abemelvin/tiamat#11-version)   
+1.2 [Contributors](https://github.com/abemelvin/tiamat#12-contributors)   
+1.3 [References](https://github.com/abemelvin/tiamat#13-references)
 2. [Purpose and scope](https://github.com/abemelvin/tiamat#2-purpose-and-scope)   
 2.1 [Justification](https://github.com/abemelvin/tiamat#21-justification)   
 2.2 [Deliverables](https://github.com/abemelvin/tiamat#22-deliverables)   
@@ -25,6 +25,22 @@
 4.7 [Instrumentation and data](https://github.com/abemelvin/tiamat#47-instrumentation-and-data)   
 4.8 [Dependencies](https://github.com/abemelvin/tiamat#48-dependencies)
 5. [Key views](https://github.com/abemelvin/tiamat#5-key-views)   
+
+---
+
+## 1 Document information
+
+---
+
+### 1.1 Version
+
+---
+
+### 1.2 Contributors
+
+---
+
+### 1.3 References
 
 ---
 
