@@ -56,7 +56,11 @@
 
 ### 4.2 Solution overview
 
+---
+
 ### 4.3 Functional requirements
+
+---
 
 ### 4.4 Quality attributes
 
@@ -87,6 +91,8 @@
 **Response:** System configurations are preserved, and system continues to operate normally without needed to install excessive dependencies
 
 **Response measure:** Less than 30 minutes needd to transfer the system between machines and be reader for deployment
+
+---
 
 ### 4.5 Constraints
 
