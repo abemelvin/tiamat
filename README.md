@@ -26,6 +26,8 @@
 4.8 Dependencies
 5. Key views   
 
+---
+
 ## 2 Purpose and scope
 
 ---
@@ -55,6 +57,8 @@
 
 ## 3 Stakeholders
 
+---
+
 ### 3.1 Researcher
 
 ---
@@ -68,6 +72,8 @@
 ---
 
 ## 4 Project
+
+---
 
 ### 4.1 Problem description
 
@@ -115,10 +121,18 @@
 
 ### 4.5 Constraints
 
+---
+
 ### 4.6 Mock network
+
+---
 
 ### 4.7 Instrumentation and data
 
+---
+
 ### 4.8 Dependencies
+
+---
 
 ## 5 Key views
