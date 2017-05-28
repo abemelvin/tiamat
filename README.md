@@ -95,8 +95,10 @@
 * **Stimulus:** Deploy additional hosts to the mock network
 * **Environment:** Pre-deployment or experiment run-time
 * **Artifact:** Infrastructure configuration files
-* **Response:** Deployed infrastructure continues uninterrupted, and newly defined hosts are deployed in real time
-* **Response measure:** Less than 30 minutes needed for each new host to deploy, no downtime experienced for infrastructure already deployed beforehand
+* **Response:** Deployed infrastructure continues uninterrupted, and newly
+defined hosts are deployed in real time
+* **Response measure:** Less than 30 minutes needed for each new host to
+deploy, no downtime experienced for infrastructure already deployed beforehand
 
 #### Portability
 
@@ -104,8 +106,10 @@
 * **Stimulus:** Transfer system from one machine to another
 * **Environment:** Pre-deployment
 * **Artifact:** System repository
-* **Response:** System configurations are preserved, and system continues to operate normally without needed to install excessive dependencies
-* **Response measure:** Less than 30 minutes needd to transfer the system between machines and be reader for deployment
+* **Response:** System configurations are preserved, and system continues to
+operate normally without needed to install excessive dependencies
+* **Response measure:** Less than 30 minutes needd to transfer the system
+between machines and be reader for deployment
 
 ---
 
@@ -113,13 +117,17 @@
 
 #### Business
 
-* System will only utilize open-source or free software without licensing restrictions
-* Team is limited to a $150 USD budget for development and testing on AWS public cloud infrastructure
+* System will only utilize open-source or free software without licensing
+restrictions
+* Team is limited to a $150 USD budget for development and testing on AWS
+public cloud infrastructure
 
 #### Technical
 
-* System is limited to virtualization under a local hypervisor as the only means of deploying the mock network
-* Deploying on public cloud infrastructure presents risks in terms of both security and legality
+* System is limited to virtualization under a local hypervisor as the only
+means of deploying the mock network
+* Deploying on public cloud infrastructure presents risks in terms of both
+security and legality
 * Hardware resources are not available to avoid virtualization
 
 ---
@@ -128,11 +136,13 @@
 
 #### Intranet
 
-1. Web server   
+1. Web server
+
 * Hosts a web application through which the contractor notionally files work 
 orders. The web application requires the user to log in with a username and 
 password, and connects to a database service. The database service is running
 locally with system privileges and is vulnerable to an injection attack.
+
 2. Authentication server
 3. Payment server
 
