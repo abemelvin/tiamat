@@ -6,25 +6,25 @@
 1.1 Version   
 1.2 Contributors   
 1.3 References
-[2. Purpose and scope](https://github.com/abemelvin/tiamat#2-purpose-and-scope)   
-2.1 Justification   
-2.2 Deliverables   
-2.3 Exclusions   
-2.4 Assumptions   
-3. Stakeholders   
-3.1 Researchers   
-3.2 Maintainers   
-3.3 Developers
-4. Project   
-4.1 Problem description   
-4.2 Solution overview   
-4.3 Functional requirements   
-4.4 Quality attributes   
-4.5 Constraints   
-4.6 Mock network   
-4.7 Instrumentation and data   
-4.8 Dependencies
-5. Key views   
+2. [Purpose and scope](https://github.com/abemelvin/tiamat#2-purpose-and-scope)   
+2.1 [Justification](https://github.com/abemelvin/tiamat#21-justification)   
+2.2 [Deliverables](https://github.com/abemelvin/tiamat#22-deliverables)   
+2.3 [Exclusions](https://github.com/abemelvin/tiamat#23-exclusions)   
+2.4 [Assumptions](https://github.com/abemelvin/tiamat#24-assumptions)   
+3. [Stakeholders](https://github.com/abemelvin/tiamat#3-stakeholders)   
+3.1 [Researchers](https://github.com/abemelvin/tiamat#31-researchers)   
+3.2 [Maintainers](https://github.com/abemelvin/tiamat#32-maintainers)   
+3.3 [Developers](https://github.com/abemelvin/tiamat#33-developers)
+4. [Project](https://github.com/abemelvin/tiamat#4-project)   
+4.1 [Problem description](https://github.com/abemelvin/tiamat#41-problem-description)   
+4.2 [Solution overview](https://github.com/abemelvin/tiamat#42-solution-overview)   
+4.3 [Functional requirements](https://github.com/abemelvin/tiamat#43-functional-requirements)   
+4.4 [Quality attributes](https://github.com/abemelvin/tiamat#44-quality-attributes)   
+4.5 [Constraints](https://github.com/abemelvin/tiamat#45-constraints)   
+4.6 [Mock network](https://github.com/abemelvin/tiamat#46-mock-network)   
+4.7 [Instrumentation and data](https://github.com/abemelvin/tiamat#47-instrumentation-and-data)   
+4.8 [Dependencies](https://github.com/abemelvin/tiamat#48-dependencies)
+5. [Key views](https://github.com/abemelvin/tiamat#5-key-views)   
 
 ---
 
