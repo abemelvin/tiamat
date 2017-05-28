@@ -1,6 +1,6 @@
 # TIAMAT: Threat Instrumentation And Machine Automation Tool
 
-## Table of Contents
+## Table of contents
 
 1. Document information   
 1.1 Version   
@@ -26,4 +26,18 @@
 4.8 Dependencies
 5. Key views   
 
+## 2 Purpose and scope
 
+### 2.1 Justification
+
+### 2.2 Deliverables
+* Mock network
+* Range infrastructure
+* Scenario injects
+* Architecture documentation
+* Researcher instructions
+* Maintainer instructions
+
+### 2.3 Exclusions
+
+### 2.4 Assumptions
