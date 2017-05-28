@@ -1,0 +1,9 @@
+
+#
+# playbook to set up the dns server
+#
+- name: set up dns
+  hosts: dns
+  tasks:
+    - name: copy and execute script
+      script: dns.sh

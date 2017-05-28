@@ -60,7 +60,8 @@ resource "aws_instance" "ansible" {
       "ansible-playbook install/filebeat.yml",
       "ansible-playbook install/packetbeat.yml",
       "ansible-playbook install/metricbeat.yml",
-      "ansible-playbook scripts/index.yml"
+      "ansible-playbook scripts/index.yml",
+      "ansible-playbook scripts/dns_setup.yml"
     ]
   }
 }
@@ -103,6 +104,58 @@ resource "aws_instance" "demo" {
 
   connection {
     host = "${aws_instance.demo.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("terraform.pem")}"
+    agent = false
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install python -y"
+    ]
+  }
+}
+
+resource "aws_instance" "dns" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "terraform"
+  subnet_id = "${aws_subnet.control.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.13"
+  depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
+
+  connection {
+    host = "${aws_instance.dns.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("terraform.pem")}"
+    agent = false
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install python -y"
+    ]
+  }
+}
+
+resource "aws_instance" "mail" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "terraform"
+  subnet_id = "${aws_subnet.control.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.14"
+  depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
+
+  connection {
+    host = "${aws_instance.mail.public_ip}"
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("terraform.pem")}"

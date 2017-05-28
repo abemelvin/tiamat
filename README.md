@@ -25,6 +25,7 @@
 4.7 [Instrumentation and data](https://github.com/abemelvin/tiamat#47-instrumentation-and-data-)   
 4.8 [Dependencies](https://github.com/abemelvin/tiamat#48-dependencies-)
 5. [Key views](https://github.com/abemelvin/tiamat#5-key-views-)   
+5.1 [Mock network diagram](https://github.com/abemelvin/tiamat#51-mock-network-diagram-)
 
 ---
 
