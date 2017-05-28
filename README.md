@@ -91,9 +91,8 @@
 
 #### Modifiability
 
-**Source:** Researcher
-
-**Stimulus:** Deploy additional hosts to the mock network
+* **Source:** Researcher
+* **Stimulus:** Deploy additional hosts to the mock network
 
 **Environment:** Pre-deployment or experiment run-time
 
