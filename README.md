@@ -129,12 +129,10 @@
 #### Intranet
 
 1. Web server   
-
 * Hosts a web application through which the contractor notionally files work 
 orders. The web application requires the user to log in with a username and 
 password, and connects to a database service. The database service is running
 locally with system privileges and is vulnerable to an injection attack.
-
 2. Authentication server
 3. Payment server
 
