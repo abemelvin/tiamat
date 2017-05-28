@@ -126,19 +126,19 @@
 
 ### 4.6 Mock network
 
-#### Core enterprise
+#### Intranet
 
 1. Web server
 2. Authentication server
 3. Payment server
 
-#### Demilitarized zone
+#### Extranet
 
 1. Gateway
 2. Firewall
 3. Intrusion detection/prevention system
 
-#### Extronet
+#### Internet
 
 1. Contractor
 2. Black hat
