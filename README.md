@@ -1,4 +1,3 @@
-# TIAMAT:
 # Threat Instrumentation And Machine Automation Tool
 
 ## Table of contents
