@@ -201,6 +201,14 @@ intranet payment server.
 
 ### 4.7 Instrumentation and data
 
+#### Centralized Logging
+
+* SQL logs
+* System logs
+* Packet captures
+
+#### Active Monitoring
+
 ---
 
 ### 4.8 Dependencies
