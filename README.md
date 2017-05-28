@@ -126,6 +126,24 @@
 
 ### 4.6 Mock network
 
+#### Core enterprise
+
+1. Web server
+2. Authentication server
+3. Payment server
+
+#### Demilitarized zone
+
+1. Gateway
+2. Firewall
+3. Intrusion detection/prevention system
+
+#### Extronet
+
+1. Contractor
+2. Black hat
+3. File transfer server
+
 ---
 
 ### 4.7 Instrumentation and data
