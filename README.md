@@ -145,7 +145,7 @@ locally with system privileges and is vulnerable to an injection attack.
 
 2. Authentication server
 
-* Runs a Lightweight Directory Access Protocol (LDAP) service that
+* Runs a lightweight directory access protocol (LDAP) service that
 authenticates users and groups on the network. The LDAP service also
 provides a central point for configuring user and group privileges.
 
@@ -183,8 +183,19 @@ activity detected.
 #### Internet
 
 1. Contractor
+
+* Runs a mail transfer agent (MTA) locally that is able to send and receive
+mail from the notional black hat.
+
 2. Black hat
+
+* Provides the researcher a manual injection point.
+
 3. File transfer server
+
+* Runs a local file transfer protocol (FTP) service that the black hat is
+able to utilize as a repository for exfiltrating sensitve data from the
+intranet payment server.
 
 ---
 
