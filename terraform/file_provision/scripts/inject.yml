@@ -1,0 +1,9 @@
+---
+#
+# playbook to ping the demo machine 20 times
+#
+- name: ping the demo machine
+  hosts: elk
+  tasks:
+    - name: copy and execute script
+      script: ping-inject.sh

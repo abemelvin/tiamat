@@ -1,0 +1,30 @@
+---
+#
+# install metricbeat
+#
+- name: add elastic gpg key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: add beats repository
+  apt_repository:
+    repo: 'deb https://artifacts.elastic.co/packages/5.x/apt stable main'
+    state: present
+    update_cache: yes
+
+- name: install metricbeat
+  package: name=metricbeat state=present
+
+- name: configure metricbeat
+  template: src=metricbeat.yml dest=/etc/metricbeat/metricbeat.yml
+  notify: restart metricbeat
+
+- name: start metricbeat
+  service: name=metricbeat state=started enabled=yes
+
+- name: start and enable metricbeat on boot
+  service:
+    name: metricbeat
+    state: started
+    enabled: yes

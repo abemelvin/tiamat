@@ -1,0 +1,16 @@
+---
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Configure Packetbeat
+  template: src=packetbeat.yml dest=/etc/packetbeat/packetbeat.yml
+  notify: restart packetbeat
+
+- name: Start Packetbeat
+  service: name=packetbeat state=started enabled=yes
+
+- name: Ensure Packetbeat is started and enabled at boot.
+  service:
+    name: packetbeat
+    state: started
+    enabled: yes

@@ -1,0 +1,21 @@
+---
+#
+# playbook to setup kibana and elasticsearch
+#
+- name: load kibana dashboards
+  hosts: elk
+  tasks:
+    - name: copy and execute script
+      script: kibana.sh
+
+- name: load packetbeat template into elasticsearch
+  hosts: demo
+  tasks:
+    - name: copy and execute script
+      script: packetbeat.sh
+
+- name: load metricbeat template into elasticsearch
+  hosts: demo
+  tasks:
+    - name: copy and execute script
+      script: metricbeat.sh

@@ -1,0 +1,68 @@
+---
+#
+# Installing logstash
+#
+# Add Logstash APT repository
+- name: Adding logstash APT repository
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
+    state: present
+# Installing Logstash
+- name: Update repositories cache and install Logstash
+  apt:
+    name: logstash
+    update_cache: yes
+# Creating certs directories for SSL
+- name: Creates SSL directories
+  file:
+    path: /etc/pki/tls/certs
+    state: directory
+# Creating private directories for SSL
+- name: Creates SSL directories
+  file:
+    path: /etc/pki/tls/private
+    state: directory
+# Update SSL to restrict outside access
+- name: Updating the config file to restrict outside access
+  lineinfile:
+    destfile: /etc/ssl/openssl.cnf
+    regexp: 'subjectAltName ='
+    line: 'subjectAltName = IP: {{ elk_ip }}'
+# Generate SSL certificates for Logstash
+- name: Generate SSL certificates
+  shell: "openssl req -config /etc/ssl/openssl.cnf -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout /etc/pki/tls/private/logstash-forwarder.key -out /etc/pki/tls/certs/logstash-forwarder.crt"
+# Configure Beats input configuration 02-beats-input.conf
+- name: Configure Beats configuration file
+  template:
+    src=beats-input.conf.j2
+    dest=/etc/logstash/conf.d/02-beats-input.conf
+    owner=root
+    group=root
+    mode=0644
+# Configure Logstash 10-syslog-filter.conf config file
+- name: Configure Syslog Filter
+  template:
+    src=syslog-filter.conf.j2
+    dest=/etc/logstash/conf.d/10-syslog-filter.conf
+    owner=root
+    group=root
+    mode=0644
+# Configure Elasticsearch output file 30-elasticsearch-output.conf
+- name: Configure Elasticsearch output file
+  template:
+    src=elasticsearch-output.conf.j2
+    dest=/etc/logstash/conf.d/30-elasticsearch-output.conf
+    owner=root
+    group=root
+    mode=0644
+# Start Logstash service
+- name: Start Logstash service
+  systemd:
+    name: logstash
+    state: started
+    daemon_reload: yes
+# Enable Logstash service
+- name: Enable Logstash service
+  systemd:
+    name: logstash
+    enabled: yes

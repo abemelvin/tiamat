@@ -1,0 +1,12 @@
+---
+- name: install ostinato
+  package: name=ostinato state=present
+
+- name: start ostinato
+  service: name=ostinato state=started enabled=yes
+
+- name: Ensure ostinato is started and enabled at boot.
+  service:
+    name: ostinato
+    state: started
+    enabled: yes

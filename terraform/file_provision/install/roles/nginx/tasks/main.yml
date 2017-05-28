@@ -1,0 +1,59 @@
+---
+#
+# Installing Nginx
+#
+# Install Nginx
+- name: Update repositories cache and install Nginx
+  apt:
+    name: nginx
+    update_cache: yes
+# Create /etc/nginx/conf.d/ directory
+- name: Create nginx directory structure
+  file: path=/etc/nginx/conf.d/
+    state=directory
+    mode=0755
+# Deploy kibana.conf with FQDN
+- name: Setup Nginx reverse proxy for kibana
+  template:
+    src=kibana.conf.j2
+    dest=/etc/nginx/sites-available/default
+    owner=root
+    group=root
+    mode=0644
+  register: nginx_needs_restart
+# Enable nginx service
+- name: Enabling Nginx service
+  systemd:
+    name: nginx
+    enabled: yes
+# Start Nginx service
+- name: Starting Nginx service
+  systemd:
+    name: nginx
+    state: started
+    daemon_reload: yes
+# Install Pexpect to handle promts of the terminal
+- name: Installing Python Pexpect
+  apt:
+    name: python-pexpect
+    update_cache: yes
+# Writes the create user script in the temp directory
+- name: Create kibana admin user
+  template:
+    src=kibanaAdmin.j2
+    dest=/tmp/createUser
+    owner=root
+    group=root
+    mode=0744
+# Runs the script to create Kibana admin user
+- name: Create Kibana admin user
+  expect:
+    command: bash /tmp/createUser
+    responses:
+      'Password:' : "{{kibana_password}}"
+# Restart Nginx service
+- name: Restart Nginx service
+  systemd:
+    name: nginx
+    state: reloaded
+    daemon_reload: yes
