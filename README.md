@@ -128,7 +128,7 @@
 
 #### Intranet
 
-1. Web server
+1. Web server   
 
 * Hosts a web application through which the contractor notionally files work 
 orders. The web application requires the user to log in with a username and 
