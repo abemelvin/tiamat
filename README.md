@@ -6,7 +6,7 @@
 1.1 Version   
 1.2 Contributors   
 1.3 References
-2. Purpose and scope   
+[2. Purpose and scope](https://github.com/abemelvin/tiamat#2-purpose-and-scope)   
 2.1 Justification   
 2.2 Deliverables   
 2.3 Exclusions   
