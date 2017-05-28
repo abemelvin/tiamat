@@ -121,6 +121,17 @@
 
 ### 4.5 Constraints
 
+#### Business
+
+* System will only utilize open-source or free software without licensing restrictions
+* Team is limited to a $150 USD budget for development and testing on AWS public cloud infrastructure
+
+#### Technical
+
+* System is limited to virtualization under a local hypervisor as the only means of deploying the mock network
+* Deploying on public cloud infrastructure presents risks in terms of both security and legality
+* Hardware resources are not available to avoid virtualization
+
 ---
 
 ### 4.6 Mock network
