@@ -28,7 +28,7 @@
 
 ---
 
-## 1 Document information [back to contents](https://github.com/abemelvin/tiamat#table-of-contents)
+## 1 Document information ## [back to contents](https://github.com/abemelvin/tiamat#table-of-contents)
 
 ---
 
