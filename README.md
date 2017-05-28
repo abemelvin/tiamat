@@ -62,9 +62,9 @@
 
 #### Modifiability
 
-Source: Researcher. 
-Stimulus: Deploy additional hosts to the mock network. 
-Environment: Pre-deployment or experiment run-time. 
+Source: Researcher
+  Stimulus: Deploy additional hosts to the mock network. 
+  Environment: Pre-deployment or experiment run-time. 
 Artifact: Infrastructure configuration files. 
 Response: Deployed infrastructure continues uninterrupted, and newly defined hosts are deployed in real time
 Response measure: Less than 30 minutes needed for each new host to deploy, no downtime experienced for infrastructure already deployed beforehand
