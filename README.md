@@ -62,31 +62,31 @@
 
 #### Modifiability
 
-*Source:* Researcher
+**Source:** Researcher
 
-*Stimulus:* Deploy additional hosts to the mock network
+**Stimulus:** Deploy additional hosts to the mock network
 
-*Environment:* Pre-deployment or experiment run-time
+**Environment:** Pre-deployment or experiment run-time
 
-*Artifact:* Infrastructure configuration files
+**Artifact:** Infrastructure configuration files
 
-*Response:* Deployed infrastructure continues uninterrupted, and newly defined hosts are deployed in real time
+**Response:** Deployed infrastructure continues uninterrupted, and newly defined hosts are deployed in real time
 
-*Response measure:* Less than 30 minutes needed for each new host to deploy, no downtime experienced for infrastructure already deployed beforehand
+**Response measure:** Less than 30 minutes needed for each new host to deploy, no downtime experienced for infrastructure already deployed beforehand
 
 #### Portability
 
-*Source:* Researcher
+**Source:** Researcher
 
-*Stimulus:* Transfer system from one machine to another
+**Stimulus:** Transfer system from one machine to another
 
-*Environment:* Pre-deployment
+**Environment:** Pre-deployment
 
-*Artifact:* System repository
+**Artifact:** System repository
 
-*Response:* System configurations are preserved, and system continues to operate normally without needed to install excessive dependencies
+**Response:** System configurations are preserved, and system continues to operate normally without needed to install excessive dependencies
 
-*Response measure:* Less than 30 minutes needd to transfer the system between machines and be reader for deployment
+**Response measure:** Less than 30 minutes needd to transfer the system between machines and be reader for deployment
 
 ### 4.5 Constraints
 
