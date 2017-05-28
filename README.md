@@ -144,13 +144,41 @@ password, and connects to a database service. The database service is running
 locally with system privileges and is vulnerable to an injection attack.
 
 2. Authentication server
+
+* Runs a Lightweight Directory Access Protocol (LDAP) service that
+authenticates users and groups on the network. The LDAP service also
+provides a central point for configuring user and group privileges.
+
 3. Payment server
+
+* Runs a database service locally that notionally stores redacted transaction
+information from purchases made at retail locations. A script generates
+messages with unredacted transaction information that are sent to the database.
+Under normal operating conditions, the database receives the message and only
+stores a redacted record of the transaction. When successfully exploited, the
+database stores unredacted transaction records that include sensitive
+payment information.
 
 #### Extranet
 
 1. Gateway
+
+* Receives all IP packets entering or leaving the intranet. Applies a
+pre-configured routing table to all received IPpackets to determine which host
+to deliver to. IPv4 forwarding is enabled.
+
 2. Firewall
+
+* Receives all IP packets entering or leaving the intranet. Applies a
+stateless pre-configured firewall ruleset to all IP packets to provide
+basic intranet network isolation.
+
 3. Intrusion detection/prevention system
+
+* Sniffs and captures all IP packets entering or leaving the intranet.
+Forwards packet captures to the centralized logging stack for post-processing
+by the researcher while also providing real time alerts for any malicious
+activity detected.
 
 #### Internet
 
