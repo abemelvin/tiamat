@@ -125,7 +125,7 @@ deploy, no downtime experienced for infrastructure already deployed beforehand
 * **Artifact:** System repository
 * **Response:** System configurations are preserved, and system continues to
 operate normally without needed to install excessive dependencies
-* **Response measure:** Less than 30 minutes needd to transfer the system
+* **Response measure:** Less than 30 minutes needed to transfer the system
 between machines and be reader for deployment
 
 ---
@@ -201,8 +201,8 @@ activity detected.
 
 1. Contractor
 
-* Runs a mail transfer agent (MTA) locally that is able to send and receive
-mail from the notional black hat.
+* Runs a mail transfer agent (MTA) locally that is able to send mail to and
+receive mail from the notional black hat.
 
 2. Black hat
 
