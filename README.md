@@ -232,3 +232,7 @@ intranet payment server.
 ---
 
 ## 5 Key views [↑](https://github.com/abemelvin/tiamat)
+
+### 5.1 Mock network diagram
+
+![alt text](https://github.com/abemelvin/tiamat/mock_network.png "mock network")
