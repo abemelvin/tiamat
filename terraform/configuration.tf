@@ -33,7 +33,7 @@ resource "aws_instance" "ansible" {
   subnet_id = "${aws_subnet.control.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.control", "aws_instance.elk", "aws_instance.demo"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.control", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -60,8 +60,7 @@ resource "aws_instance" "ansible" {
       "ansible-playbook install/filebeat.yml",
       "ansible-playbook install/packetbeat.yml",
       "ansible-playbook install/metricbeat.yml",
-      "ansible-playbook scripts/index.yml",
-      "ansible-playbook scripts/dns_setup.yml"
+      "ansible-playbook scripts/index.yml"
     ]
   }
 }
@@ -92,7 +91,7 @@ resource "aws_instance" "elk" {
   }
 }
 
-resource "aws_instance" "demo" {
+resource "aws_instance" "contractor" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
@@ -103,33 +102,7 @@ resource "aws_instance" "demo" {
   depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
 
   connection {
-    host = "${aws_instance.demo.public_ip}"
-    type = "ssh"
-    user = "ubuntu"
-    private_key = "${file("terraform.pem")}"
-    agent = false
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
-  }
-}
-
-resource "aws_instance" "dns" {
-  ami = "ami-f4cc1de2"
-  instance_type = "t2.medium"
-  security_groups = ["${aws_security_group.terraform.id}"]
-  key_name = "terraform"
-  subnet_id = "${aws_subnet.control.id}"
-  associate_public_ip_address = true
-  private_ip = "10.0.0.13"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
-
-  connection {
-    host = "${aws_instance.dns.public_ip}"
+    host = "${aws_instance.contractor.public_ip}"
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("terraform.pem")}"
@@ -168,4 +141,20 @@ resource "aws_instance" "mail" {
       "sudo apt-get install python -y"
     ]
   }
+}
+
+output "ansible ip" {
+  value = "${aws_instance.ansible.public_ip}"
+}
+
+output "elk ip" {
+  value = "${aws_instance.elk.public_ip}"
+}
+
+output "contractor ip" {
+  value = "${aws_instance.contractor.public_ip}"
+}
+
+output "mail ip" {
+  value = "${aws_instance.mail.public_ip}"
 }

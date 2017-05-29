@@ -1,7 +1,7 @@
 [elk]
 ubuntu@10.0.0.11
 
-[demo]
+[contractor]
 ubuntu@10.0.0.12
 
 [dns]
