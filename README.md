@@ -102,6 +102,10 @@
 
 ### 4.3 Functional requirements [↑](https://github.com/abemelvin/tiamat)
 
+#### Researcher Use Case
+
+![researcher use case](https://github.com/abemelvin/tiamat/blob/master/researcher_use_case.png "researcher use case")
+
 ---
 
 ### 4.4 Quality attributes [↑](https://github.com/abemelvin/tiamat)
@@ -181,7 +185,7 @@ payment information.
 1. Gateway
 
 * Receives all IP packets entering or leaving the intranet. Applies a
-pre-configured routing table to all received IPpackets to determine which host
+pre-configured routing table to all received IP packets to determine which host
 to deliver to. IPv4 forwarding is enabled.
 
 2. Firewall
