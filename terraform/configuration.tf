@@ -5,10 +5,31 @@ resource "aws_vpc" "terraform" {
   enable_dns_hostnames = "true"
 }
 
-resource "aws_subnet" "control" {
+resource "aws_internet_gateway" "terraform" {
+  vpc_id = "${aws_vpc.terraform.id}"
+  depends_on = ["aws_vpc.terraform"]
+}
+
+resource "aws_route_table" "terraform" {
+  vpc_id = "${aws_vpc.terraform.id}"
+  depends_on = ["aws_internet_gateway.terraform"]
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.terraform.id}"
+  }
+}
+
+resource "aws_subnet" "terraform" {
   vpc_id = "${aws_vpc.terraform.id}"
   cidr_block = "10.0.0.0/24"
   depends_on = ["aws_vpc.terraform"]
+}
+
+resource "aws_route_table_association" "terraform" {
+  subnet_id = "${aws_subnet.terraform.id}"
+  route_table_id = "${aws_route_table.terraform.id}"
+  depends_on = ["aws_subnet.terraform", "aws_route_table.terraform"]
 }
 
 resource "aws_route53_zone" "terraform" {
@@ -23,7 +44,7 @@ resource "aws_route53_record" "contractor" {
   type = "A"
   ttl = "300"
   records = ["${aws_instance.contractor.private_ip}"]
-  depends_on = ["aws_route53_zone.terraform"]
+  depends_on = ["aws_instance.contractor", "aws_route53_zone.terraform"]
 }
 
 resource "aws_route53_record" "mail" {
@@ -32,12 +53,12 @@ resource "aws_route53_record" "mail" {
   type = "A"
   ttl = "300"
   records = ["${aws_instance.mail.private_ip}"]
-  depends_on = ["aws_route53_zone.terraform"]
+  depends_on = ["aws_instance.mail", "aws_route53_zone.terraform"]
 }
 
 resource "aws_security_group" "terraform" {
   name = "terraform"
-  description = "Allow all traffic"
+  description = "allow all traffic"
   vpc_id = "${aws_vpc.terraform.id}"
   depends_on = ["aws_vpc.terraform"]
 
@@ -57,14 +78,14 @@ resource "aws_security_group" "terraform" {
 }
 
 resource "aws_instance" "ansible" {
-  ami           = "ami-f4cc1de2"
+  ami = "ami-f4cc1de2"
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "terraform"
-  subnet_id = "${aws_subnet.control.id}"
+  subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.control", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -101,10 +122,10 @@ resource "aws_instance" "elk" {
   instance_type = "t2.xlarge"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "terraform"
-  subnet_id = "${aws_subnet.control.id}"
+  subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.11"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
     host = "${aws_instance.elk.public_ip}"
@@ -127,10 +148,10 @@ resource "aws_instance" "contractor" {
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "terraform"
-  subnet_id = "${aws_subnet.control.id}"
+  subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.12"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
     host = "${aws_instance.contractor.public_ip}"
@@ -153,10 +174,10 @@ resource "aws_instance" "mail" {
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "terraform"
-  subnet_id = "${aws_subnet.control.id}"
+  subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.14"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.control"]
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
     host = "${aws_instance.mail.public_ip}"
