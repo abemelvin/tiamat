@@ -1,14 +1,45 @@
 provider "aws" {}
 
+resource "aws_vpc" "terraform" {
+  cidr_block = "10.0.0.0/16"
+  enable_dns_hostnames = "true"
+}
+
 resource "aws_subnet" "control" {
-  vpc_id = "vpc-17d6d271"
+  vpc_id = "${aws_vpc.terraform.id}"
   cidr_block = "10.0.0.0/24"
+  depends_on = ["aws_vpc.terraform"]
+}
+
+resource "aws_route53_zone" "terraform" {
+  name = "fazio.com"
+  vpc_id = "${aws_vpc.terraform.id}"
+  depends_on = ["aws_vpc.terraform"]
+}
+
+resource "aws_route53_record" "contractor" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "contractor.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.contractor.private_ip}"]
+  depends_on = ["aws_route53_zone.terraform"]
+}
+
+resource "aws_route53_record" "mail" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "mail.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.mail.private_ip}"]
+  depends_on = ["aws_route53_zone.terraform"]
 }
 
 resource "aws_security_group" "terraform" {
   name = "terraform"
   description = "Allow all traffic"
-  vpc_id = "vpc-17d6d271"
+  vpc_id = "${aws_vpc.terraform.id}"
+  depends_on = ["aws_vpc.terraform"]
 
   ingress = {
     from_port = 0
