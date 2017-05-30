@@ -112,7 +112,8 @@ resource "aws_instance" "ansible" {
       "ansible-playbook install/filebeat.yml",
       "ansible-playbook install/packetbeat.yml",
       "ansible-playbook install/metricbeat.yml",
-      "ansible-playbook scripts/index.yml"
+      "ansible-playbook scripts/index.yml",
+      "ansible-playbook scripts/mail_setup.yml"
     ]
   }
 }
