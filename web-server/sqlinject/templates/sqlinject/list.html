@@ -1,0 +1,58 @@
+{% extends "sqlinject/search.html" %}
+
+{% block content %}
+    <h3>Multiple matches found:</h3>
+        <div class="list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Order_Id</th>
+                    <th>Date</th>
+                    <th>Content</th>
+                    <th>Owner</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for o in orders %}
+                <tr>
+                    <td>{{o.id}}</td>
+                    <td>{{o.date}}</td>
+                    <td>{{o.content}}</td>
+                    <td>{{o.first_name}}&nbsp{{o.last_name}}</td>
+                </tr>
+    {% empty %}
+                <tr>
+                    <td>No results.</td>
+                </tr>
+            </tbody>
+    {% endfor %}
+
+    <h3>Users matched found:</h3>
+        <div class="list">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Group Type</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for u in users %}
+                <tr>
+                    <td>{{u.first_name}}</td>
+                    <td>{{u.last_name}}</td>
+                    <td>{{u.email}}</td>
+                    <td>{{u.group_type}}</td>
+                </tr>
+    {% empty %}
+                <tr>
+                    <td>No results.</td>
+                </tr>
+            </tbody>
+    {% endfor %}
+
+{% endblock %}
+
+

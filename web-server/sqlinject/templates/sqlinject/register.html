@@ -1,0 +1,13 @@
+{% extends "sqlinject/base.html" %}
+
+{% block content %}
+    <p>Register for the sql injection:</p>
+
+    <form method="post" action="{% url 'register' %}">
+        <table>
+            {{form}}
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="Register" />
+    </form>
+{% endblock %}

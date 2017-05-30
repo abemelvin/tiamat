@@ -1,0 +1,46 @@
+{% extends "sqlinject/search.html" %}
+
+{% block content %}
+    {% for error in form.non_field_errors %}
+        <p style="color: red">
+            {{ error }}
+        </p>
+    {% endfor %}
+
+    <form method="post" action="{% url 'edit' entry.id %}">
+        <table>
+            {% for field in form.visible_fields %}
+                <tr>
+                    <td>{{field.label_tag}}</td>
+                    <td>{{field}}</td>
+                    <td class="error">
+                        {% for error in field.errors %} {{error}} {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>Created:</td>
+                <td colspan="2">
+                    {{entry.creation_time|date:"Y-m-d"}}
+                    (by {{entry.created_by.first_name}} {{entry.created_by.last_name}})
+                </td>
+            </tr>
+            <tr>
+                <td>Last Updated:</td>
+                <td colspan="2">
+                    {{entry.update_time}} (by user {{entry.updated_by}})
+                </td>
+            </tr>
+        </table>
+        {% for field in form.hidden_fields %}
+            {{field}} {{field.errors}}
+        {% endfor %}
+        {% csrf_token %}
+        <input type="submit" value="Update">
+    </form>
+
+    <form action="{% url 'delete' entry.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+    </form>
+{% endblock %}
