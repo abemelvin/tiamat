@@ -8,4 +8,4 @@
     - name: copy and execute script
       script: mail.sh
     - name: copy postfix config file
-      copy: src=/main.cf dest=/etc/postfix/main.cf
+      copy: src=~/scripts/main.cf dest=/etc/postfix/main.cf

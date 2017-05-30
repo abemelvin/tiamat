@@ -85,7 +85,7 @@ resource "aws_instance" "ansible" {
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -108,12 +108,12 @@ resource "aws_instance" "ansible" {
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 terraform.pem",
-      "ansible-playbook install/elk.yml",
-      "ansible-playbook install/filebeat.yml",
-      "ansible-playbook install/packetbeat.yml",
-      "ansible-playbook install/metricbeat.yml",
-      "ansible-playbook scripts/index.yml",
-      "ansible-playbook scripts/mail_setup.yml"
+      #"ansible-playbook install/elk.yml",
+      #"ansible-playbook install/filebeat.yml",
+      #"ansible-playbook install/packetbeat.yml",
+      #"ansible-playbook install/metricbeat.yml",
+      #"ansible-playbook scripts/index.yml",
+      "ansible-playbook scripts/webapp_setup.yml"
     ]
   }
 }
@@ -196,6 +196,32 @@ resource "aws_instance" "mail" {
   }
 }
 
+resource "aws_instance" "webapp" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "terraform"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.15"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+
+  connection {
+    host = "${aws_instance.mail.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("terraform.pem")}"
+    agent = false
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install python -y"
+    ]
+  }
+}
+
 output "ansible ip" {
   value = "${aws_instance.ansible.public_ip}"
 }
@@ -210,4 +236,8 @@ output "contractor ip" {
 
 output "mail ip" {
   value = "${aws_instance.mail.public_ip}"
+}
+
+output "webapp ip" {
+  value = "${aws_instance.webapp.public_ip}"
 }

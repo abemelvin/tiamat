@@ -1,0 +1,15 @@
+---
+#
+# playbook to set up the web app server
+#
+- name: set up web app
+  hosts: webapp
+  gather_facts: no
+  pre_tasks:
+    - name: install python2
+      raw: sudo apt-get install -y python-simplejson
+  tasks:
+    - name: copy and execute script
+      script: webapp.sh
+    - name: copy apache config file
+      copy: src=~/scripts/apache2.cf dest=~/etc/apache2/apache2.cf
