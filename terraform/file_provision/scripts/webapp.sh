@@ -11,7 +11,7 @@ sudo apt-get install -y libapache2-mod-wsgi
 
 cd ~
 git clone https://github.com/abemelvin/tiamat/
-mv /tiamat/web-server web-server
+mv tiamat/web-server web-server
 cd ~
 sudo chgrp -R www-data web-server
 sudo chmod -R g+w web-server

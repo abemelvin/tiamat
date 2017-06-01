@@ -2,7 +2,7 @@
 #
 # Playbook to install metricbeat
 #
-- hosts: demo
+- hosts: contractor
   remote_user: ubuntu
   become: yes
   become_user: root

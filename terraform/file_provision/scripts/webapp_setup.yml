@@ -4,6 +4,8 @@
 #
 - name: set up web app
   hosts: webapp
+  become: yes
+  become_user: root
   gather_facts: no
   pre_tasks:
     - name: install python2
@@ -12,4 +14,4 @@
     - name: copy and execute script
       script: webapp.sh
     - name: copy apache config file
-      copy: src=~/scripts/apache2.cf dest=~/etc/apache2/apache2.cf
+      copy: src=~/scripts/apache2.conf dest=/etc/apache2/apache2.conf

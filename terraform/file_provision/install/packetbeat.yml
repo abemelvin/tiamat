@@ -2,7 +2,7 @@
 #
 # Playbook to install packetbeat
 #
-- hosts: demo
+- hosts: contractor
   remote_user: ubuntu
   become: yes
   become_user: root

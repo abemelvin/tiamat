@@ -56,6 +56,15 @@ resource "aws_route53_record" "mail" {
   depends_on = ["aws_instance.mail", "aws_route53_zone.terraform"]
 }
 
+resource "aws_route53_record" "webapp" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "webapp.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.webapp.private_ip}"]
+  depends_on = ["aws_instance.webapp", "aws_route53_zone.terraform"]
+}
+
 resource "aws_security_group" "terraform" {
   name = "terraform"
   description = "allow all traffic"
@@ -113,7 +122,8 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/packetbeat.yml",
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
-      "ansible-playbook scripts/webapp_setup.yml"
+      #"ansible-playbook scripts/webapp_setup.yml",
+      "ansible-playbook scripts/mail_setup.yml"
     ]
   }
 }
@@ -187,13 +197,6 @@ resource "aws_instance" "mail" {
     private_key = "${file("terraform.pem")}"
     agent = false
   }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
-  }
 }
 
 resource "aws_instance" "webapp" {
@@ -212,13 +215,6 @@ resource "aws_instance" "webapp" {
     user = "ubuntu"
     private_key = "${file("terraform.pem")}"
     agent = false
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
   }
 }
 
