@@ -1,7 +1,0 @@
-provisioner "remote-exec" {
-  inline = [
-    "sudo apt-add-repository ppa:ansible/ansible -y",
-    "sudo apt-get update -y",
-    "sudo apt-get install ansible -y"
-  ]
-}
