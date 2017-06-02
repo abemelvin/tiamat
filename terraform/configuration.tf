@@ -128,7 +128,12 @@ resource "aws_instance" "ansible" {
       "ansible-playbook install/metricbeat.yml",
       "ansible-playbook scripts/index.yml",
       #"ansible-playbook scripts/webapp_setup.yml",
+<<<<<<< HEAD
       #"ansible-playbook scripts/mail_setup.yml"
+=======
+      #"ansible-playbook scripts/mail_setup.yml",
+      "echo all done"
+>>>>>>> df620acd1b9589f32f3aba4f06e6f11da046e11e
     ]
   }
 }
@@ -150,13 +155,6 @@ resource "aws_instance" "elk" {
     private_key = "${file("key")}"
     agent = false
     }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
-  }
 }
 
 resource "aws_instance" "contractor" {

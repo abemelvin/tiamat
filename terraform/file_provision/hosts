@@ -1,5 +1,6 @@
 [elk]
 ubuntu@10.0.0.11
+vagrant@10.0.0.11
 
 [contractor]
 ubuntu@10.0.0.12
