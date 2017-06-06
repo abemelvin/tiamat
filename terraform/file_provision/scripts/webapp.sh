@@ -14,3 +14,4 @@ sudo mv tiamat/web-server web-server
 sudo chgrp -R www-data web-server
 sudo chmod -R g+w web-server
 sudo apache2ctl restart
+sudo apache2ctl restart
