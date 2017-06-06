@@ -7,6 +7,9 @@ from cliff.command import Command
 from cliff.commandmanager import CommandManager
 import subprocess
 
+# global state variables
+is_deployed = False
+
 
 class Tiamat(App):
 
@@ -45,23 +48,27 @@ def main(argv=sys.argv[1:]):
 
 class Deploy(Command):
     """Apply the environment configuration"""
-
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
         parser = super(Deploy, self).get_parser(prog_name)
-        parser.add_argument('config_name')
+        parser.add_argument('--config_name', default='test')
         parser.add_argument('--caps', action='store_true')
         return parser
 
     def take_action(self, parsed_args):
-        # self.log.info('sending greeting')
         self.log.debug('debugging')
         output = 'start deploying environment ' + parsed_args.config_name + '\n'
         if parsed_args.caps:
             output = output.upper()
         self.app.stdout.write(output)
-        subprocess.call("terraform apply", shell=True)
+
+        global is_deployed
+        if not is_deployed:
+            subprocess.call("terraform apply", shell=True)
+            is_deployed = True
+        else:
+            print "Error: environment already deployed."
 
 
 class Destroy(Command):
@@ -73,6 +80,9 @@ class Destroy(Command):
         self.log.debug('debugging')
         self.app.stdout.write('start destroying environment...\n')
         subprocess.call("terraform destroy", shell=True)
+        global is_deployed
+        is_deployed = False
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
