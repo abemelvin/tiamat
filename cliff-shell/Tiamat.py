@@ -5,6 +5,7 @@ import cliff
 from cliff.app import App
 from cliff.command import Command
 from cliff.commandmanager import CommandManager
+import subprocess
 
 
 class Tiamat(App):
@@ -60,6 +61,7 @@ class Deploy(Command):
         if parsed_args.caps:
             output = output.upper()
         self.app.stdout.write(output)
+        subprocess.call("terraform apply", shell=True)
 
 
 class Destroy(Command):
@@ -70,6 +72,7 @@ class Destroy(Command):
     def take_action(self, parsed_args):
         self.log.debug('debugging')
         self.app.stdout.write('start destroying environment...\n')
+        subprocess.call("terraform destroy", shell=True)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
