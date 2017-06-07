@@ -12,6 +12,12 @@
       raw: sudo apt-get install -y python-simplejson
   tasks:
     - name: copy and execute script
-      script: mail.sh
+      script: mail_1.sh
     - name: copy postfix config file
       copy: src=~/scripts/main.cf dest=/etc/postfix/main.cf
+    - name: copy virtual aliases file
+      copy: src=~/scripts/virtual dest=/etc/postfix/virtual
+    - name: copy dovecot config file
+      copy: src=~/scripts/dovecot.conf dest=/etc/dovecot/dovecot.conf
+    - name: copy and execute script
+      script: mail_2.sh

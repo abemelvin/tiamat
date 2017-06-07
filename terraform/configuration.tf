@@ -122,14 +122,13 @@ resource "aws_instance" "ansible" {
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 key",
-      "ansible-playbook install/elk.yml",
-      "ansible-playbook install/filebeat.yml",
-      "ansible-playbook install/packetbeat.yml",
-      "ansible-playbook install/metricbeat.yml",
-      "ansible-playbook scripts/index.yml",
-      "ansible-playbook scripts/webapp_setup.yml",
-      #"ansible-playbook scripts/mail_setup.yml"
-      #"ansible-playbook scripts/mail_setup.yml",
+      #"ansible-playbook install/elk.yml",
+      #"ansible-playbook install/filebeat.yml",
+      #"ansible-playbook install/packetbeat.yml",
+      #"ansible-playbook install/metricbeat.yml",
+      #"ansible-playbook scripts/index.yml",
+      #"ansible-playbook scripts/webapp_setup.yml",
+      "ansible-playbook scripts/mail_setup.yml",
       "echo all done"
     ]
   }
