@@ -117,7 +117,7 @@ resource "aws_instance" "ansible" {
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -128,7 +128,7 @@ resource "aws_instance" "ansible" {
     }
 
   provisioner "file" {
-    source = "file_provision/"
+    source = "ansible/"
     destination = "~"
   }
 
@@ -146,7 +146,8 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
       #"ansible-playbook scripts/webapp_setup.yml",
-      "ansible-playbook scripts/mail_setup.yml",
+      "ansible-playbook install/mail.yml",
+      #"ansible-playbook scripts/ldap_setup.yml",
       "echo all done"
     ]
   }
@@ -187,13 +188,6 @@ resource "aws_instance" "contractor" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
   }
 }
 

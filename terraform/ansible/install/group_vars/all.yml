@@ -47,3 +47,5 @@ packetbeat_ssl_dir: /etc/pki/logstash
 packetbeat_ssl_certificate_file: ""
 packetbeat_ssl_key_file: ""
 packetbeat_ssl_insecure: "true"
+
+postfix_domain: fazio.com
