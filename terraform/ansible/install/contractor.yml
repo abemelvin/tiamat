@@ -1,8 +1,8 @@
 ---
 #
-# set up the mail server
+# set up the contractor laptop
 #
-- hosts: mail
+- hosts: contractor
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -11,8 +11,3 @@
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
   roles:
-   - { role: postfix }
-   - { role: dovecot }
-   - { role: postgresql }
-   - { role: apache }
-   - { role: squirrelmail }

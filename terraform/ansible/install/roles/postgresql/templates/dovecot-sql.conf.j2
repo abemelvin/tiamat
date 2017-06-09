@@ -1,0 +1,5 @@
+driver = pgsql
+connect = host=/var/run/postgresql/ dbname=mail user=mailreader
+default_pass_scheme = SHA512
+password_query = SELECT email as user, password FROM users WHERE email = '%u'
+user_query = SELECT email as user, 'maildir:/home/mailboxes/maildir/'||maildir as mail, '/home/mailboxes/home/'||maildir as home, 500 as uid, 500 as gid FROM users WHERE email = '%u'

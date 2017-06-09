@@ -1,0 +1,55 @@
+disable_plaintext_auth = no
+mail_privileged_group = mail
+
+passdb {
+  driver = sql
+  args = /etc/dovecot/dovecot-sql.conf
+}
+userdb {
+  driver = prefetch
+}
+userdb {
+  driver = sql
+  args = /etc/dovecot/dovecot-sql.conf
+}
+
+protocols = imap lmtp
+
+service lmtp {
+    unix_listener /var/spool/postfix/private/dovecot-lmtp {
+    group = postfix
+    mode = 0600
+    user = postfix
+    }
+}
+protocol lmtp {
+    postmaster_address=postmaster@{{ postfix_domain }}
+    hostname=mail.{{ postfix_domain }}
+}
+
+protocol imap {
+  mail_plugins = " autocreate"
+}
+plugin {
+  autocreate = Trash
+  autocreate2 = Sent
+  autosubscribe = Trash
+  autosubscribe2 = Sent
+}
+
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    group = postfix
+    mode = 0660
+    user = postfix
+  }
+}
+
+service imap-login {
+  inet_listener imap {
+    port = 143
+    ssl = no
+
+#ssl=required
+#ssl_cert = </etc/ssl/certs/mailcert.pem
+#ssl_key = </etc/ssl/private/mail.key

@@ -1,6 +1,6 @@
-myhostname = mail.fazio.com
+myhostname = mail.{{ postfix_domain }}
 myorigin = /etc/mailname
-mydestination = mail.fazio.com, fazio.com, localhost, localhost.localdomain
+mydestination = mail.{{ postfix_domain }}, {{ postfix_domain }}, localhost, localhost.localdomain
 relayhost =
 mynetworks = 127.0.0.0/8 10.0.0.0/24
 mailbox_size_limit = 0

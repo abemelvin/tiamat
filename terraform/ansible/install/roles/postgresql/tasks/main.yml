@@ -1,0 +1,121 @@
+---
+#
+# install postgresql
+#
+- name: install postgresql
+  apt:
+    name: postgresql
+    state: latest
+- name: install postfix-pgsql
+  apt:
+    name: postfix-pgsql
+    state: latest
+- name: install dovecot-lmtpd
+  apt:
+    name: dovecot-lmtpd
+    state: latest
+- name: install dovecot-pgsql
+  apt:
+    name: dovecot-pgsql
+    state: latest
+- name: modify postgresql ident configuration file
+  template:
+    src: pg_ident.conf.j2
+    dest: /etc/postgresql/9.5/main/pg_ident.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: modify postgresql hba configuration file
+  template:
+    src: pg_hba.conf.j2
+    dest: /etc/postgresql/9.5/main/pg_hba.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: reload postgresql
+  service:
+    name: postgresql
+    state: reloaded
+- name: copy database sql script
+  copy:
+    src: ../scripts/database.sql
+    dest: /home/ubuntu/database.sql
+    owner: root
+    group: root
+    mode: 0644
+- name: copy tables sql script
+  copy:
+    src: ../scripts/tables.sql
+    dest: /home/ubuntu/tables.sql
+    owner: root
+    group: root
+    mode: 0644
+- name: copy mailbox sql script
+  copy:
+    src: ../scripts/mailbox.sql
+    dest: /home/ubuntu/mailbox.sql
+    owner: root
+    group: root
+    mode: 0644
+- name: create postgresql user and mail database
+  raw: sudo -u postgres psql -f database.sql
+- name: create database tables
+  raw: psql -U mailreader -d mail -f tables.sql
+- name: create a mailbox for contractor
+  raw: psql -U mailreader -d mail -f mailbox.sql
+- name: create a new system user for dovecot
+  user:
+    name: vmail
+    comment: dovecot virtual mail user
+    uid: 0700
+    createhome: no
+    system: yes
+- name: create a new mailbox directory
+  file:
+    path: /home/mailboxes
+    state: directory
+    owner: vmail
+    mode: 0700
+- name: modify dovecot sql configuration file
+  template:
+    src: dovecot-sql.conf.j2
+    dest: /etc/dovecot/dovecot-sql.conf
+    owner: root
+    group: root
+    mode: 0600
+- name: modify dovecot configuration file for postgresql
+  template:
+    src: dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: create pgsql aliases configuration file
+  template:
+    src: pgsql-aliases.cf.j2
+    dest: /etc/postfix/pgsql-aliases.cf
+    owner: root
+    group: root
+    mode: 0644
+- name: create pgsql boxes configuration file
+  template:
+    src: pgsql-boxes.cf.j2
+    dest: /etc/postfix/pgsql-boxes.cf
+    owner: root
+    group: root
+    mode: 0644
+- name: modify postfix main configuration file for postgresql
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded
+- name: restart dovecot
+  service:
+    name: dovecot
+    state: restarted
