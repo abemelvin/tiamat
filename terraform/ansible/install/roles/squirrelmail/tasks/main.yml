@@ -6,6 +6,13 @@
   apt:
     name: squirrelmail
     state: latest
+- name: modify squirrelmail configuration file
+  template:
+    src: config.php.j2
+    dest: /etc/squirrelmail/config.php
+    owner: root
+    group: root
+    mode: 0644
 - name: copy virtual host file into apache
   template:
     src: apache.conf.j2

@@ -48,8 +48,9 @@ service auth {
 service imap-login {
   inet_listener imap {
     port = 143
-    ssl = no
+  }
+}
 
-#ssl=required
-#ssl_cert = </etc/ssl/certs/mailcert.pem
-#ssl_key = </etc/ssl/private/mail.key
+ssl=required
+ssl_cert = </etc/ssl/certs/mailcert.pem
+ssl_key = </etc/ssl/private/mail.key

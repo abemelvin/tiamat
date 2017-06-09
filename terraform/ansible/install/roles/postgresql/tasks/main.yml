@@ -61,7 +61,7 @@
   raw: sudo -u postgres psql -f database.sql
 - name: create database tables
   raw: psql -U mailreader -d mail -f tables.sql
-- name: create a mailbox for contractor
+- name: create virtual mailboxes
   raw: psql -U mailreader -d mail -f mailbox.sql
 - name: create a new system user for dovecot
   user:
@@ -75,7 +75,7 @@
     path: /home/mailboxes
     state: directory
     owner: vmail
-    mode: 0700
+    mode: 0777
 - name: modify dovecot sql configuration file
   template:
     src: dovecot-sql.conf.j2

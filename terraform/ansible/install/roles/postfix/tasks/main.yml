@@ -22,6 +22,20 @@
   service:
     name: postfix
     state: stopped
+- name: copy ssl certificate
+  copy:
+    src: ../ssl/mailcert.pem
+    dest: /etc/ssl/certs/mailcert.pem
+    owner: root
+    group: root
+    mode: 0644
+- name: copy ssl key
+  copy:
+    src: ../ssl/mail.key
+    dest: /etc/ssl/private/mail.key
+    owner: root
+    group: root
+    mode: 0644
 - name: modify postfix master configuration file
   template:
     src: master.cf.j2
