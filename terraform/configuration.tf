@@ -146,8 +146,8 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
       #"ansible-playbook scripts/webapp_setup.yml",
-      "ansible-playbook install/mail.yml",
-      #"ansible-playbook scripts/ldap_setup.yml",
+      #"ansible-playbook install/mail.yml",
+      "ansible-playbook install/ldap.yml",
       "echo all done"
     ]
   }
