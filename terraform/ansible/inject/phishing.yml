@@ -1,0 +1,9 @@
+---
+#
+# phishing inject
+#
+- name: phishing inject
+  hosts: blackhat
+  tasks:
+    - name: send a phishing email
+      raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" contractor@fazio.com
