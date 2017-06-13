@@ -1,0 +1,28 @@
+---
+#
+# install squirrelmail
+#
+- name: install squirrelmail
+  apt:
+    name: squirrelmail
+    state: latest
+- name: modify squirrelmail configuration file
+  template:
+    src: config.php.j2
+    dest: /etc/squirrelmail/config.php
+    owner: root
+    group: root
+    mode: 0644
+- name: copy virtual host file into apache
+  template:
+    src: apache.conf.j2
+    dest: /etc/apache2/sites-available/squirrelmail.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: enable the squirrelmail virtual host
+  raw: sudo a2ensite squirrelmail.conf
+- name: reload apache
+  service:
+    name: apache2
+    state: reloaded

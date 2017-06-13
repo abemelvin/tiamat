@@ -1,0 +1,61 @@
+---
+#
+# install slapd
+#
+- name: install slapd
+  apt:
+    name: slapd
+    state: latest
+- name: install ldap-utils
+  apt:
+    name: ldap-utils
+    state: latest
+- name: set the slapd organization
+  debconf:
+    name: slapd
+    question: shared/organization
+    value: 'fazio.com'
+    vtype: string
+- name: set the slapd domain
+  debconf:
+    name: slapd
+    question: slapd/domain
+    value: 'fazio.com'
+    vtype: string
+- name: set the slapd password
+  debconf:
+    name: slapd
+    question: slapd/password1
+    value: 'password'
+    vtype: password
+- name: confirm the slapd password
+  debconf:
+    name: slapd
+    question: slapd/password2
+    value: 'password'
+    vtype: password
+- name: confirm moving old database
+  debconf:
+    name: slapd
+    question: slapd/move_old_databse
+    value: 'true'
+    vtype: boolean
+- name: select HDB slapd backend
+  debconf:
+    name: slapd
+    question: slapd/backend
+    value: 'HDB'
+    vtype: select
+- name: reconfigure the slapd package
+  raw: dpkg-reconfigure -f noninteractive slapd
+- name: install phpldapadmin
+  apt:
+    name: phpldapadmin
+    state: latest
+- name: modify the phpldapadmin configuration file
+  template:
+    src: config.php.j2
+    dest: /etc/phpldapadmin/config.php
+    owner: root
+    group: root
+    mode: 0644

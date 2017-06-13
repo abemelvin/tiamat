@@ -1,0 +1,17 @@
+[elk]
+ubuntu@10.0.0.11
+
+[contractor]
+ubuntu@10.0.0.12
+
+[dns]
+ubuntu@10.0.0.13
+
+[mail]
+ubuntu@10.0.0.14
+
+[webapp]
+ubuntu@10.0.0.15
+
+[ldap]
+ubuntu@10.0.0.16

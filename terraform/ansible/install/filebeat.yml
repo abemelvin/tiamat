@@ -1,0 +1,10 @@
+---
+#
+# Playbook to install filebeat
+#
+- hosts: contractor
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  roles:
+   - { role: filebeat }

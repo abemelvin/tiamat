@@ -1,0 +1,65 @@
+---
+#
+# install postfix
+#
+- name: set the mail server type
+  debconf:
+    name: postfix
+    question: postfix/main_mailer_type
+    value: 'Internet Site'
+    vtype: string
+- name: set the local domain name
+  debconf:
+    name: postfix
+    question: postfix/mail_name
+    value: '{{ postfix_domain }}'
+    vtype: string
+- name: install postfix
+  apt:
+    name: postfix
+    state: latest
+- name: stop postfix
+  service:
+    name: postfix
+    state: stopped
+- name: copy ssl certificate
+  copy:
+    src: ../ssl/mailcert.pem
+    dest: /etc/ssl/certs/mailcert.pem
+    owner: root
+    group: root
+    mode: 0644
+- name: copy ssl key
+  copy:
+    src: ../ssl/mail.key
+    dest: /etc/ssl/private/mail.key
+    owner: root
+    group: root
+    mode: 0644
+- name: modify postfix master configuration file
+  template:
+    src: master.cf.j2
+    dest: /etc/postfix/master.cf
+    owner: root
+    group: root
+    mode: 0644
+- name: modify postfix main configuration file
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644
+- name: modify aliases file
+  template:
+    src: aliases.j2
+    dest: /etc/aliases
+    owner: root
+    group: root
+    mode: 0644
+- name: renew aliases
+  command: newaliases
+- name: start postfix
+  service:
+    name: postfix
+    state: started

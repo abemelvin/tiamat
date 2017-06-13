@@ -1,0 +1,13 @@
+---
+#
+# set up the contractor laptop
+#
+- hosts: contractor
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  gather_facts: no
+  pre_tasks:
+    - name: install python2
+      raw: sudo apt-get install -y python-simplejson
+  roles:

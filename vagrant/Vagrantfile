@@ -2,35 +2,33 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = "2"
-# SPLUNK_DEB = "splunk-6.5.2-67571ef4b87d-linux-2.6-amd64.deb"
-# SPLUNK_INDEX = ""
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "dummy"
 
-  config.vm.define :master do |master_config|
-    master_config.vm.hostname = "master"
-
-    master_config.vm.provider :aws do |aws, override|
-      aws.tags = {
-        'Name' => 'master'
-      }
-      aws.access_key_id = 
-      aws.secret_access_key =
-      aws.keypair_name = "mits"
-
-      aws.ami = "ami-f4cc1de2"
-      aws.instance_type = "t2.medium"
-      aws.security_groups = ["sg-7c0dfd03"]
-      aws.subnet_id = "subnet-308bae1d"
-      aws.private_ip_address = "172.31.64.5"
-
-      override.ssh.username = "ubuntu"
-      override.ssh.private_key_path = "../aws/mits.pem"
+  config.vm.define :elk do |elk_config|
+    elk_config.vm.provider :virtualbox do |vb|
+      vb.memory = 4096
     end
+    elk_config.vm.box = "bento/ubuntu-16.04"
+    elk_config.vm.hostname = "elk"
+    elk_config.vm.network "private_network", :netmask => "255.255.255.0", ip: "10.0.0.11",
+      virtualbox__intnet: true
+    elk_config.vm.network "forwarded_port", guest: 80, host: 8080
 
-    master_config.vm.provision :shell, path: "provision/lamp.sh"
+    elk_config.vm.provision "file", source: "../terraform/key.pub", destination: "~vagrant/.ssh/key.pub"
+    elk_config.vm.provision "shell", inline: "cat ~vagrant/.ssh/key.pub >> ~vagrant/.ssh/authorized_keys"
   end
+
+  config.vm.define :ansible do |ansible_config|
+    ansible_config.vm.box = "bento/ubuntu-16.04"
+    ansible_config.vm.hostname = "ansible"
+    ansible_config.vm.network "private_network", :netmask => "255.255.255.0", ip: "10.0.0.10",
+      virtualbox__intnet: true
+
+    ansible_config.vm.provision "file", source: "../terraform/file_provision/", destination: "~vagrant"
+    ansible_config.vm.provision "shell", path: "../vagrant/provision/ansible.sh"
+  end
+end
 
 #  config.vm.define :nagios do |nagios_config|
 #    nagios_config.vm.box = "ubuntu/trusty64"
@@ -131,5 +129,3 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #   apt-get update
     #   apt-get install -y apache2
     # SHELL
-
-end

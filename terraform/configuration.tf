@@ -1,5 +1,10 @@
 provider "aws" {}
 
+resource "aws_key_pair" "terraform" {
+  key_name = "key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/Owd1mxio0N+z8T3EUXZzkYtxIYm6iWSpPk7B67yD5JlnaAAlVSeXzWiYUtkawYUx1JKMQapkhTlBzZYB079qKbYG0Dk7x3yFwtnWUR4iSYcw5o8QknLy2F+Rc8qV/lhVHnD8sy9jKJoozLy1Jzrm0YabsKvJQB4TFAID63knlGUuhzeVKaKKk6YQb93+UKOXqmUrVa0x6DIbKmZ+WrH9y+ubUrhG9T//uub1OTILOSbElyMsh5AL/gSZkktuVIlq2eI6Cvva9r9UqycXnjtSzioZty1VdFk54Ag0Ijpgw0kK1dNuWOQaM/lzKySjodLJAHG4uwvVHvmgAPJDSC/5 abemelvin@MacBook-Pro.local"
+}
+
 resource "aws_vpc" "terraform" {
   cidr_block = "10.0.0.0/16"
   enable_dns_hostnames = "true"
@@ -47,13 +52,40 @@ resource "aws_route53_record" "contractor" {
   depends_on = ["aws_instance.contractor", "aws_route53_zone.terraform"]
 }
 
-resource "aws_route53_record" "mail" {
+resource "aws_route53_record" "ldap" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "ldap.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.ldap.private_ip}"]
+  depends_on = ["aws_instance.ldap", "aws_route53_zone.terraform"]
+}
+
+resource "aws_route53_record" "mail_A" {
   zone_id = "${aws_route53_zone.terraform.zone_id}"
   name = "mail.fazio.com"
   type = "A"
   ttl = "300"
   records = ["${aws_instance.mail.private_ip}"]
   depends_on = ["aws_instance.mail", "aws_route53_zone.terraform"]
+}
+
+resource "aws_route53_record" "mail_MX" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "fazio.com"
+  type = "MX"
+  ttl = "300"
+  records = ["50 mail.fazio.com"]
+  depends_on = ["aws_instance.mail", "aws_route53_zone.terraform"]
+}
+
+resource "aws_route53_record" "webapp" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "webapp.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.webapp.private_ip}"]
+  depends_on = ["aws_instance.webapp", "aws_route53_zone.terraform"]
 }
 
 resource "aws_security_group" "terraform" {
@@ -81,22 +113,22 @@ resource "aws_instance" "ansible" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
-  key_name = "terraform"
+  key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
     type = "ssh"
     user = "ubuntu"
-    private_key = "${file("terraform.pem")}"
+    private_key = "${file("key")}"
     agent = false
     }
 
   provisioner "file" {
-    source = "file_provision/"
+    source = "ansible/"
     destination = "~"
   }
 
@@ -107,13 +139,16 @@ resource "aws_instance" "ansible" {
       "sudo apt-get install ansible -y",
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
-      "sudo chmod 600 terraform.pem",
-      "ansible-playbook install/elk.yml",
-      "ansible-playbook install/filebeat.yml",
-      "ansible-playbook install/packetbeat.yml",
-      "ansible-playbook install/metricbeat.yml",
-      "ansible-playbook scripts/index.yml",
-      "ansible-playbook scripts/mail_setup.yml"
+      "sudo chmod 600 key",
+      #"ansible-playbook install/elk.yml",
+      #"ansible-playbook install/filebeat.yml",
+      #"ansible-playbook install/packetbeat.yml",
+      #"ansible-playbook install/metricbeat.yml",
+      #"ansible-playbook scripts/index.yml",
+      #"ansible-playbook scripts/webapp_setup.yml",
+      #"ansible-playbook install/mail.yml",
+      "ansible-playbook install/ldap.yml",
+      "echo all done"
     ]
   }
 }
@@ -122,7 +157,7 @@ resource "aws_instance" "elk" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.xlarge"
   security_groups = ["${aws_security_group.terraform.id}"]
-  key_name = "terraform"
+  key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.11"
@@ -132,23 +167,16 @@ resource "aws_instance" "elk" {
     host = "${aws_instance.elk.public_ip}"
     type = "ssh"
     user = "ubuntu"
-    private_key = "${file("terraform.pem")}"
+    private_key = "${file("key")}"
     agent = false
     }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
-  }
 }
 
 resource "aws_instance" "contractor" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
-  key_name = "terraform"
+  key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.12"
@@ -158,15 +186,8 @@ resource "aws_instance" "contractor" {
     host = "${aws_instance.contractor.public_ip}"
     type = "ssh"
     user = "ubuntu"
-    private_key = "${file("terraform.pem")}"
+    private_key = "${file("key")}"
     agent = false
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
   }
 }
 
@@ -174,7 +195,7 @@ resource "aws_instance" "mail" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]
-  key_name = "terraform"
+  key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.14"
@@ -184,15 +205,46 @@ resource "aws_instance" "mail" {
     host = "${aws_instance.mail.public_ip}"
     type = "ssh"
     user = "ubuntu"
-    private_key = "${file("terraform.pem")}"
+    private_key = "${file("key")}"
     agent = false
   }
+}
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt-get install python -y"
-    ]
+resource "aws_instance" "webapp" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "key"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.15"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+
+  connection {
+    host = "${aws_instance.webapp.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("key")}"
+    agent = false
+  }
+}
+
+resource "aws_instance" "ldap" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "key"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.16"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+
+  connection {
+    host = "${aws_instance.ldap.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("key")}"
+    agent = false
   }
 }
 
@@ -210,4 +262,12 @@ output "contractor ip" {
 
 output "mail ip" {
   value = "${aws_instance.mail.public_ip}"
+}
+
+output "webapp ip" {
+  value = "${aws_instance.webapp.public_ip}"
+}
+
+output "ldap ip" {
+  value = "${aws_instance.ldap.public_ip}"
 }

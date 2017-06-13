@@ -1,0 +1,23 @@
+---
+#
+# install dovecot
+#
+- name: install dovecot-imapd
+  apt:
+    name: dovecot-imapd
+    state: latest
+- name: install dovecot-pop3d
+  apt:
+    name: dovecot-pop3d
+    state: latest
+- name: modify dovecot configuration file
+  template:
+    src: dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: restart dovecot
+  service:
+    name: dovecot
+    state: restarted
