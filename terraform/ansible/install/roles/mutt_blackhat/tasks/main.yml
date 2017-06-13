@@ -1,0 +1,15 @@
+---
+#
+# install mutt
+#
+- name: install mutt
+  apt:
+    name: mutt
+    state: latest
+- name: create the mutt configuration file
+  template:
+    src: muttrc.j2
+    dest: /home/ubuntu/.muttrc
+    owner: root
+    group: root
+    mode: 0777
