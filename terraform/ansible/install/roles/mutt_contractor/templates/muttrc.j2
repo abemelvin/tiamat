@@ -1,0 +1,15 @@
+set realname = "contractor"
+set from = "contractor@fazio.com"
+set use_from = no
+set envelope_from ="yes"
+
+mailboxes imap://mail.fazio.com
+set folder="imap://mail.fazio.com:993"
+set imap_user="contractor@fazio.com" #your IMAP user name or login
+set imap_pass="password" #your IMAP password
+
+set header_cache=~/.mutt/cache/headers
+set message_cachedir=~/.mutt/cache/bodies
+set certificate_file=~/.mutt/certificates
+
+set spoolfile = "imap://mail.fazio.com/INBOX"
