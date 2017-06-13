@@ -52,6 +52,15 @@ resource "aws_route53_record" "contractor" {
   depends_on = ["aws_instance.contractor", "aws_route53_zone.terraform"]
 }
 
+resource "aws_route53_record" "blackhat" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "blackhat.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.blackhat.private_ip}"]
+  depends_on = ["aws_instance.blackhat", "aws_route53_zone.terraform"]
+}
+
 resource "aws_route53_record" "ldap" {
   zone_id = "${aws_route53_zone.terraform.zone_id}"
   name = "ldap.fazio.com"
@@ -117,7 +126,7 @@ resource "aws_instance" "ansible" {
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap", "aws_instance.blackhat"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -145,9 +154,11 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/packetbeat.yml",
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
-      #"ansible-playbook scripts/webapp_setup.yml",
+      "ansible-playbook install/webapp.yml",
       #"ansible-playbook install/mail.yml",
-      "ansible-playbook install/ldap.yml",
+      #"ansible-playbook install/contractor.yml",
+      #"ansible-playbook install/blackhat.yml",
+      #"ansible-playbook install/ldap.yml",
       "echo all done"
     ]
   }
@@ -248,6 +259,25 @@ resource "aws_instance" "ldap" {
   }
 }
 
+resource "aws_instance" "blackhat" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "key"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.17"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+
+  connection {
+    host = "${aws_instance.blackhat.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("key")}"
+    agent = false
+  }
+}
+
 output "ansible ip" {
   value = "${aws_instance.ansible.public_ip}"
 }
@@ -270,4 +300,8 @@ output "webapp ip" {
 
 output "ldap ip" {
   value = "${aws_instance.ldap.public_ip}"
+}
+
+output "blackhat ip" {
+  value = "${aws_instance.blackhat.public_ip}"
 }
