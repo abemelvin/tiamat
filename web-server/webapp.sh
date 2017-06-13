@@ -1,6 +1,6 @@
 MYSQL_ROOT = root
 MYSQL_PASS = root
-
+DB_NAME = target_exemplar
 
 sudo apt-get upgrade -y
 
@@ -60,11 +60,12 @@ sudo apt-get install -y mysql-server
 
 # Create exemplar database
 # -------------------
+sudo echo "create database $DB_NAME" | mysql -u$MYSQL_ROOT -p$MYSQL_PASS
 if [ $MYSQL_PASS ]
 then
-  mysql -u "$MYSQL_ROOT" -p "MYSQL_PASS" < target_exemplar.sql
+  sudo mysql -u$MYSQL_ROOT -p$MYSQL_PASS $DB_NAME < target_exemplar.sql
 else
-  mysql -u "$MYSQL_ROOT" < target_exemplar.sql
+  sudo mysql -u$MYSQL_ROOT $DB_NAME < target_exemplar.sql
 fi
 
 
