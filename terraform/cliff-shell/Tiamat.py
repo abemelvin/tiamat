@@ -1,15 +1,23 @@
 import sys
 import os
 import logging
-import cliff
+import subprocess
+
+try:
+    import cliff
+except ImportError, e:
+    subprocess.check_call("pip install cliff", shell=True)
+
 from cliff.app import App
 from cliff.command import Command
 from cliff.commandmanager import CommandManager
-import subprocess
+from distutils.spawn import find_executable
 
 # global state variables
 is_deployed = False
 ansible_ip = ""
+elk_ip = ""
+elk_logs_path = ""
 
 
 class Tiamat(App):
@@ -24,12 +32,77 @@ class Tiamat(App):
         commands = {
             'deploy': Deploy,
             'destroy': Destroy,
-            'ansible': Ansible
+            'ansible': Ansible,
+            'get-elk-files': Elk
         }
         for k, v in commands.iteritems():
             self.command_manager.add_command(k, v)
 
         self.command_manager.add_command('complete', cliff.complete.CompleteCommand)
+
+        # start dependencies check
+        if "AWS_ACCESS_KEY_ID" not in os.environ:
+            print "Error: environment variable AWS_ACCESS_KEY_ID is missing."
+            exit(1)
+
+        if "AWS_SECRET_ACCESS_KEY" not in os.environ:
+            print "Error: environment variable AWS_SECRET_ACCESS_KEY is missing."
+            exit(1)
+
+        if "AWS_DEFAULT_REGION" not in os.environ:
+            print "Error: environment variable AWS_DEFAULT_REGION is missing."
+            exit(1)
+
+        if not find_executable('terraform'):
+            ans = raw_input("Error: Terraform is not installed or missing in search path.\n \
+            Do you want to install it via Tiamat? y/n ")
+
+            if ans == 'y' or ans == 'yes':
+                is_64bits = sys.maxsize > 2 ** 32
+                local_path = raw_input("Please input full local file directory --> ")
+                local_file_path = local_path + '/terraform.zip'
+
+                if sys.platform.startswith('linux'):
+                    if is_64bits:
+                        url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
+                            "linux_amd64.zip?_ga=2.142026481.2126347023.1497377866-658368258.1496936210"
+                    else:
+                        url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
+                            "linux_386.zip?_ga=2.137897971.2126347023.1497377866-658368258.1496936210"
+                    wget_call = "wget " + url + " -O " + local_file_path
+                    subprocess.check_call(wget_call, shell=True)  # check this command
+                    unzip_call = "unzip " + local_file_path + " -d " + local_path
+                    subprocess.check_call(unzip_call, shell=True)
+
+                elif sys.platform.startswith('darwin'):
+                    url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
+                        "_darwin_amd64.zip?_ga=2.76410710.2126347023.1497377866-658368258.1496936210"
+                    curl_call = "curl " + url + " -o " + local_file_path
+                    subprocess.check_call(curl_call, shell=True)
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path
+                    subprocess.check_call(unzip_call, shell=True)  # can use -d to assign exp dir
+
+                elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
+                    if is_64bits:
+                        url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
+                            "windows_amd64.zip?_ga=2.176148193.2126347023.1497377866-658368258.1496936210"
+                    else:
+                        url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
+                            "windows_386.zip?_ga=2.176148193.2126347023.1497377866-658368258.1496936210"
+                    wget_call = "wget " + url + " -O " + local_path
+                    subprocess.check_call(wget_call, shell=True)  # check this command
+                    subprocess.check_call("unzip " + local_path, shell=True)  # check this command
+
+                else:
+                    print "Error: cannot check OS.Please download Terraform manually."
+                    url = ""
+                    exit(1)
+
+            else:
+                exit(1)
+        else:
+            pass
+            # print find_executable('terraform')
 
     def initialize_app(self, argv):
             self.LOG.debug('initialize_app')
@@ -78,11 +151,16 @@ class Deploy(Command):
                     print output.strip()
 
             # result = p.stdout.read()
-            ip_beg = result.find("ansible ip") + 13
-            ip_end = result.find("\n",ip_beg)
+            ansible_ip_beg = result.find("ansible ip") + 13
+            ansible_ip_end = result.find("\n",ansible_ip_beg)
             global ansible_ip
-            ansible_ip = result[ip_beg:ip_end]
-            # self.app.stdout.write(ansible_ip)
+            ansible_ip = result[ansible_ip_beg:ansible_ip_end]
+
+            elk_ip_beg = result.find("elk ip") + 9
+            elk_ip_end = result.find("\n", elk_ip_beg)
+            global elk_ip
+            elk_ip = result[elk_ip_beg:elk_ip_end]
+
             is_deployed = True
         else:
             self.app.stdout.write("Error: environment already deployed.\n")
@@ -115,6 +193,27 @@ class Ansible(Command):
 
         ssh_call = "ssh -i key ubuntu@" + ansible_ip
         subprocess.check_call(ssh_call, shell=True)
+
+
+class Elk(Command):
+    """Copy log files from ELK server to local folder"""
+    log = logging.getLogger(__name__)
+
+    def get_parser(self, prog_name):
+        parser = super(Elk, self).get_parser(prog_name)
+        parser.add_argument('local_path')
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global elk_ip
+        global elk_logs_path
+        if not ansible_ip:
+            self.app.stdout.write("Error: ELK IP unavailable.\n")
+            return
+
+        scp_call = "scp -i key -r ubuntu@" + elk_ip + ':' + elk_logs_path + ' ' + parsed_args.local_path
+        subprocess.check_call(scp_call, shell=True)
 
 
 if __name__ == '__main__':
