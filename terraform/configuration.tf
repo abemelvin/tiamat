@@ -159,7 +159,7 @@ resource "aws_instance" "ansible" {
       "ansible-playbook install/contractor.yml",
       "ansible-playbook install/blackhat.yml",
       #"ansible-playbook install/ldap.yml",
-      "echo *** all done ***"
+      "echo provisioning complete"
     ]
   }
 }
