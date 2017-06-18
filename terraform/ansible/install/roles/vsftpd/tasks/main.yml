@@ -1,0 +1,31 @@
+---
+#
+# install vsftpd
+#
+- name: install vsftpd
+  apt:
+    name: vsftpd
+    state: latest
+- name: copy vsftpd configuration file
+  template:
+    src: vsftpd.conf.j2
+    dest: /etc/vsftpd.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: create an ftp root directory
+  file:
+    path: /var/ftp
+    state: directory
+    owner: ftp
+    mode: 0555
+- name: create an anonymous subdirectory
+  file:
+    path: /var/ftp/upload
+    state: directory
+    owner: ftp
+    mode: 0777
+- name: restart vsftpd
+  service:
+    name: vsftpd
+    state: restarted
