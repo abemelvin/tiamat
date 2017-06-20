@@ -12,13 +12,16 @@ sudo ufw allow in "Apache Full"
 # Apache Installation
 echo "Apache Installation Starts!"
 sudo apt-get install -y apache2
-sudo systemctl restart apache2
+
+
+# Careful about ht file path!
+cd ~
 sudo git clone https://github.com/abemelvin/tiamat/
-sudo mv -v tiamat/terraform/ansible/web-server/html/*  /var/www/html/
+sudo mv -v ~/tiamat/terraform/ansible/web-server/html/*  /var/www/html/
 sudo chgrp -R www-data /var/www
 # sudo chmod -R g+w ubuntu
 sudo chmod 755 /var/www/html/ #7 - rwx 5 - r-x 5 - r-x
-
+sudo mv -f ~/tiamat/terraform/ansible/web-server/dir.conf /etc/apache2/mods-enabled/dir.conf
 
 # PHP Installation
 # -------------------
@@ -67,10 +70,14 @@ sudo apt-get install -y mysql-server
 # -------------------
 echo "Database Example Creation Starts!"
 sudo mysql -u "$MYSQL_ROOT" -p"$MYSQL_PASS"  -e "create database $DB_NAME"
+# Careful about ht file path!
 sudo mysql -u "$MYSQL_ROOT" -p"$MYSQL_PASS" "$DB_NAME" < ~/tiamat/terraform/ansible/web-server/target_exemplar.sql
 # else
 #   sudo mysql -u$MYSQL_ROOT $DB_NAME < target_exemplar.sql
 # fi
+
+
+sudo systemctl restart apache2
 
 
 
