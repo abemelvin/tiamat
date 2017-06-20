@@ -38,16 +38,16 @@ CREATE TABLE `target_order` (
 --
 
 INSERT INTO `target_order` (`id`, `datetime`, `content`, `owner_id`) VALUES
-(101, '2017-12-10 03:33:11', 'neque.', 5),
-(102, '2016-12-05 20:46:44', 'In condimentum. Donec at', 5),
-(103, '2016-05-01 12:16:22', 'amet, dapibus', 5),
-(104, '2016-08-27 14:24:33', 'non dui nec', 5),
-(105, '2017-02-05 20:37:43', 'Praesent interdum ligula eu', 4),
-(106, '2017-12-13 05:30:47', 'hendrerit consectetuer, cursus et,', 5),
-(107, '2017-05-03 16:06:39', 'Etiam gravida', 5),
-(108, '2017-10-14 21:20:29', 'magna.', 4),
-(109, '2016-06-13 02:34:12', 'fringilla mi lacinia', 5),
-(110, '2017-02-23 14:58:30', 'ultricies', 4),
+(101, '2017-12-10 03:33:11', 'neque.', 2),
+(102, '2016-12-05 20:46:44', 'In condimentum. Donec at', 2),
+(103, '2016-05-01 12:16:22', 'amet, dapibus', 2),
+(104, '2016-08-27 14:24:33', 'non dui nec', 2),
+(105, '2017-02-05 20:37:43', 'Praesent interdum ligula eu', 2),
+(106, '2017-12-13 05:30:47', 'hendrerit consectetuer, cursus et,', 2),
+(107, '2017-05-03 16:06:39', 'Etiam gravida', 2),
+(108, '2017-10-14 21:20:29', 'magna.', 2),
+(109, '2016-06-13 02:34:12', 'fringilla mi lacinia', 2),
+(110, '2017-02-23 14:58:30', 'ultricies', 2),
 (111, '2017-01-26 21:24:14', 'vel', 3),
 (112, '2017-02-20 15:47:36', 'iaculis quis, pede.', 3),
 (113, '2017-07-16 08:03:45', 'ante dictum', 5),
@@ -145,15 +145,29 @@ INSERT INTO `target_order` (`id`, `datetime`, `content`, `owner_id`) VALUES
 -- Table structure for table `user`
 --
 
+
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `password` varchar(128) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `password` varchar(255) NOT NULL,
   `first_name` varchar(30) NOT NULL,
   `last_name` varchar(30) NOT NULL,
-  `email` varchar(254) NOT NULL,
-  `username` varchar(150) NOT NULL,
-  `group_id` int(11) NOT NULL DEFAULT '3'
+  `email` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `group_id` int(11) NOT NULL DEFAULT '3',
+  -- `active` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- CREATE TABLE `user` (
+--   `id` int(11) NOT NULL,
+--   `password` varchar(128) NOT NULL,
+--   `first_name` varchar(30) NOT NULL,
+--   `last_name` varchar(30) NOT NULL,
+--   `email` varchar(254) NOT NULL,
+--   `username` varchar(150) NOT NULL 
+--   `group_id` int(11) NOT NULL DEFAULT '3'
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
@@ -201,14 +215,12 @@ ALTER TABLE `target_order`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `group_id` (`group_id`);
 
 --
 -- Indexes for table `user_group`
 --
 ALTER TABLE `user_group`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`);
 
 --
@@ -220,11 +232,6 @@ ALTER TABLE `user_group`
 --
 ALTER TABLE `target_order`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `user_group`
 --
