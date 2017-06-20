@@ -151,6 +151,12 @@ class Deploy(Command):
 
         global is_deployed
         if not is_deployed:
+            try:
+                subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
+            except subprocess.CalledProcessError:
+                print "\nError predicted by terraform plan. Please check the configuration before deploy."
+                return
+
             p = subprocess.Popen("terraform apply", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             result = ""
             while True:
@@ -161,9 +167,15 @@ class Deploy(Command):
                 if output:
                     print output.strip()
 
-            # result = p.stdout.read()
+            if p.returncode != 0:
+                print "\nError: terraform exited abnormally. Return code is %s.\n" % p.returncode
+                print p.stderr.read()
+                print "Immediate destroy is suggested.\n"
+                subprocess.call("terraform destroy", shell=True)
+                return
+
             ansible_ip_beg = result.find("ansible ip") + 13
-            ansible_ip_end = result.find("\n",ansible_ip_beg)
+            ansible_ip_end = result.find("\n", ansible_ip_beg)
             global ansible_ip
             ansible_ip = result[ansible_ip_beg:ansible_ip_end]
 
@@ -171,7 +183,6 @@ class Deploy(Command):
             elk_ip_end = result.find("\n", elk_ip_beg)
             global elk_ip
             elk_ip = result[elk_ip_beg:elk_ip_end]
-
             is_deployed = True
         else:
             self.app.stdout.write("Error: environment already deployed.\n")
