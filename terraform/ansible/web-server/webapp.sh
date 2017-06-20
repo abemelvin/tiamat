@@ -12,7 +12,7 @@ sudo ufw allow in "Apache Full"
 # Apache Installation
 echo "Apache Installation Starts!"
 sudo apt-get install -y apache2
-
+sudo systemctl restart apache2
 
 # Careful about ht file path!
 cd ~

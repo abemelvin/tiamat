@@ -29,8 +29,8 @@
                     Browse <input type="file" name="image" id="image" style="display: none;">
                 </label>
                 
-                <!-- <button type="submit" class="btn btn-primary">upload</button> -->
-                <input class="bnt-default" type="submit" value="Upload" name="submit">
+                <button type="submit" class="btn btn-primary" name="submit">upload</button>
+                <!-- <input class="bnt-default" type="submit" value="Upload" name="submit"> -->
             </form>
         </div>
 
