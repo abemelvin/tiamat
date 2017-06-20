@@ -1,0 +1,18 @@
+.big-heading{
+	text-align: center;
+}
+.small-heading{
+	text-align: center;
+}
+.order-table{
+	margin-left: 20%;
+	margin-right: 20%;
+}
+.middle-frame{
+	margin-left: 20%;
+	margin-right: 20%;	
+}
+#search-input{
+	width: 250px;
+	height: 35px;
+}

@@ -13,7 +13,7 @@ sudo ufw allow in "Apache Full"
 sudo apt-get install -y apache2
 sudo systemctl restart apache2
 sudo git clone https://github.com/abemelvin/tiamat/
-sudo mv -v tiamat/web-server/html/*  /var/www/html/
+sudo mv -v tiamat/terraform/ansible/web-server/html/*  /var/www/html/
 sudo chgrp -R www-data /var/www
 # sudo chmod -R g+w ubuntu
 sudo chmod 755 /var/www/html/ #7 - rwx 5 - r-x 5 - r-x
