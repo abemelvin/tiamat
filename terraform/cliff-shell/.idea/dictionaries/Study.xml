@@ -3,6 +3,7 @@
     <words>
       <w>ansible</w>
       <w>prog</w>
+      <w>returncode</w>
       <w>wget</w>
     </words>
   </dictionary>
