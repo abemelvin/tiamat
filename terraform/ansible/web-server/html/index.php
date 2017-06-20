@@ -22,9 +22,6 @@
         <div class="small-heading">
             <h2>Order Database</h2>
         </div>
-    <!--     <h2>Welcome <?php echo $login_session; ?></h2> 
-          <h2><a href = "logout.php">Sign Out</a></h2> -->
-
         <div class="file-upload">
             <form action="upload.php" method="post" enctype="multipart/form-data">
                 <h3>Upload picture:</h3>
@@ -32,8 +29,8 @@
                     Browse <input type="file" name="image" id="image" style="display: none;">
                 </label>
                 
-                <button type="submit" class="btn btn-primary">upload</button>
-                <!-- <input class="bnt-default" type="submit" value="Upload" name="submit"> -->
+                <!-- <button type="submit" class="btn btn-primary">upload</button> -->
+                <input class="bnt-default" type="submit" value="Upload" name="submit">
             </form>
         </div>
 
