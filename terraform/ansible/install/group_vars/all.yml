@@ -49,3 +49,7 @@ packetbeat_ssl_key_file: ""
 packetbeat_ssl_insecure: "true"
 
 postfix_domain: fazio.com
+
+mysql_root: root
+mysql_pass: root
+db_name: target_exemplar

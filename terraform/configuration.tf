@@ -43,6 +43,15 @@ resource "aws_route53_zone" "terraform" {
   depends_on = ["aws_vpc.terraform"]
 }
 
+resource "aws_route53_record" "wazuh" {
+  zone_id = "${aws_route53_zone.terraform.zone_id}"
+  name = "wazuh.fazio.com"
+  type = "A"
+  ttl = "300"
+  records = ["${aws_instance.wazuh.private_ip}"]
+  depends_on = ["aws_instance.wazuh", "aws_route53_zone.terraform"]
+}
+
 resource "aws_route53_record" "contractor" {
   zone_id = "${aws_route53_zone.terraform.zone_id}"
   name = "contractor.fazio.com"
@@ -156,7 +165,7 @@ resource "aws_instance" "ansible" {
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap", "aws_instance.blackhat", "aws_instance.ftp"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.wazuh", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap", "aws_instance.blackhat", "aws_instance.ftp"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -184,11 +193,11 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/packetbeat.yml",
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
-      #"ansible-playbook install/webapp.yml",
-      "ansible-playbook install/mail.yml",
-      "ansible-playbook install/contractor.yml",
-      "ansible-playbook install/blackhat.yml",
-      "ansible-playbook install/ftp.yml",
+      "ansible-playbook install/webapp.yml",
+      #"ansible-playbook install/mail.yml",
+      #"ansible-playbook install/contractor.yml",
+      #"ansible-playbook install/blackhat.yml",
+      #"ansible-playbook install/ftp.yml",
       #"ansible-playbook install/ldap.yml",
       "echo provisioning complete"
     ]
@@ -214,6 +223,25 @@ resource "aws_instance" "elk" {
     }
 }
 
+resource "aws_instance" "wazuh" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.large"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "key"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.12"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+
+  connection {
+    host = "${aws_instance.wazuh.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("key")}"
+    agent = false
+    }
+}
+
 resource "aws_instance" "contractor" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.micro"
@@ -221,7 +249,7 @@ resource "aws_instance" "contractor" {
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.12"
+  private_ip = "10.0.0.14"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
@@ -240,7 +268,7 @@ resource "aws_instance" "mail" {
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.14"
+  private_ip = "10.0.0.15"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
@@ -259,7 +287,7 @@ resource "aws_instance" "webapp" {
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.15"
+  private_ip = "10.0.0.16"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
@@ -268,6 +296,12 @@ resource "aws_instance" "webapp" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
+  }
+
+  provisioner "file" {
+    source = "ansible/web-server/html"
+    destination = "~ls
+    "
   }
 }
 
@@ -278,7 +312,7 @@ resource "aws_instance" "ldap" {
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.16"
+  private_ip = "10.0.0.17"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
@@ -297,7 +331,7 @@ resource "aws_instance" "blackhat" {
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.17"
+  private_ip = "10.0.0.18"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
@@ -321,7 +355,7 @@ resource "aws_instance" "ftp" {
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.18"
+  private_ip = "10.0.0.19"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
@@ -339,6 +373,10 @@ output "ansible ip" {
 
 output "elk ip" {
   value = "${aws_instance.elk.public_ip}"
+}
+
+output "wazuh ip" {
+  value = "${aws_instance.wazuh.public_ip}"
 }
 
 output "contractor ip" {

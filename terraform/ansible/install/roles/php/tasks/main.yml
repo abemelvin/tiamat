@@ -1,0 +1,45 @@
+---
+#
+# install php
+#
+- name: update apt cache
+  apt:
+    update_cache: yes
+- name: install php
+  apt:
+    name: php
+    state: present
+- name: install libapache2-mod-php
+  apt:
+    name: libapache2-mod-php
+    state: present
+#- name: install php5-cli
+#  apt:
+#    name: php5-cli
+#    state: present
+#- name: install php5-mysql
+#  apt:
+#    name: php5-mysql
+#    state: present
+#- name: install php5-curl
+#  apt:
+#    name: php5-curl
+#    state: present
+#- name: install php5-mcrypt
+#  apt:
+#    name: php5-mcrypt
+#    state: present
+#- name: enable mcrypt for php5
+#  raw: php5enmod mcrypt
+- name: install phpunit
+  apt:
+    name: phpunit
+    state: present
+- name: install php-mbstring
+  apt:
+    name: php-mbstring
+    state: present
+- name: install php-gettext
+  apt:
+    name: php-gettext
+    state: present

@@ -5,4 +5,8 @@
 - name: install apache2
   apt:
     name: apache2
-    state: latest
+    state: present
+- name: restart apache
+  service:
+    name: apache2
+    state: restarted
