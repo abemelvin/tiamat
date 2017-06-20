@@ -4,12 +4,13 @@ DB_NAME=target_exemplar
 export MYSQL_ROOT ; export MYSQL_PASS ; export DB_NAME
 
 sudo apt-get update -y
-sudo apt-get upgrade -y
+# sudo apt-get upgrade -y # this commands require interaction
 
 # Enable Ubuntu Firewall and allow SSH & MySQL Ports
 sudo ufw allow in "Apache Full"
 
 # Apache Installation
+echo "Apache Installation Starts!"
 sudo apt-get install -y apache2
 sudo systemctl restart apache2
 sudo git clone https://github.com/abemelvin/tiamat/
@@ -22,6 +23,7 @@ sudo chmod 755 /var/www/html/ #7 - rwx 5 - r-x 5 - r-x
 # PHP Installation
 # -------------------
 # Install php itself
+echo "PHP Installation Starts!"
 sudo apt-get install -y php libapache2-mod-php
 # Command-Line Interpreter
 sudo apt-get install -y php5-cli
@@ -42,6 +44,7 @@ sudo apt-get install -y php-mbstring php-gettext
 # MySQL Installation
 # -------------------
 # Install MySQL Server in a Non-Interactive mode. Default root password will be "root"
+echo "MySQL Installation Starts!"
 sudo echo "mysql-server-5.7 mysql-server/root_password password root" | sudo debconf-set-selections
 sudo echo "mysql-server-5.7 mysql-server/root_password_again password root" | sudo debconf-set-selections
 sudo apt-get install -y mysql-server 
@@ -62,9 +65,9 @@ sudo apt-get install -y mysql-server
 
 # Create exemplar database
 # -------------------
+echo "Database Example Creation Starts!"
 sudo mysql -u "$MYSQL_ROOT" -p"$MYSQL_PASS"  -e "create database $DB_NAME"
-
-sudo mysql -u "$MYSQL_ROOT" -p"$MYSQL_PASS" "$DB_NAME" < target_exemplar.sql
+sudo mysql -u "$MYSQL_ROOT" -p"$MYSQL_PASS" "$DB_NAME" < ~/tiamat/terraform/ansible/web-server/target_exemplar.sql
 # else
 #   sudo mysql -u$MYSQL_ROOT $DB_NAME < target_exemplar.sql
 # fi

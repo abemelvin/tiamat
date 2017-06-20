@@ -157,7 +157,7 @@ CREATE TABLE `user` (
   -- `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- CREATE TABLE `user` (
 --   `id` int(11) NOT NULL,
