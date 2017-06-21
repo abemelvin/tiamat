@@ -193,12 +193,13 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/packetbeat.yml",
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
-      "ansible-playbook install/webapp.yml",
+      #"ansible-playbook install/webapp.yml",
       #"ansible-playbook install/mail.yml",
       #"ansible-playbook install/contractor.yml",
       #"ansible-playbook install/blackhat.yml",
       #"ansible-playbook install/ftp.yml",
       #"ansible-playbook install/ldap.yml",
+      "ansible-playbook install/wazuh.yml",
       "echo provisioning complete"
     ]
   }
@@ -300,8 +301,7 @@ resource "aws_instance" "webapp" {
 
   provisioner "file" {
     source = "ansible/web-server/html"
-    destination = "~ls
-    "
+    destination = "~"
   }
 }
 
