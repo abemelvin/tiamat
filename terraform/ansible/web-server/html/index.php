@@ -26,9 +26,8 @@
             <form action="upload.php" method="post" enctype="multipart/form-data">
                 <h3>Upload picture:</h3>
                 <label class="btn btn-default btn-file">
-                    Browse <input type="file" name="image" id="image" style="display: none;">
+                     <input type="file" name="image" id="image">
                 </label>
-                
                 <button type="submit" class="btn btn-primary" name="submit">upload</button>
                 <!-- <input class="bnt-default" type="submit" value="Upload" name="submit"> -->
             </form>
@@ -66,7 +65,7 @@
             print "\t\t<th>Order_ID</th>\n";
             print "\t\t<th>Timestamp</th>\n";
             print "\t\t<th>Content</th>\n";
-            print "\t\t<th>Owner/th>\n";
+            print "\t\t<th>Owner</th>\n";
             print "\t</tr>\n";
             print "</thead>";
             while($row = $result->fetch_assoc()) {

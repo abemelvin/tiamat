@@ -1,30 +1,74 @@
 ---
 #
-# Installing Elasticsearch
+# install elasticsearch
 #
-# Adds the apt-key for Elasticsearch
-- name: Add Elasticsearch apt-key
+- name: install curl
+  apt:
+    name: curl
+    state: present
+- name: install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+- name: add elastic gpg key
   apt_key:
     url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
     state: present
-# Add the Elasticsearch APT-repository
-- name: Adding Elasticsearch APT repository
+- name: add elastic repository
   apt_repository:
     repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
     state: present
-# Install Elasticsearch
-- name: Update repositories cache and install Elasticsearch
+- name: update apt cache
+  apt:
+    update_cache: yes
+- name: install elasticsearch
   apt:
     name: elasticsearch
-    update_cache: yes
-# Update Elasticsearch config file to only allow localhost connections
-- name: Updating the config file to restrict outside access
-  lineinfile:
-    destfile: /etc/elasticsearch/elasticsearch.yml
-    regexp: 'network.host:'
-    line: 'network.host: 0.0.0.0'
-# Restart Elasticsearch
-- name: Restarting Elasticsearch
+    state: present
+- name: enable and start elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    state: started
+- name: download wazuh elasticsearch template
+  raw: wget https://raw.githubusercontent.com/wazuh/wazuh-kibana-app/master/server/startup/integration_files/template_file.json
+- name: load wazuh elasticsearch template
+  shell: "curl -XPUT 'http://localhost:9200/_template/wazuh' -H 'Content-Type: application/json' -d @template_file.json"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
+- name: enable memory locking
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: root
+    mode: 0644
+- name: create systemd directory
+  raw: mkdir -p /etc/systemd/system/elasticsearch.service.d/
+- name: set systemd memory limit to infinity
+  template:
+    src: elasticsearch.conf.j2
+    dest: /etc/systemd/system/elasticsearch.service.d/elasticsearch.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: set sysv memory limit to infinity
+  template:
+    src: elasticsearch.j2
+    dest: /etc/default/elasticsearch
+    owner: root
+    group: root
+    mode: 0644
+- name: limit memory to 4gb
+  template:
+    src: jvm.options.j2
+    dest: /etc/elasticsearch/jvm.options
+    owner: root
+    group: root
+    mode: 0644
+- name: restart elasticsearch
   service:
     name: elasticsearch
     state: restarted

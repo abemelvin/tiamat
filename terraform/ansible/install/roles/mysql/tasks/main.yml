@@ -1,0 +1,20 @@
+---
+#
+# install mysql
+#
+- name: set the mysql root password
+  debconf:
+    name: mysql-server-5.7
+    question: mysql-server/root_password
+    value: 'root'
+    vtype: string
+- name: confirm the mysql root password
+  debconf:
+    name: mysql-server-5.7
+    question: mysql-server/root_password_again
+    value: 'root'
+    vtype: string
+- name: install mysql-server
+  apt:
+    name: mysql-server
+    state: present

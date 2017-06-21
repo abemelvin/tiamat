@@ -1,6 +1,6 @@
 ---
 #
-# set up the webapp server
+# set up the web server
 #
 - hosts: webapp
   remote_user: ubuntu
@@ -10,8 +10,8 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
-  tasks:
-    - name: copy and execute the shell script
-      script: web-server/webapp.sh
-    - name: copy apache config file for php
-      copy: web-server/dir.conf dest=/etc/apache2/mods-enabled/dir.conf
+  roles:
+   - { role: apache }
+   - { role: php }
+   - { role: mysql }
+   - { role: web_app }

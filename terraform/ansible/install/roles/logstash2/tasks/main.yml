@@ -1,0 +1,32 @@
+---
+#
+# install logstash
+#
+- name: install logstash
+  apt:
+    name: logstash
+    state: present
+- name: download logstash wazuh config
+  raw: curl -so /etc/logstash/conf.d/01-wazuh.conf https://raw.githubusercontent.com/wazuh/wazuh/2.0/extensions/logstash/01-wazuh.conf
+- name: download logstash wazuh template
+  raw: curl -so /etc/logstash/wazuh-elastic5-template.json https://raw.githubusercontent.com/wazuh/wazuh/2.0/extensions/elasticsearch/wazuh-elastic5-template.json
+- name: enable and start logstash
+  service:
+    name: logstash
+    enabled: yes
+    state: started
+- name: copy openssl example configuration
+  copy:
+    src: /etc/ssl/openssl.cnf
+    dest: /home/ubuntu/custom_openssl.cnf
+    owner: root
+    group: root
+    mode: 0644
+- name: set elastic stack ip address in ssl config
+  lineinfile:
+    path: /home/ubuntu/custom_openssl.cnf
+    line: 'subjectAltName = IP: 10.0.0.11'
+- name: generate ssl certificate and key
+  raw: openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/logstash/logstash.key -out /etc/logstash/logstash.crt -config /home/ubuntu/custom_openssl.cnf
+- name: delete the duplicate openssl config
+  raw: rm /home/ubuntu/custom_openssl.cnf

@@ -1,23 +1,23 @@
 [elk]
 ubuntu@10.0.0.11
 
-[contractor]
+[wazuh]
 ubuntu@10.0.0.12
 
-[dns]
-ubuntu@10.0.0.13
-
-[mail]
+[contractor]
 ubuntu@10.0.0.14
 
-[webapp]
+[mail]
 ubuntu@10.0.0.15
 
-[ldap]
+[webapp]
 ubuntu@10.0.0.16
 
-[blackhat]
+[ldap]
 ubuntu@10.0.0.17
 
-[ftp]
+[blackhat]
 ubuntu@10.0.0.18
+
+[ftp]
+ubuntu@10.0.0.19
