@@ -21,6 +21,7 @@ sudo mv -v ~/tiamat/terraform/ansible/web-server/html/*  /var/www/html/
 sudo chgrp -R www-data /var/www
 # sudo chmod -R g+w ubuntu
 sudo chmod 755 /var/www/html/ #7 - rwx 5 - r-x 5 - r-x
+sudo chmod 777 /var/www/html/images #7 - rwx 5 - r-x 5 - r-x
 sudo mv -f ~/tiamat/terraform/ansible/web-server/dir.conf /etc/apache2/mods-enabled/dir.conf
 
 
@@ -37,8 +38,15 @@ sudo apt-get install -y mysql-server
 # -------------------
 # Install php itself
 echo "PHP Installation Starts!"
-sudo apt-get install -y php libapache2-mod-php php-mcrypt php-mysql
-sudo systemctl status apache2
+sudo apt-get install -y php
+sudo apt-get install -y libapache2-mod-php 
+sudo apt-get install -y php-mcrypt 
+sudo apt-get install -y php-mysql
+sudo apt-get install -y php-cli 
+sudo apt-get install -y php-curl
+# Enable mycrpt for PHP5
+sudo php5enmod mcrypt
+# sudo systemctl status apache2
 
 
 

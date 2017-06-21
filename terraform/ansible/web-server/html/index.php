@@ -28,8 +28,6 @@
                 <label class="btn btn-default btn-file">
                      <input type="file" name="image" id="image">
                 </label>
-
-                
                 <button type="submit" class="btn btn-primary" name="submit">upload</button>
                 <!-- <input class="bnt-default" type="submit" value="Upload" name="submit"> -->
             </form>
@@ -38,12 +36,7 @@
         <div class="search-area">
             <form action="index.php" method="GET">
                 <h3>Search order by content:</h3>
-                <input id="search-input" type="text" name="query_order" />
-                <button type="submit" class="btn btn-primary" >search</button>
-            </form>
-            <form action="index.php" method="GET">
-                <h3>Search order by username:</h3>
-                <input id="search-input" type="text" name="query_username" />
+                <input id="search-input" type="text" name="query" />
                 <button type="submit" class="btn btn-primary" >search</button>
             </form>
         </div>
