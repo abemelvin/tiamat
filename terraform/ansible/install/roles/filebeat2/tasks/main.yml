@@ -27,4 +27,5 @@
 - name: enable and start filebeat
   service:
     name: filebeat
+    enabled: yes
     state: started

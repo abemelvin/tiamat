@@ -188,7 +188,8 @@ resource "aws_instance" "ansible" {
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 key",
-      #"ansible-playbook install/elk.yml",
+      #"ansible-playbook install/wazuh.yml",
+      "ansible-playbook install/elastic_stack.yml",
       #"ansible-playbook install/filebeat.yml",
       #"ansible-playbook install/packetbeat.yml",
       #"ansible-playbook install/metricbeat.yml",
@@ -199,7 +200,6 @@ resource "aws_instance" "ansible" {
       #"ansible-playbook install/blackhat.yml",
       #"ansible-playbook install/ftp.yml",
       #"ansible-playbook install/ldap.yml",
-      "ansible-playbook install/wazuh.yml",
       "echo provisioning complete"
     ]
   }
