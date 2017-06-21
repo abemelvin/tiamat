@@ -1,0 +1,34 @@
+---
+#
+# install kibana
+#
+- name: install kibana
+  apt:
+    name: kibana=5.4.1
+    state: present
+- name: install wazuh app plugin
+  raw: /usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/wazuhapp/wazuhapp.zip
+- name: install nginx
+  apt:
+    name: nginx
+    state: present
+- name: create an ssl directory
+  raw: mkdir -p /etc/ssl/certs /etc/ssl/private
+- name: generate ssl certificate
+  raw: openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/kibana-access.key -out /etc/ssl/certs/kibana-access.pem
+- name: install apache2-utils
+  apt:
+    name: apache2-utils
+    state: present
+- name: add ubuntu to kibana password file
+  htpasswd:
+    path: /etc/nginx/conf.d/kibana.htpasswd
+    name: ubuntu
+    password: ubuntu
+    owner: root
+    group: www-data
+    mode: 0644
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted

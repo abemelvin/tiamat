@@ -188,12 +188,13 @@ resource "aws_instance" "ansible" {
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 key",
-      #"ansible-playbook install/elk.yml",
+      #"ansible-playbook install/wazuh.yml",
+      "ansible-playbook install/elastic_stack.yml",
       #"ansible-playbook install/filebeat.yml",
       #"ansible-playbook install/packetbeat.yml",
       #"ansible-playbook install/metricbeat.yml",
       #"ansible-playbook scripts/index.yml",
-      "ansible-playbook install/webapp.yml",
+      #"ansible-playbook install/webapp.yml",
       #"ansible-playbook install/mail.yml",
       #"ansible-playbook install/contractor.yml",
       #"ansible-playbook install/blackhat.yml",
@@ -300,8 +301,7 @@ resource "aws_instance" "webapp" {
 
   provisioner "file" {
     source = "ansible/web-server/html"
-    destination = "~ls
-    "
+    destination = "~"
   }
 }
 
