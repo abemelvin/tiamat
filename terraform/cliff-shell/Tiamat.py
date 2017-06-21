@@ -2,6 +2,7 @@ import sys
 import os
 import logging
 import subprocess
+import MySQLdb
 
 try:
     import cliff
@@ -155,7 +156,9 @@ class Deploy(Command):
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
             except subprocess.CalledProcessError:
                 print "\nError predicted by terraform plan. Please check the configuration before deploy."
-                return
+                ans = raw_input("Do you want to deploy anyway? y/n")
+                if ans != 'y' and ans != 'yes':
+                    return
 
             p = subprocess.Popen("terraform apply", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             result = ""
@@ -189,7 +192,7 @@ class Deploy(Command):
 
 
 class Destroy(Command):
-    """A simple command that prints a message."""
+    """Destroy the applied environment"""
     log = logging.getLogger(__name__)
 
     def take_action(self, parsed_args):
