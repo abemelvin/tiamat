@@ -11,5 +11,5 @@
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
   roles:
-   - { role: wazuh }
+   - { role: wazuh_server }
    - { role: filebeat2 }
