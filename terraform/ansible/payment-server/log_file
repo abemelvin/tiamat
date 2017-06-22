@@ -1,0 +1,3 @@
+(transac_id, datetime, content, amount, credit_card_no) = ('83663059','2017-06-22 16:06:52', 'oEOIEulk', '9359.91', '6703501446080701')
+(transac_id, datetime, content, amount, credit_card_no) = ('40534668','2017-06-22 16:11:28', 'kPSJIExX', '4448.01', '6615635500064400')
+(transac_id, datetime, content, amount, credit_card_no) = ('15791775','2017-06-22 16:11:32', 'YHejMowk', '4295.53', '0400331236265077')
