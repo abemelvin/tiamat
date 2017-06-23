@@ -5,6 +5,8 @@ import string
 import random
 import time
 import sys
+import thread
+import traceback
 
 
 class PaymentServer:
@@ -19,14 +21,30 @@ class PaymentServer:
 
         # prepare a cursor object using cursor() method
         self.cursor = self.db.cursor()
-        self.is_infected = True
+        self.is_infected = False
+
+    def check_firmware(self):
+        print "firmware check is running..."
+        while True:
+            with open("pos_firmware", "r") as firmware:
+                if firmware.read() == "malicious firmware":
+                    self.is_infected = True
+                    print "(malicious firmware)"
+                else:
+                    print "(normal firmware)"
+                    self.is_infected = False
+            time.sleep(10)
 
     @staticmethod
     def redact_info(credit_card_no):
-        return credit_card_no[:12] + "****"
+        return '*' * 12 + credit_card_no[12:]
 
     def run(self):
         print "server running..."
+
+        # start another thread to periodically check pos_firmware
+        thread.start_new_thread(self.check_firmware, ())
+
         while True:
             transac_id = ''.join(random.choice(string.digits) for _ in range(8))
             datetime = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -48,18 +66,19 @@ class PaymentServer:
 
                 print "one record inserted."
             except Exception as e:
-                print(e)
+                traceback.print_exc(e)
+                # print(e)
                 # Rollback in case there is any error
                 self.db.rollback()
 
             # store unredacted data in some sort of log file if infected
             if self.is_infected:
-                log_file = open("log_file", "a")
-                unredacted_info = ("(transac_id, datetime, content, amount, credit_card_no) = "
-                                   "('%s','%s', '%s', '%.2f', '%s')\n" %
-                                   (transac_id, datetime, content, amount, credit_card_no))
-                log_file.write(unredacted_info)
-                log_file.close()
+                with open("log_file", "a") as log_file:
+                    unredacted_info = ("(transac_id, datetime, content, amount, credit_card_no) = "
+                                       "('%s','%s', '%s', '%.2f', '%s')\n" %
+                                       (transac_id, datetime, content, amount, credit_card_no))
+                    log_file.write(unredacted_info)
+                    log_file.close()
 
             # assume interval is drawn from exp distribution
             interval = random.expovariate(0.1)
