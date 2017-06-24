@@ -21,3 +21,6 @@ ubuntu@10.0.0.18
 
 [ftp]
 ubuntu@10.0.0.19
+
+[payments]
+ubuntu@10.0.0.20

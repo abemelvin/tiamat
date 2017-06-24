@@ -53,3 +53,4 @@ postfix_domain: fazio.com
 mysql_root: root
 mysql_pass: root
 db_name: target_exemplar
+payment_db_name: payment_db

@@ -1,0 +1,43 @@
+---
+#
+# install payment server
+#
+- name: enable firewall
+  ufw:
+    state: enabled
+    policy: deny
+- name: allow ssh
+  ufw:
+    rule: allow
+    port: 22
+- name: allow mysql
+  ufw:
+    rule: allow
+    port: 3309
+- name: allow http
+  ufw:
+    rule: allow
+    port: 80
+- name: copy database sql script
+  copy:
+    src: ../scripts/create_table.sql
+    dest: /home/ubuntu/create_table.sql
+    owner: root
+    group: root
+    mode: 0644
+- name: create the payments database
+  raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}"  -e "create database {{ payment_db_name }}"
+- name: populate database tables
+  raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}" "{{ payment_db_name }}" < create_table.sql
+- name: install python-mysqldb
+  apt:
+    name: python-mysqldb
+    state: present
+- name: move the firmware file 
+  raw: mv /home/ubuntu/payment-server/pos_firmware /home/ubuntu/pos_firmware
+- name: move the log file  
+  raw: mv /home/ubuntu/payment-server/log_file /home/ubuntu/log_file
+- name: move the payment generator
+  raw: mv /home/ubuntu/payment-server/server.py /home/ubuntu/server.py 
+- name: start processing payments
+  shell: nohup python server.py >/dev/null 2>&1 &
