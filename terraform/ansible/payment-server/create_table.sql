@@ -6,7 +6,7 @@ CREATE TABLE `transactions` (
   `transac_id` text NOT NULL,
   `datetime` datetime NOT NULL,
   `content` text NOT NULL,
-  `amount` double NOT NULL,
+  `amount` decimal(12,8) NOT NULL,
   `credit_card_no` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

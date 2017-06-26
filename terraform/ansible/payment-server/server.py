@@ -33,7 +33,7 @@ class PaymentServer:
                 else:
                     print "(normal firmware)"
                     self.is_infected = False
-            time.sleep(10)
+            time.sleep(3)
 
     @staticmethod
     def redact_info(credit_card_no):
