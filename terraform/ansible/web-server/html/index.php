@@ -24,7 +24,7 @@
         </div>
         <div class="file-upload">
             <form action="upload.php" method="post" enctype="multipart/form-data">
-                <h3>Upload picture:</h3>
+                <h3>Upload invoice:</h3>
                 <label class="btn btn-default btn-file">
                      <input type="file" name="image" id="image">
                 </label>
