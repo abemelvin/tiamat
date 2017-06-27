@@ -9,7 +9,13 @@ body {
   padding: 15px;
   margin: 0 auto;
 }
-.form-signin .form-signin-heading, .form-signup .form-signup-heading,
+
+.form-signin-heading {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
 .form-signin .checkbox, .form-signup .checkbox {
   margin-bottom: 10px;
 }

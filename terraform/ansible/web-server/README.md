@@ -10,7 +10,7 @@ For example, the exemplar assumes SQL injection is possible on the vendor web po
 - [X] set password in the insertion of data
 - [X] test display
 - [X] test sql injection
-- [ ] automate sql injection
+- [ ] automate sql injection (using yml and php+curl) [later]
 - [ ] all done!
 
 ### LAMP
@@ -68,3 +68,4 @@ $ curl -X GET  http://52.37.128.197/index.php?query=anything%25%27+OR+%27x%27+LI
 ## References
 
 [SQL injection](http://php.net/manual/en/security.database.sql-injection.php)
+[Curl in PHP](http://thisinterestsme.com/php-login-to-website-with-curl/)

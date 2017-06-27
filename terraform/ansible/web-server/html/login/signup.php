@@ -22,18 +22,22 @@
   <body>
     <div class="container">
 
-      <form class="form-signup" id="usersignup" name="usersignup" method="post" action="createuser.php">
-        <h2 class="form-signup-heading">Register</h2>
+      <div class="form-signin-heading">
+        <h1>Welcome to Join!</h1>
+      </div>
+      <div class="form-signup">
+      <form id="usersignup" name="usersignup" method="post" action="createuser.php">
         <input name="newuser" id="newuser" type="text" class="form-control" placeholder="Username" autofocus>
         <input name="email" id="email" type="text" class="form-control" placeholder="Email">
-<br>
+        <br>
         <input name="password1" id="password1" type="password" class="form-control" placeholder="Password">
         <input name="password2" id="password2" type="password" class="form-control" placeholder="Repeat Password">
 
-        <button name="Submit" id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
-
+        <button name="Submit" id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
         <div id="message"></div>
       </form>
+      <a href="main_login.php">Have an account?</a>
+      </div>
 
     </div> <!-- /container -->
 
