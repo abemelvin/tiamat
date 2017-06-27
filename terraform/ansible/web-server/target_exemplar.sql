@@ -23,23 +23,74 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `target_order`
+-- Table structure for table `members`
 --
 
-CREATE TABLE `target_order` (
+CREATE TABLE `members` (
+  `id` char(23) NOT NULL,
+  `username` varchar(65) NOT NULL DEFAULT '',
+  `password` varchar(65) NOT NULL DEFAULT '',
+  `email` varchar(65) NOT NULL,
+  `verified` tinyint(1) NOT NULL DEFAULT '0',
+  `mod_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `root` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `members` (`id`, `username`, `password`, `email`, `verified`, `root`) VALUES
+(1, 'root', '$2y$10$N1Oz.rXA2S3rAXPHmfUTH.WePB/4mL9IVYB7dSqzRmHBgBZ0tL2IG', 'root@gmail.com', 1, 1),
+(2, 'target', '$2y$10$MGePloNFOO3ACVObNN.VyeyQGR4M7JC1ioGnSDjhwOXcxF9G4ORo.', 'target@gmail.com', 1, 0),
+(3, 'vendor-1', '$2y$10$HGMg5Awl201TFwJsN5ykkuSD/W4PWJmch1pbPy9zVh/yheCnTOINu', 'vendor1@gmail.com', 1, 0),
+(4, 'vendor-2', '$2y$10$StEl0oramRyYdX3CudIOvurLXLcPSWV2xFZn/smzwQSvTFApq.6rS', 'vendor2@gmail.com', 1, 0),
+(5, 'vendor-3', '$2y$10$Od1bDD0vXhPS0oyWIsI7ZuHb7/i/nYOAjMRufLwsmmKekyHXgoF7e', 'vendor3@gmail.com', 1, 0);
+
+
+--
+-- Table structure for table `login_Attempts`
+--
+
+CREATE TABLE `loginAttempts` (
+  `IP` varchar(20) NOT NULL,
+  `Attempts` int(11) NOT NULL,
+  `LastLogin` datetime NOT NULL,
+  `Username` varchar(65) DEFAULT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `targetOrder`
+--
+
+-- CREATE TABLE `targetOrder` (
+--   `id` int(11) NOT NULL,
+--   `datetime` datetime NOT NULL,
+--   `content` text NOT NULL,
+--   `username` varchar(65) NOT NULL FOREIGN KEY REFERENCES `members`(`username`) ON DELETE CASCADE ON UPDATE CASCADE,
+--   PRIMARY KEY (`id`)
+--   -- NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201,
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `targetOrder` (
   `id` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
   `content` text NOT NULL,
-  `username` int(11) NOT NULL
-  PRIMARY KEY (`id`),
-  NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201,
+  `username` varchar(65) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 --
--- Dumping data for table `target_order`
+-- Dumping data for table `targetOrder`
 --
 
-INSERT INTO `target_order` (`id`, `datetime`, `content`, `username`) VALUES
+INSERT INTO `targetOrder` (`id`, `datetime`, `content`, `username`) VALUES
 (101, '2017-12-10 03:33:11', 'neque.', 'vendor-1'),
 (102, '2016-12-05 20:46:44', 'In condimentum. Donec at', 'vendor-1'),
 (103, '2016-05-01 12:16:22', 'amet, dapibus', 'vendor-1'),
@@ -144,55 +195,11 @@ INSERT INTO `target_order` (`id`, `datetime`, `content`, `username`) VALUES
 -- --------------------------------------------------------
 
 
---
--- Table structure for table `members`
---
-
-CREATE TABLE `members` (
-  `id` char(23) NOT NULL,
-  `username` varchar(65) NOT NULL DEFAULT '',
-  `password` varchar(65) NOT NULL DEFAULT '',
-  `email` varchar(65) NOT NULL,
-  `verified` tinyint(1) NOT NULL DEFAULT '0',
-  `mod_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `root` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUEKEY `username_UNIQUE` (`username`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-INSERT INTO `members` (`id`, `username`, `password`, `email`, `verified`, `root`) VALUES
-(1, 'root', '$2y$10$N1Oz.rXA2S3rAXPHmfUTH.WePB/4mL9IVYB7dSqzRmHBgBZ0tL2IG', 'root@gmail.com', 1, 1),
-(2, 'target', '$2y$10$MGePloNFOO3ACVObNN.VyeyQGR4M7JC1ioGnSDjhwOXcxF9G4ORo.', 'target@gmail.com', 1, 0),
-(3, 'vendor-1', '$2y$10$HGMg5Awl201TFwJsN5ykkuSD/W4PWJmch1pbPy9zVh/yheCnTOINu', 'vendor1@gmail.com', 1, 0),
-(4, 'vendor-2', '$2y$10$StEl0oramRyYdX3CudIOvurLXLcPSWV2xFZn/smzwQSvTFApq.6rS', 'vendor2@gmail.com', 1, 0),
-(5, 'vendor-3', '$2y$10$Od1bDD0vXhPS0oyWIsI7ZuHb7/i/nYOAjMRufLwsmmKekyHXgoF7e', 'vendor3@gmail.com', 1, 0);
-
-
---
--- Table structure for table `loginAttempts`
---
-
-CREATE TABLE `loginAttempts` (
-  `IP` varchar(20) NOT NULL,
-  `Attempts` int(11) NOT NULL,
-  `LastLogin` datetime NOT NULL,
-  `Username` varchar(65) DEFAULT NULL,
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
--- --------------------------------------------------------
-
-
---
--- Constraints for table `target_order`
---
-ALTER TABLE `target_order`
-  ADD CONSTRAINT `target_order_ibfk_1` FOREIGN KEY (`username`) REFERENCES `members` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- --
+-- -- Constraints for table `targetOrder`
+-- --
+-- ALTER TABLE `targetOrder`
+--   ADD CONSTRAINT `target_order_ibfk_1` FOREIGN KEY (`username`) REFERENCES `members` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

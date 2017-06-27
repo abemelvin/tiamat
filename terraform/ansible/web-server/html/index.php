@@ -58,13 +58,14 @@
             $query_order = $_GET['query_order'];
 
             if ($_SESSION['username'] == "root"){
-                $sql = "SELECT username, datetime, content FROM target_order t WHERE content LIKE '%".$query_order."%' GROUP BY username ORDER BY datetime DESC";
+                $sql = "SELECT username, datetime, content FROM targetOrder t WHERE content LIKE '%".$query_order."%' GROUP BY username ORDER BY datetime DESC";
             }
             else{
-                $sql = "SELECT username, datetime, content FROM target_order t WHERE username = '".$_SESSION['username']."' AND content LIKE '%".$query_order."%' ORDER BY datetime DESC";
+                $sql = "SELECT username, datetime, content FROM targetOrder t WHERE username = '".$_SESSION['username']."' AND content LIKE '%".$query_order."%' ORDER BY datetime DESC";
             }
 
             $result = $db->query($sql);
+            $order_id = 1;
 
             print "<div class='order-table'>";
             print "<table class='table'>\n";
@@ -78,16 +79,16 @@
             print "</thead>";
             while($row = $result->fetch_assoc()) {
                 print "\t<tr>\n";
-                $id = $row['id'];
                 $datetime = $row['datetime'];
                 $content = $row['content'];
                 $username = $row['username'];
 
-                print "\t\t<th scope='row'>$id</th>\n";
+                print "\t\t<th scope='row'>$order_id</th>\n";
                 print "\t\t<td>$datetime</td>\n";
                 print "\t\t<td>$content</td>\n";
                 print "\t\t<td>$username</td>\n";
                 print "\t</tr>\n";
+                $order_id += 1;
             }
             print "<table>\n";
             print "</div>";
@@ -97,7 +98,7 @@
             $query_user = $_GET['query_user'];
             
             if ($_SESSION['username'] == "root"){
-                $sql = "SELECT username, password, email, verified, mod_timestamp FROM members WHERE username LIKE '%".query_user."%'";   
+                $sql = "SELECT username, password, email, verified, mod_timestamp FROM members WHERE username LIKE '%".$query_user."%'";   
                 $result = $db->query($sql);
 
                 print "<div class='order-table'>";
@@ -131,7 +132,7 @@
 
             }
             else {
-                $sql = "SELECT username, email FROM members WHERE username != 'root' and username LIKE '%".query_user."%'";  
+                $sql = "SELECT username, email FROM members WHERE username != 'root' and username LIKE '%".$query_user."%'";  
                 $result = $db->query($sql);
 
                 print "<div class='order-table'>";

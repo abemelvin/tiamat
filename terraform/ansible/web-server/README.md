@@ -6,10 +6,10 @@ For example, the exemplar assumes SQL injection is possible on the vendor web po
 
 ### To-Do List
 
-- [ ] test new sql file
-- [ ] set password in the insertion of data
-- [ ] test display
-- [ ] test sql injection
+- [X] test new sql file
+- [X] set password in the insertion of data
+- [X] test display
+- [X] test sql injection
 - [ ] automate sql injection
 - [ ] all done!
 
