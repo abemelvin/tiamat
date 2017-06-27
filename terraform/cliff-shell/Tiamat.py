@@ -2,12 +2,15 @@ import sys
 import os
 import logging
 import subprocess
-import MySQLdb
+import json
+from os import listdir
+from os.path import isfile, join
 
 try:
     import cliff
-except ImportError, e:
+except ImportError as e:
     subprocess.check_call("pip install cliff", shell=True)
+    import cliff
 
 from cliff.app import App
 from cliff.command import Command
@@ -15,9 +18,28 @@ from cliff.commandmanager import CommandManager
 from distutils.spawn import find_executable
 
 # global state variables
-is_deployed = False
-ansible_ip = ""
-elk_ip = ""
+full_server_list = ["blackhat", "contractor", "elk", "ftp",
+                    "mail", "payments", "wazuh"]
+
+if isfile("ip_file.json"):
+    is_deployed = True
+    with open("ip_file.json", "r") as ip_file:
+        ip = json.load(ip_file)
+        active_server_list = ip.keys()
+
+else:
+    is_deployed = False
+    ip = {}
+    active_server_list = []
+
+deploy_server_list = [f.split('_')[0] for f in listdir('.') if
+                      isfile(f) and f[-2:] == 'tf']
+
+try:
+    deploy_server_list.remove('configuration.tf')
+except ValueError:
+    pass
+
 elk_logs_path = ""
 os_platform = ""
 
@@ -35,8 +57,12 @@ class Tiamat(App):
             'deploy': Deploy,
             'destroy': Destroy,
             'ansible': Ansible,
-            'get-elk-files': ElkFiles,
-            'elk': Elk
+            'get elk files': ElkFiles,
+            'elk': Elk,
+            'show active servers': ShowActive,
+            'show deployment list': ShowServers,
+            'add server': AddServers,
+            'remove server': RemoveServers
         }
         for k, v in commands.iteritems():
             self.command_manager.add_command(k, v)
@@ -151,12 +177,13 @@ class Deploy(Command):
         self.app.stdout.write(output)
 
         global is_deployed
+        global deploy_server_list
         if not is_deployed:
             try:
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
             except subprocess.CalledProcessError:
-                print "\nError predicted by terraform plan. Please check the configuration before deploy."
-                ans = raw_input("Do you want to deploy anyway? y/n")
+                print "\nError predicted by terraform plan. Please check the configuration before deployment."
+                ans = raw_input("Do you want to deploy anyway? y/n ")
                 if ans != 'y' and ans != 'yes':
                     return
 
@@ -179,14 +206,22 @@ class Deploy(Command):
 
             ansible_ip_beg = result.find("ansible ip") + 13
             ansible_ip_end = result.find("\n", ansible_ip_beg)
-            global ansible_ip
-            ansible_ip = result[ansible_ip_beg:ansible_ip_end]
+            global ip
+            ip["ansible"] = result[ansible_ip_beg:ansible_ip_end]
 
-            elk_ip_beg = result.find("elk ip") + 9
-            elk_ip_end = result.find("\n", elk_ip_beg)
-            global elk_ip
-            elk_ip = result[elk_ip_beg:elk_ip_end]
+            if 'elk' in deploy_server_list:
+                elk_ip_beg = result.find("elk ip") + 9
+                elk_ip_end = result.find("\n", elk_ip_beg)
+                ip["elk"] = result[elk_ip_beg:elk_ip_end]
+
             is_deployed = True
+            global active_server_list
+            active_server_list = deploy_server_list
+            active_server_list.append('ansible')
+
+            with open("ip_file.json", "w") as ip_file:
+                json.dump(ip, ip_file)
+            ip_file.close()
         else:
             self.app.stdout.write("Error: environment already deployed.\n")
 
@@ -200,9 +235,13 @@ class Destroy(Command):
         self.app.stdout.write('start destroying environment...\n')
         subprocess.call("terraform destroy", shell=True)
         global is_deployed
+        global ip
+        global active_server_list
         is_deployed = False
-        global ansible_ip
-        ansible_ip = ""
+        ip.clear()
+        active_server_list = []
+        if isfile('ip_file.json'):
+            os.remove('ip_file.json')
 
 
 class Ansible(Command):
@@ -211,12 +250,12 @@ class Ansible(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global ansible_ip
-        if not ansible_ip:
+        global ip
+        if "ansible" not in ip.keys():
             self.app.stdout.write("Error: Ansible IP unavailable.\n")
             return
 
-        ssh_call = "ssh -i key ubuntu@" + ansible_ip
+        ssh_call = "ssh -i key ubuntu@" + ip["ansible"]
         subprocess.check_call(ssh_call, shell=True)
 
 
@@ -231,13 +270,13 @@ class ElkFiles(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global elk_ip
+        global ip
         global elk_logs_path
-        if not elk_ip:
+        if "elk" not in ip.keys():
             self.app.stdout.write("Error: ELK IP unavailable.\n")
             return
 
-        scp_call = "scp -i key -r ubuntu@" + elk_ip + ':' + elk_logs_path + ' ' + parsed_args.local_path
+        scp_call = "scp -i key -r ubuntu@" + ip["elk"] + ':' + elk_logs_path + ' ' + parsed_args.local_path
         subprocess.check_call(scp_call, shell=True)
 
 
@@ -247,20 +286,83 @@ class Elk(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global elk_ip
-        if not elk_ip:
+        global ip
+        if "elk" not in ip.keys():
             self.app.stdout.write("Error: ELK IP unavailable.\n")
             return
 
         global os_platform
         if os_platform == "Linux":
-            browser_call = "xdg-open " + 'http://' + elk_ip
+            browser_call = "xdg-open " + 'http://' + ip["elk"]
         elif os_platform == "OS X":
-            browser_call = "open " + 'http://' + elk_ip
+            browser_call = "open " + 'http://' + ip["elk"]
         elif os_platform == "Windows":
-            browser_call = "explorer " + 'http://' + elk_ip
+            browser_call = "explorer " + 'http://' + ip["elk"]
 
         subprocess.check_call(browser_call, shell=True)
+
+
+class ShowActive(Command):
+    """show the list of active servers"""
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global active_server_list
+        for server in active_server_list:
+            print server
+
+
+class AddServers(Command):
+    """show the list of servers to be deployed"""
+    log = logging.getLogger(__name__)
+
+    def get_parser(self, prog_name):
+        parser = super(AddServers, self).get_parser(prog_name)
+        parser.add_argument('server_name')
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global deploy_server_list
+        if parsed_args.server_name not in deploy_server_list:
+            config_file_path = "overrides/" + parsed_args.server_name + "_override.tf" + " ."
+            if not isfile(config_file_path):
+                print "Error: no config file for this server."
+                return
+
+            cp_call = "cp " + config_file_path
+            subprocess.check_call(cp_call, shell=True)
+            deploy_server_list.append(parsed_args.server_name)
+
+
+class RemoveServers(Command):
+    """show the list of servers to be deployed"""
+    log = logging.getLogger(__name__)
+
+    def get_parser(self, prog_name):
+        parser = super(RemoveServers, self).get_parser(prog_name)
+        parser.add_argument('server_name')
+        return parser
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global deploy_server_list
+        if parsed_args.server_name in deploy_server_list:
+            rm_call = "rm " + parsed_args.server_name + "_override.tf"
+            subprocess.call(rm_call, shell=True)
+            deploy_server_list.remove(parsed_args.server_name)
+
+
+class ShowServers(Command):
+    """show the list of servers to be deployed"""
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global deploy_server_list
+        for server in deploy_server_list:
+            print server
 
 
 if __name__ == '__main__':
