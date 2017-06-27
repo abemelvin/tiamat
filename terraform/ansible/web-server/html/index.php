@@ -58,7 +58,7 @@
             $query_order = $_GET['query_order'];
 
             if ($_SESSION['username'] == "root"){
-                $sql = "SELECT username, datetime, content FROM targetOrder t WHERE content LIKE '%".$query_order."%' GROUP BY username ORDER BY datetime DESC";
+                $sql = "SELECT username, datetime, content FROM targetOrder t WHERE content LIKE '%".$query_order."%' ORDER BY username ASC, datetime DESC";
             }
             else{
                 $sql = "SELECT username, datetime, content FROM targetOrder t WHERE username = '".$_SESSION['username']."' AND content LIKE '%".$query_order."%' ORDER BY datetime DESC";
