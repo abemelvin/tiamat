@@ -1,5 +1,6 @@
+<?php require "login/loginheader.php"; ?>
+
 <?php
-// include('session.php');
 $target_dir = "images/";
 $target_file = $target_dir . basename($_FILES["image"]["name"]);
 $uploadOk = 1;
