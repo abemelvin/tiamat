@@ -1,0 +1,54 @@
+---
+#
+# install phpmyadmin
+#
+- name: select dbconfig
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/dbconfig-install
+    value: 'true'
+    vtype: boolean
+- name: provide mysql password
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/app-pass
+    value: '{{ mysql_pass }}'
+    vtype: password
+- name: confirm mysql password
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/app-password-confirm
+    value: '{{ mysql_pass }}'
+    vtype: password
+- name: provide admin password
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/admin-pass
+    value: '{{ mysql_pass }}'
+    vtype: password
+- name: configure for apache2
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/reconfigure-webserver
+    value: 'apache2'
+    vtype: multiselect
+- name: install phpmyadmin
+  apt:
+    name: phpmyadmin
+    state: present
+- name: install php-mbstring
+  apt:
+    name: php-mbstring
+    state: present
+- name: install php-gettext
+  apt:
+    name: php-gettext
+    state: present
+- name: enable mcrypt
+  raw: phpenmod mcrypt
+- name: enable mbstring 
+  raw: phpenmod mbstring
+- name: restart apache
+  service:
+    name: apache2
+    state: restarted
