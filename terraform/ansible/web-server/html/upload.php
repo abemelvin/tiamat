@@ -1,17 +1,19 @@
+<?php require "login/loginheader.php"; ?>
+
 <?php
-// include('session.php');
 $target_dir = "images/";
-$target_file = $target_dir . basename($_FILES["image"]["name"]);
+
+$target_file = $target_dir . basename($_FILES["invoice"]["name"]);
 $uploadOk = 1;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-// Check if image file is a actual image or fake image
+// Check if invoice file is a actual invoice or fake invoice
 // if(isset($_POST["submit"])) {
-//     $check = getimagesize($_FILES["image"]["tmp_name"]);
+//     $check = getimagesize($_FILES["invoice"]["tmp_name"]);
 //     if($check !== false) {
-//         echo "File is an image - " . $check["mime"] . ".";
+//         echo "File is an invoice - " . $check["mime"] . ".";
 //         $uploadOk = 1;
 //     } else {
-//         echo "File is not an image.";
+//         echo "File is not an invoice.";
 //         $uploadOk = 0;
 //     }
 // }
@@ -21,7 +23,7 @@ if (file_exists($target_file)) {
     $uploadOk = 0;
 }
 // Check file size
-if ($_FILES["image"]["size"] > 5000000) {
+if ($_FILES["invoice"]["size"] > 5000000) {
     print "Sorry, your file is too large.";
     $uploadOk = 0;
 }
@@ -36,8 +38,8 @@ if ($uploadOk == 0) {
     print "Sorry, your file was not uploaded.";
 // if everything is ok, try to upload file
 } else {
-    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-        print "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
+    if (move_uploaded_file($_FILES["invoice"]["tmp_name"], $target_file)) {
+        print "The file ". basename( $_FILES["invoice"]["name"]). " has been uploaded.";
     } else {
         print "Sorry, there was an error uploading your file.";
     }

