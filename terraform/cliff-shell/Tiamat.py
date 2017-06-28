@@ -305,7 +305,7 @@ class AddServers(Command):
                 print "Error: no config file for this server."
                 return
 
-            cp_call = "cp " + config_file_path
+            cp_call = "cp " + config_file_path + " ."
             subprocess.check_call(cp_call, shell=True)
             deploy_server_list.append(parsed_args.server_name)
 
