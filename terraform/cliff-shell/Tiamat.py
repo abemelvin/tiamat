@@ -121,6 +121,7 @@ class Tiamat(App):
                             "windows_386.zip?_ga=2.176148193.2126347023.1497377866-658368258.1496936210"
                     wget_call = "wget " + url + " -O " + local_path
                     subprocess.check_call(wget_call, shell=True)  # check this command
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path
                     try: 
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
