@@ -17,32 +17,6 @@ from cliff.command import Command
 from cliff.commandmanager import CommandManager
 from distutils.spawn import find_executable
 
-# global state variables
-full_server_list = ["blackhat", "contractor", "elk", "ftp",
-                    "mail", "payments", "wazuh"]
-
-if isfile("ip_file.json"):
-    is_deployed = True
-    with open("ip_file.json", "r") as ip_file:
-        ip = json.load(ip_file)
-        active_server_list = ip.keys()
-
-else:
-    is_deployed = False
-    ip = {}
-    active_server_list = []
-
-deploy_server_list = [f.split('_')[0] for f in listdir('.') if
-                      isfile(f) and f[-2:] == 'tf']
-
-try:
-    deploy_server_list.remove('configuration.tf')
-except ValueError:
-    pass
-
-elk_logs_path = ""
-os_platform = ""
-
 
 class Tiamat(App):
 
@@ -314,7 +288,7 @@ class ShowActive(Command):
 
 
 class AddServers(Command):
-    """show the list of servers to be deployed"""
+    """add a server to deployment list"""
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
@@ -326,7 +300,7 @@ class AddServers(Command):
         self.log.debug('debugging')
         global deploy_server_list
         if parsed_args.server_name not in deploy_server_list:
-            config_file_path = "overrides/" + parsed_args.server_name + "_override.tf" + " ."
+            config_file_path = "overrides/" + parsed_args.server_name + "_override.tf"
             if not isfile(config_file_path):
                 print "Error: no config file for this server."
                 return
@@ -337,7 +311,7 @@ class AddServers(Command):
 
 
 class RemoveServers(Command):
-    """show the list of servers to be deployed"""
+    """remove a server from deployment list"""
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
@@ -366,4 +340,30 @@ class ShowServers(Command):
 
 
 if __name__ == '__main__':
+    # global state variables
+    full_server_list = ["blackhat", "contractor", "elk", "ftp",
+                        "mail", "payments", "wazuh"]
+
+    if isfile("ip_file.json"):
+        is_deployed = True
+        with open("ip_file.json", "r") as ip_file:
+            ip = json.load(ip_file)
+            active_server_list = ip.keys()
+
+    else:
+        is_deployed = False
+        ip = {}
+        active_server_list = []
+
+    deploy_server_list = [f.split('_')[0] for f in listdir('.') if
+                          isfile(f) and f[-2:] == 'tf']
+
+    try:
+        deploy_server_list.remove('configuration.tf')
+    except ValueError:
+        pass
+
+    elk_logs_path = ""
+    os_platform = ""
+
     sys.exit(main(sys.argv[1:]))
