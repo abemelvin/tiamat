@@ -27,7 +27,7 @@ class PaymentServer:
         print "firmware check is running..."
         while True:
             with open("pos_firmware", "r") as firmware:
-                if firmware.read() == "malicious firmware":
+                if "malicious" in firmware.readline():
                     self.is_infected = True
                     print "(malicious firmware)"
                 else:
