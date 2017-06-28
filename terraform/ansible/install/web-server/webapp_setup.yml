@@ -10,5 +10,5 @@
   tasks:
     - name: copy and execute script
       script: webapp.sh
-    - name: copy apache config file for php
-      copy: src=~/scripts/dir.conf dest=/etc/apache2/mods-enabled/dir.conf
+    # - name: copy apache config file for php
+    #   copy: src=~/scripts/dir.conf dest=/etc/apache2/mods-enabled/dir.conf

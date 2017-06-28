@@ -11,13 +11,13 @@
     path: /var/www
     owner: www-data
     group: www-data
-    mode: 0700
+    mode: 0777
 - name: change mode of /var/www/html
   file:
     path: /var/www/html
     owner: www-data
     group: www-data
-    mode: 0755
+    mode: 0777
 - name: enable firewall
   ufw:
     state: enabled
