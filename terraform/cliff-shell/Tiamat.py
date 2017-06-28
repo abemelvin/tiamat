@@ -178,24 +178,26 @@ class Deploy(Command):
                 subprocess.call("terraform destroy", shell=True)
                 return
 
+            # parse ansible ip
             ansible_ip_beg = result.find("ansible ip") + 13
             ansible_ip_end = result.find("\n", ansible_ip_beg)
-            global ip
-            ip["ansible"] = result[ansible_ip_beg:ansible_ip_end]
+            global state
+            state.ip["ansible"] = result[ansible_ip_beg:ansible_ip_end]
 
+            # parse elk ip
             if 'elk' in deploy_server_list:
                 elk_ip_beg = result.find("elk ip") + 9
                 elk_ip_end = result.find("\n", elk_ip_beg)
-                ip["elk"] = result[elk_ip_beg:elk_ip_end]
+                state.ip["elk"] = result[elk_ip_beg:elk_ip_end]
 
             is_deployed = True
-            global active_server_list
-            active_server_list = deploy_server_list
-            active_server_list.append('ansible')
 
-            with open("ip_file.json", "w") as ip_file:
-                json.dump(ip, ip_file)
-            ip_file.close()
+            state.active_server_list = deploy_server_list
+            state.active_server_list.append('ansible')
+
+            with open("global_state.json", "w") as global_state:
+                json.dump(state, global_state)
+            global_state.close()
         else:
             self.app.stdout.write("Error: environment already deployed.\n")
 
@@ -209,13 +211,12 @@ class Destroy(Command):
         self.app.stdout.write('start destroying environment...\n')
         subprocess.call("terraform destroy", shell=True)
         global is_deployed
-        global ip
-        global active_server_list
+        global state
         is_deployed = False
-        ip.clear()
-        active_server_list = []
-        if isfile('ip_file.json'):
-            os.remove('ip_file.json')
+        state.ip.clear()
+        state.active_server_list = []
+        if isfile('global_state.json'):
+            os.remove('global_state.json')
 
 
 class Ansible(Command):
@@ -224,12 +225,12 @@ class Ansible(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global ip
-        if "ansible" not in ip.keys():
+        global state
+        if "ansible" not in state.ip.keys():
             self.app.stdout.write("Error: Ansible IP unavailable.\n")
             return
 
-        ssh_call = "ssh -i key ubuntu@" + ip["ansible"]
+        ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
         subprocess.check_call(ssh_call, shell=True)
 
 
@@ -244,13 +245,13 @@ class ElkFiles(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global ip
+        global state
         global elk_logs_path
-        if "elk" not in ip.keys():
+        if "elk" not in state.ip.keys():
             self.app.stdout.write("Error: ELK IP unavailable.\n")
             return
 
-        scp_call = "scp -i key -r ubuntu@" + ip["elk"] + ':' + elk_logs_path + ' ' + parsed_args.local_path
+        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + elk_logs_path + ' ' + parsed_args.local_path
         subprocess.check_call(scp_call, shell=True)
 
 
@@ -260,18 +261,18 @@ class Elk(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global ip
-        if "elk" not in ip.keys():
+        global state
+        if "elk" not in state.ip.keys():
             self.app.stdout.write("Error: ELK IP unavailable.\n")
             return
 
         global os_platform
         if os_platform == "Linux":
-            browser_call = "xdg-open " + 'http://' + ip["elk"]
+            browser_call = "xdg-open " + 'http://' + state.ip["elk"]
         elif os_platform == "OS X":
-            browser_call = "open " + 'http://' + ip["elk"]
+            browser_call = "open " + 'http://' + state.ip["elk"]
         elif os_platform == "Windows":
-            browser_call = "explorer " + 'http://' + ip["elk"]
+            browser_call = "explorer " + 'http://' + state.ip["elk"]
 
         subprocess.check_call(browser_call, shell=True)
 
@@ -282,8 +283,8 @@ class ShowActive(Command):
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
-        global active_server_list
-        for server in active_server_list:
+        global state
+        for server in state.active_server_list:
             print server
 
 
@@ -339,24 +340,27 @@ class ShowServers(Command):
             print server
 
 
+class GlobalState:
+    def __init__(self):
+        self.active_server_list = []
+        self.ip = {}
+
+
 if __name__ == '__main__':
     # global state variables
     full_server_list = ["blackhat", "contractor", "elk", "ftp",
                         "mail", "payments", "wazuh"]
 
-    if isfile("ip_file.json"):
+    if isfile("global_state.json"):
         is_deployed = True
-        with open("ip_file.json", "r") as ip_file:
-            ip = json.load(ip_file)
-            active_server_list = ip.keys()
+        with open("global_state.json", "r") as global_state:
+            state = json.load(global_state)
 
     else:
         is_deployed = False
-        ip = {}
-        active_server_list = []
+        state = GlobalState()
 
-    deploy_server_list = [f.split('_')[0] for f in listdir('.') if
-                          isfile(f) and f[-2:] == 'tf']
+    deploy_server_list = [f.split('_')[0] for f in listdir('.') if isfile(f) and f[-2:] == 'tf']
 
     try:
         deploy_server_list.remove('configuration.tf')
