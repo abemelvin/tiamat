@@ -53,16 +53,21 @@ class Tiamat(App):
             os_platform = "Windows"
 
         # start dependencies check
+        environment_errors = list()
         if "AWS_ACCESS_KEY_ID" not in os.environ:
-            print "Error: environment variable AWS_ACCESS_KEY_ID is missing."
-            exit(1)
+            environment_errors.append("Environment variable AWS_ACCESS_KEY_ID is missing. Please check your ~/.bash_profile.")
 
         if "AWS_SECRET_ACCESS_KEY" not in os.environ:
-            print "Error: environment variable AWS_SECRET_ACCESS_KEY is missing."
-            exit(1)
+            environment_errors.append("Environment variable AWS_SECRET_ACCESS_KEY is missing. Please check your ~/.bash_profile.")
 
         if "AWS_DEFAULT_REGION" not in os.environ:
-            print "Error: environment variable AWS_DEFAULT_REGION is missing."
+            environment_errors.append("Environment variable AWS_DEFAULT_REGION is missing. Please check your ~/.bash_profile.")
+
+        if len(environment_errors) > 0:
+            print "Environment errors:"
+            for row in environment_errors:
+                print row
+            print "Exiting..."
             exit(1)
 
         if not find_executable('terraform'):
@@ -71,7 +76,8 @@ class Tiamat(App):
 
             if ans == 'y' or ans == 'yes':
                 is_64bits = sys.maxsize > 2 ** 32
-                local_path = raw_input("Please input full local file directory --> ")
+                #local_path = raw_input("Please input full local file directory --> ")
+                local_path = os.getcwd()
                 local_file_path = local_path + '/terraform.zip'
 
                 if os_platform == "Linux":
@@ -106,9 +112,12 @@ class Tiamat(App):
                     subprocess.check_call("unzip " + local_path, shell=True)  # check this command
 
                 else:
-                    print "Error: cannot check OS.Please download Terraform manually."
+                    print "Error: could not determine your OS. Please download Terraform manually."
                     url = ""
                     exit(1)
+
+                os.environ["PATH"] += os.pathsep + os.getcwd()
+                print "Added", os.getcwd(), "to your PATH variable."
 
             else:
                 exit(1)
