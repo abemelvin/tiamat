@@ -43,11 +43,11 @@
   apt:
     name: python-passlib
     state: present
-- name: add ubuntu to kibana password file
+- name: add tiamat to kibana password file
   htpasswd:
     path: /etc/nginx/conf.d/kibana.htpasswd
-    name: ubuntu
-    password: ubuntu
+    name: tiamat
+    password: threat-detection
     owner: root
     group: www-data
     mode: 0644

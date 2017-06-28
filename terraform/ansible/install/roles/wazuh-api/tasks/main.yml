@@ -1,0 +1,12 @@
+---
+#
+# configure wazuh-api
+#
+- name: create wazuh-api user and password
+  shell: cd /var/ossec/api/configuration/auth; echo threat-detection | node htpasswd -ci user tiamat
+- name: restart wazuh-api
+  service:
+    name: wazuh-api
+    state: restarted
+- name: connect wazuh-api
+  script: ../scripts/api.sh
