@@ -90,7 +90,13 @@ class Tiamat(App):
                     wget_call = "wget " + url + " -O " + local_file_path
                     subprocess.check_call(wget_call, shell=True)  # check this command
                     unzip_call = "unzip " + local_file_path + " -d " + local_path
-                    subprocess.check_call(unzip_call, shell=True)
+                    try: 
+                        subprocess.check_call(unzip_call, shell=True)
+                    except subprocess.CalledProcessError as e:
+                        print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
+                        print "You can also manually unzip terraform and restart this program."
+                        print "Exiting..."
+                        exit(1)
 
                 elif os_platform == "OS X":
                     url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
@@ -98,7 +104,13 @@ class Tiamat(App):
                     curl_call = "curl " + url + " -o " + local_file_path
                     subprocess.check_call(curl_call, shell=True)
                     unzip_call = "unzip " + local_file_path + "-d " + local_path
-                    subprocess.check_call(unzip_call, shell=True)  # can use -d to assign exp dir
+                    try: 
+                        subprocess.check_call(unzip_call, shell=True)
+                    except subprocess.CalledProcessError as e:
+                        print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
+                        print "You can also manually unzip terraform and restart this program."
+                        print "Exiting..."
+                        exit(1)
 
                 elif os_platform == "Windows":
                     if is_64bits:
@@ -109,11 +121,18 @@ class Tiamat(App):
                             "windows_386.zip?_ga=2.176148193.2126347023.1497377866-658368258.1496936210"
                     wget_call = "wget " + url + " -O " + local_path
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    subprocess.check_call("unzip " + local_path, shell=True)  # check this command
+                    try: 
+                        subprocess.check_call(unzip_call, shell=True)
+                    except subprocess.CalledProcessError as e:
+                        print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
+                        print "You can also manually unzip terraform and restart this program."
+                        print "Exiting..."
+                        exit(1)
 
                 else:
                     print "Error: could not determine your OS. Please download Terraform manually."
                     url = ""
+                    print "Exiting..."
                     exit(1)
 
                 os.environ["PATH"] += os.pathsep + os.getcwd()
