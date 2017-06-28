@@ -1,24 +1,24 @@
-resource "aws_route53_record" "blackhat" {
+resource "aws_route53_record" "web" {
   zone_id = "${aws_route53_zone.terraform.zone_id}"
-  name = "blackhat.fazio.com"
+  name = "web.fazio.com"
   type = "A"
   ttl = "300"
-  records = ["${aws_instance.blackhat.private_ip}"]
-  depends_on = ["aws_instance.blackhat", "aws_route53_zone.terraform"]
+  records = ["${aws_instance.web.private_ip}"]
+  depends_on = ["aws_instance.web", "aws_route53_zone.terraform"]
 }
 
-resource "aws_instance" "blackhat" {
+resource "aws_instance" "web" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
-  private_ip = "10.0.0.18"
+  private_ip = "10.0.0.16"
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
-    host = "${aws_instance.blackhat.public_ip}"
+    host = "${aws_instance.web.public_ip}"
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("key")}"
@@ -26,11 +26,11 @@ resource "aws_instance" "blackhat" {
   }
 
   provisioner "file" {
-    source = "scripts/"
+    source = "ansible/web-server/html"
     destination = "~"
   }
 }
 
-output "blackhat ip" {
-  value = "${aws_instance.blackhat.public_ip}"
+output "web ip" {
+  value = "${aws_instance.web.public_ip}"
 }

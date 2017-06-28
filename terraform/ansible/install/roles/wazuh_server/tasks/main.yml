@@ -38,6 +38,15 @@
     owner: root
     group: root
     mode: 0644
+#- name: configure agents
+#  template:
+#    src: agent.conf.j2
+#    dest: /var/ossec/etc/shared/agent.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+- name: restart ossec-control
+  shell: /var/ossec/bin/ossec-control restart
 - name: add the nodejs repository
   raw: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 - name: install nodejs
@@ -62,6 +71,11 @@
     owner: root
     group: root
     mode: 0644
+- name: install python-passlib
+  apt:
+    name: python-passlib
+    state: present
+
 #- name: create ssl certificate for authd
 #  raw: openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /var/ossec/etc/sslmanager.key -out /var/ossec/etc/sslmanager.cert
 #- name: listen for wazuh agent registration
