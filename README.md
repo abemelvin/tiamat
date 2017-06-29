@@ -2,6 +2,7 @@
 
 ## Table of contents
 
+1. [Installation]
 1. [Document information](https://github.com/abemelvin/tiamat#1-document-information-)   
 1.1 [Version](https://github.com/abemelvin/tiamat#11-version-)   
 1.2 [Contributors](https://github.com/abemelvin/tiamat#12-contributors-)   
@@ -28,6 +29,12 @@
 5.1 [Mock network diagram](https://github.com/abemelvin/tiamat#51-mock-network-diagram-)
 
 ---
+
+## 1. Installation [↑](https://github.com/abemelvin/tiamat)
+
+Tiamat does not require compilation which makes installation extremely simple.
+Just clone the Tiamat repository to your local machine by running
+`git clone https://github.com/abemelvin/tiamat.git` in your shell.
 
 ## 1 Document information [↑](https://github.com/abemelvin/tiamat)
 
