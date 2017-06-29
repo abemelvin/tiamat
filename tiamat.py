@@ -95,7 +95,7 @@ class Tiamat(App):
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
                         print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
-                        print "You can also manually extract terraform into tiamat/terraform/ and restart this program."
+                        print "You can also manually extract terraform into tiamat/ and restart this program."
                         print "Exiting..."
                         exit(1)
 
@@ -109,7 +109,7 @@ class Tiamat(App):
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
                         print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
-                        print "You can also manually extract terraform into tiamat/terraform/ and restart this program."
+                        print "You can also manually extract terraform into tiamat/ and restart this program."
                         print "Exiting..."
                         exit(1)
 
@@ -127,7 +127,7 @@ class Tiamat(App):
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
                         print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
-                        print "You can also manually extract terraform into tiamat/terraform/ and restart this program."
+                        print "You can also manually extract terraform into tiamat/ and restart this program."
                         print "Exiting..."
                         exit(1)
 

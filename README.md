@@ -19,7 +19,7 @@ Just clone the Tiamat repository to your local machine by running
 ## 2. Getting started [↑](https://github.com/abemelvin/tiamat)
 
 To start using Tiamat, execute the `tiamat.py` script located in the
-`tiamat/terraform/` directory by running `python tiamat.py`.
+`tiamat/` directory by running `python tiamat.py`.
 
 Tiamat utilizes Terraform (https://www.terraform.io) to instantiate the
 infrastructure needed to host your testbed. Terraform accesses various
