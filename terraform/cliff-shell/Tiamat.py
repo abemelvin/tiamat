@@ -36,7 +36,8 @@ class Tiamat(App):
             'show active servers': ShowActive,
             'show deployment list': ShowServers,
             'add server': AddServers,
-            'remove server': RemoveServers
+            'remove server': RemoveServers,
+            'show available': ShowAvailableServers
         }
         for k, v in commands.iteritems():
             self.command_manager.add_command(k, v)
@@ -369,6 +370,21 @@ class ShowServers(Command):
         global deploy_server_list
         for server in deploy_server_list:
             print server
+
+class ShowAvailableServers(Command):
+    """show the list of servers to be deployed"""
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global available_server_list
+        file_path = "overrides/"
+        available_server_list = [f for f in os.listdir(file_path) if isfile(join(file_path, f))]
+        if len(available_server_list) > 0:
+            for row in available_server_list:
+                print row.split('_')[0]
+        else:
+            print "Didn't find any servers available for deployment, someone deleted all the files in the 'tiamat/terraform/overrides/' directory!"
 
 
 if __name__ == '__main__':
