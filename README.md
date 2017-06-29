@@ -48,7 +48,11 @@ specify your AWS access keys in your environment. Tiamat will check that
 your environment is correctly configured before allowing you to proceed
 to deployment. Tiamat will also check that your PATH variable contains a 
 valid Terraform executable, and will assist you in downloading an
-executable if it is not found.
+executable if one is not found.
+
+## 3. Deploying the testbed [↑](https://github.com/abemelvin/tiamat)
+
+
 
 ## 1 Document information [↑](https://github.com/abemelvin/tiamat)
 
