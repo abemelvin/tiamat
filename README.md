@@ -97,7 +97,7 @@ ansible ip = 54.242.186.67
 payments ip = 34.207.64.90
 ~~~
 
-## 4. Provisioning the testbed
+## 4. Provisioning the testbed [↑](https://github.com/abemelvin/tiamat)
 
 Once deployment is complete, you will need to provision the instantiated
 servers with the appropriate software packages. Automated provisioning
@@ -120,7 +120,7 @@ ubuntu@ip-10-0-0-10:~$ ansible-playbook install/payment_server.yml
 Once you have provisioned the testbed, you can interact with the environment
 as you see fit.
 
-## 5. Destroying the testbed
+## 5. Destroying the testbed [↑](https://github.com/abemelvin/tiamat)
 
 Since your testbed is deployed on AWS, you will be charged based on the
 volume and length of your usage. Therefore, it is key to destroy the testbed
