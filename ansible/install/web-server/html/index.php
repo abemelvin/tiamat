@@ -30,6 +30,7 @@
             </form>
         </div>
         <br>
+        <p><b><?php echo $_GET['message']; ?><b></p>
         <p><b>Hint</b>: Shell injection - upload a <b>shell file</b> and execute command with root priviledge on server. </p>
 
         <div class="search-area">
