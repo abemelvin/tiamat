@@ -52,6 +52,55 @@ executable if one is not found.
 
 ## 3. Deploying the testbed [↑](https://github.com/abemelvin/tiamat)
 
+Tiamat maintains a list of servers that are currently flagged to be deployed.
+You can view this list by running `show deployment list` in the Tiamat shell:
+
+~~~
+(Tiamat) show deployment list
+- elk
+- contractor
+- blackhat
+- mail
+- ftp
+~~~
+
+To view a list of all the servers that you can add to the deployment list,
+run `show available` in the Tiamat shell:
+
+~~~
+(Tiamat) show available
+- blackhat
+- contractor
+- elk
+- ftp
+- mail
+- payments
+- wazuh
+- web
+~~~
+
+To add servers to the deployment list, run `add server [name]` in the
+Tiamat shell, replacing `[name]` with the specific server identifier:
+
+~~~
+(Tiamat) add server payments
+~~~
+
+To remove servers from the deployment list, run `remove server [name]` in the
+Tiamat shell, replacing `[name]` with the specific server identifer:
+
+~~~
+(Tiamat) remove server payments
+~~~
+
+Once you are satisfied with your server list, you can proceed with deployment
+by running `deploy` in the Tiamat shell:
+
+~~~
+(Tiamat) deploy
+~~~
+
+
 
 
 ## 1 Document information [↑](https://github.com/abemelvin/tiamat)
