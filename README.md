@@ -36,6 +36,20 @@ Tiamat does not require compilation which makes installation extremely simple.
 Just clone the Tiamat repository to your local machine by running
 `git clone https://github.com/abemelvin/tiamat.git` in your shell.
 
+## 2. Getting started [↑](https://github.com/abemelvin/tiamat)
+
+To start using Tiamat, execute the `tiamat.py` script located in the
+`tiamat/terraform/` directory by running `python cliff-shell/tiamat.py`.
+
+Tiamat utilizes Terraform (https://www.terraform.io) to instantiate the
+infrastructure needed to host your testbed. Terraform accesses various
+AWS APIs which require you to have a validated AWS account and to also
+specify your AWS access keys in your environment. Tiamat will check that
+your environment is correctly configured before allowing you to proceed
+to deployment. Tiamat will also check that your PATH variable contains a 
+valid Terraform executable, and will assist you in downloading an
+executable if it is not found.
+
 ## 1 Document information [↑](https://github.com/abemelvin/tiamat)
 
 ---
