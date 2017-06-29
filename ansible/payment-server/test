@@ -1,2 +1,0 @@
-(transac_id, datetime, content, amount, credit_card_no) = ('45433004','2017-06-29 19:18:34', 'blCrhxVo', '4521.00', '0937893916344624')
-(transac_id, datetime, content, amount, credit_card_no) = ('82559730','2017-06-29 19:19:02', 'lfSdqxRC', '9292.52', '2554322552765766')
