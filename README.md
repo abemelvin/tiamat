@@ -100,8 +100,60 @@ by running `deploy` in the Tiamat shell:
 (Tiamat) deploy
 ~~~
 
+After initiating deployment, Tiamat will first check your deployment
+template for errors. If an error is detected, this may indicate that the
+`tiamat/terraform/configuration.tf` file is damaged. If you are confident
+that this is not the case, you can proceed with deployment by following
+the prompts.
 
+Once deployment is complete, you will be presented with the public IP addresses
+of your servers. If you wish to SSH directly into your servers or to access
+a web service running on your servers, you will need this information:
 
+~~~
+Outputs:
+
+ansible ip = 54.242.186.67
+payments ip = 34.207.64.90
+~~~
+
+## 4. Provisioning the testbed
+
+Once deployment is complete, you will need to provision the instantiated
+servers with the appropriate software packages. Automated provisioning
+scripts are provided for each available server, which can be executed using
+Ansible. To connect to Ansible, run `ansible` in the Tiamat shell:
+
+~~~
+(Tiamat) ansible
+~~~
+
+Once you have a secure shell to Ansible, you can execute the provisioning
+scripts that correspond to the servers you deployed. For example, if you
+only chose to deploy the payments server, you would provision that server
+like so:
+
+~~~
+ubuntu@ip-10-0-0-10:~$ ansible-playbook install/payment_server.yml
+~~~
+
+Once you have provisioned the testbed, you can interact with the environment
+as you see fit.
+
+## 5. Destroying the testbed
+
+Since your testbed is deployed on AWS, you will be charged based on the
+volume and length of your usage. Therefore, it is key to destroy the testbed
+once you are done with your experiments. To do this, run `destroy`:
+
+~~~
+(Tiamat) destroy
+~~~
+
+Terraform will confirm your intent to destroy one final time before the process
+is initiated. Try not to interrupt the destruction process once it has started,
+as it could prevent Terraform from halting gracefully and damage your state
+file in the process.
 
 ## 1 Document information [↑](https://github.com/abemelvin/tiamat)
 
