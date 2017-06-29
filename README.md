@@ -4,9 +4,12 @@
 
 1. [Installation](https://github.com/abemelvin/tiamat#1-installation-)   
 2. [Getting started](https://github.com/abemelvin/tiamat#2-getting-started-)   
-3. [Deploying the testbed](https://github.com/abemelvin/tiamat#3-deploying-the-testbed-)   
-4. [Provisioning the testbed](https://github.com/abemelvin/tiamat#4-provisioning-the-testbed-)   
-5. [Destroying the testbed](https://github.com/abemelvin/tiamat#5-destroying-the-testbed-)   
+3. [Deploying the testbed](https://github.com/abemelvin/tiamat#3-deploying-the-
+testbed-)   
+4. [Provisioning the testbed](https://github.com/abemelvin/tiamat#4-
+provisioning-the-testbed-)   
+5. [Destroying the testbed](https://github.com/abemelvin/tiamat#5-destroying-
+the-testbed-)   
 
 ---
 
