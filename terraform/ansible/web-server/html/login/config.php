@@ -5,7 +5,7 @@ include 'globalcon.php';
 include 'dbconf.php';
 
 //Set this for global site use
-$site_name = 'http://52.37.128.197/';
+$site_name = '';
 
 //Maximum Login Attempts
 $max_attempts = 5;
