@@ -382,7 +382,7 @@ class ShowAvailableServers(Command):
         available_server_list = [f for f in os.listdir(file_path) if isfile(join(file_path, f))]
         if len(available_server_list) > 0:
             for row in available_server_list:
-                print row.split('_')[0]
+                print "-", row.split('_')[0]
         else:
             print "Didn't find any servers available for deployment, someone deleted all the files in the 'tiamat/terraform/overrides/' directory!"
 
