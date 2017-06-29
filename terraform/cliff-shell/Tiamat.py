@@ -145,6 +145,9 @@ class Tiamat(App):
             pass
             # print find_executable('terraform')
 
+        print "Welcome to Threat Instrumentation And Machine Automation Tool (Tiamat)!"
+        print "For a list of available commands, use 'help'. To exit, use 'quit'."
+
     def initialize_app(self, argv):
             self.LOG.debug('initialize_app')
 
