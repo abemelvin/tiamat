@@ -188,11 +188,16 @@ class Deploy(Command):
         if not is_deployed:
             try:
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
-            except subprocess.CalledProcessError:
-                print "\nError predicted by terraform plan. Please check the configuration before deployment."
-                ans = raw_input("Do you want to deploy anyway? y/n ")
-                if ans != 'y' and ans != 'yes':
-                    return
+            except subprocess.CalledProcessError as e:
+                if e == 0:
+                    pass
+                if e == 1:
+                    print "\nError predicted by terraform plan. Please check the configuration before deployment."
+                    ans = raw_input("Do you want to deploy anyway? y/n ")
+                    if ans != 'y' and ans != 'yes':
+                        return
+                if e == 2:
+                    pass
 
             p = subprocess.Popen("terraform apply", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             result = ""
