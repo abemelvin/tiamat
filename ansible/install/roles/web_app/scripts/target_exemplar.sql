@@ -47,6 +47,8 @@ INSERT INTO `members` (`id`, `username`, `password`, `email`, `verified`, `root`
 (3, 'vendor-1', '$2y$10$HGMg5Awl201TFwJsN5ykkuSD/W4PWJmch1pbPy9zVh/yheCnTOINu', 'vendor1@gmail.com', 1, 0),
 (4, 'vendor-2', '$2y$10$StEl0oramRyYdX3CudIOvurLXLcPSWV2xFZn/smzwQSvTFApq.6rS', 'vendor2@gmail.com', 1, 0),
 (5, 'vendor-3', '$2y$10$Od1bDD0vXhPS0oyWIsI7ZuHb7/i/nYOAjMRufLwsmmKekyHXgoF7e', 'vendor3@gmail.com', 1, 0);
+(6, 'contractor', '$2y$10$D/78R1qVox9qokolL0Ngz.vfHBN2oJtrOwmPX0otxaKuU3wqG4Lv.', 'contractor@gmail.com', 1, 0);
+
 
 
 --
