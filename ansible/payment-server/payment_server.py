@@ -14,14 +14,18 @@ import subprocess
 class PaymentServer:
     def __init__(self):
         self.pos_ip = "localhost"
-        self.pos_port = "5555"
-        self.port = "6666"  # nc listening port of payment server
+        self.pos_nc_port = "5555"
+        self.nc_port = "6666"  # nc listening port of payment server
 
     def check_firmware(self):
         print "firmware check is running..."
-        old_checksum = ''
+
+        with open("pos_firmware.py", "r") as firmware:
+            m = hashlib.md5(firmware.read())
+            old_checksum = m.digest()
+
         while True:
-            # print "new check"
+            #print "new check"
             with open("pos_firmware.py", "r") as firmware:
                 m = hashlib.md5(firmware.read())
                 new_checksum = m.digest()
@@ -29,7 +33,7 @@ class PaymentServer:
             if new_checksum != old_checksum:
                 # push new firmware
                 print "detect firmware update"
-                nc_call = "nc " + self.pos_ip + " " + self.pos_port + " < " + "pos_firmware.py"
+                nc_call = "nc " + self.pos_ip + " " + self.pos_nc_port + " < " + "pos_firmware.py"
                 while subprocess.call(nc_call, shell=True) != 0:
                     pass
 
