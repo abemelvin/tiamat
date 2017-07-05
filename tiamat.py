@@ -95,9 +95,9 @@ class Tiamat(App):
                     else:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "linux_386.zip?_ga=2.137897971.2126347023.1497377866-658368258.1496936210"
-                    wget_call = "wget " + url + " -O " + local_file_path
+                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null"
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    unzip_call = "unzip " + local_file_path + " -d " + local_path
+                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null"
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
@@ -113,9 +113,9 @@ class Tiamat(App):
                 elif os_platform == "OS X":
                     url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
                         "_darwin_amd64.zip?_ga=2.76410710.2126347023.1497377866-658368258.1496936210"
-                    curl_call = "curl " + url + " -o " + local_file_path
+                    curl_call = "curl " + url + " -o " + local_file_path + " > /dev/null"
                     subprocess.check_call(curl_call, shell=True)
-                    unzip_call = "unzip " + local_file_path + "-d " + local_path
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path + " > /dev/null"
                     try: 
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
