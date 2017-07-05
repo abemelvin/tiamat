@@ -9,7 +9,7 @@ from os.path import isfile, join
 try:
     import cliff
 except ImportError as e:
-    subprocess.check_call("pip install cliff", shell=True)
+    subprocess.check_call("sudo apt-get -y install python-cliff", shell=True)
     import cliff
 
 from cliff.app import App
