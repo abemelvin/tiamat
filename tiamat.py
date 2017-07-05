@@ -9,7 +9,12 @@ from os.path import isfile, join
 try:
     import cliff
 except ImportError as e:
-    subprocess.check_call("sudo apt-get -y install python-cliff", shell=True)
+    print "Did not find 'python-cliff', installing..."
+    try:
+        subprocess.check_call("sudo apt-get -y install python-cliff > /dev/null", shell=True)
+    except subprocess.CalledProcessError as e2:
+        print "Could not install python-cliff, exiting..."
+        exit(1)
     import cliff
 
 from cliff.app import App
@@ -83,7 +88,6 @@ class Tiamat(App):
                 local_file_path = local_path + '/terraform.zip'
 
                 if os_platform == "Linux":
-                    subprocess.check_call("sudo apt-get -y install unzip", shell=True)
                     if is_64bits:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "linux_amd64.zip?_ga=2.142026481.2126347023.1497377866-658368258.1496936210"
@@ -96,10 +100,12 @@ class Tiamat(App):
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
-                        print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
-                        print "You can also manually extract terraform into tiamat/ and restart this program."
-                        print "Exiting..."
-                        exit(1)
+                        print "Did not find 'unzip', installing..."
+                        try:
+                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
+                        except subprocess.CalledProcessError as e:
+                            print "Could not install 'unzip', exiting..."
+                            exit(1)
 
                 elif os_platform == "OS X":
                     url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
