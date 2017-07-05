@@ -147,6 +147,11 @@ class Tiamat(App):
             pass
             # print find_executable('terraform')
 
+        try:
+            subprocess.check_call("chmod 0600 key", shell=True)
+        except subprocess.CalledProcessError as e:
+            print e
+            exit(1)
         print "Welcome to Threat Instrumentation And Machine Automation Tool (Tiamat)!"
         print "For a list of available commands, use 'help'. To exit, use 'quit'."
 
@@ -423,7 +428,7 @@ class GlobalState:
 if __name__ == '__main__':
     # global state variables
     full_server_list = ["blackhat", "contractor", "ftp",
-                        "mail", "payments"]
+                        "mail", "payments", "web"]
 
     if isfile("global_state.json"):
         is_deployed = True
