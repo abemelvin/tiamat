@@ -92,7 +92,7 @@ class Tiamat(App):
                             "linux_386.zip?_ga=2.137897971.2126347023.1497377866-658368258.1496936210"
                     wget_call = "wget " + url + " -O " + local_file_path
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    unzip_call = "unzip " + local_file_path + " -d " + local_path + "/terraform_binary"
+                    unzip_call = "unzip " + local_file_path + " -d " + local_path
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
@@ -106,7 +106,7 @@ class Tiamat(App):
                         "_darwin_amd64.zip?_ga=2.76410710.2126347023.1497377866-658368258.1496936210"
                     curl_call = "curl " + url + " -o " + local_file_path
                     subprocess.check_call(curl_call, shell=True)
-                    unzip_call = "unzip " + local_file_path + "-d " + local_path + "/terraform_binary"
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path
                     try: 
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
