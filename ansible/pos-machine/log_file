@@ -1,0 +1,1 @@
+(transac_id, datetime, content, amount, credit_card_no) = ('40653022','2017-07-04 18:30:30', 'PxpRjaGW', '6269.91', '8950987711614563')
