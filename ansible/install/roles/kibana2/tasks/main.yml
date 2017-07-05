@@ -55,3 +55,5 @@
   service:
     name: nginx
     state: restarted
+#- name: load packetbeat kibana templates
+#  shell: ./etc/packetbeat/scripts/import_dashboards -user tiamat -pass threat-detection

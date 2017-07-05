@@ -82,7 +82,7 @@ by running `deploy` in the Tiamat shell:
 
 After initiating deployment, Tiamat will first check your deployment
 template for errors. If an error is detected, this may indicate that the
-`tiamat/terraform/configuration.tf` file is damaged. If you are confident
+`tiamat/configuration.tf` file is damaged. If you are confident
 that this is not the case, you can proceed with deployment by following
 the prompts.
 

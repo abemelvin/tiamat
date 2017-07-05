@@ -83,6 +83,7 @@ class Tiamat(App):
                 local_file_path = local_path + '/terraform.zip'
 
                 if os_platform == "Linux":
+                    subprocess.check_call("sudo apt-get -y install unzip", shell=True)
                     if is_64bits:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "linux_amd64.zip?_ga=2.142026481.2126347023.1497377866-658368258.1496936210"
@@ -92,7 +93,7 @@ class Tiamat(App):
                     wget_call = "wget " + url + " -O " + local_file_path
                     subprocess.check_call(wget_call, shell=True)  # check this command
                     unzip_call = "unzip " + local_file_path + " -d " + local_path
-                    try: 
+                    try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
                         print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"

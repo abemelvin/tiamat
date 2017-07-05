@@ -16,3 +16,4 @@
    - { role: mysql }
    - { role: web_app }
    - { role: wazuh_agent_web }
+   - { role: packetbeat }
