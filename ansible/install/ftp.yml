@@ -12,3 +12,4 @@
       raw: sudo apt-get install -y python-simplejson
   roles:
    - { role: vsftpd }
+   - { role: wazuh_agent_ftp }

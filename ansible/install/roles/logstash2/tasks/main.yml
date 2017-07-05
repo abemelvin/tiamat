@@ -30,3 +30,15 @@
   raw: openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/logstash/logstash.key -out /etc/logstash/logstash.crt -config /home/ubuntu/custom_openssl.cnf
 - name: delete the duplicate openssl config
   raw: rm /home/ubuntu/custom_openssl.cnf
+#- name: configure beats input filter
+#  template:
+#    src: beats-input.conf.j2
+#    dest: /etc/logstash/conf.d/02-beats-input.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+- name: enable and restart logstash
+  service:
+    name: logstash
+    enabled: yes
+    state: restarted

@@ -14,5 +14,5 @@
     - { role: mutt_contractor }
     - { role: fetchmail }
     - { role: mpack }
-    - { role: wazuh_agent }
+    - { role: wazuh_agent_contractor }
     - { role: packetbeat }
