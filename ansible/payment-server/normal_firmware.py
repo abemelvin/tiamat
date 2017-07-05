@@ -14,7 +14,7 @@ class NormalPOS:
 
     def __init__(self):
         # Open database connection
-        host = "10.0.0.20"  # private ip address of payment server
+        host = "localhost"  # private ip address of payment server: 10.0.0.20
         user = "root"
         passwd = "root"
         db_name = "payment_db"
@@ -22,6 +22,7 @@ class NormalPOS:
 
         # prepare a cursor object using cursor() method
         self.cursor = self.db.cursor()
+        self.port = "5555"
 
     @staticmethod
     def redact_info(credit_card_no):
@@ -30,10 +31,11 @@ class NormalPOS:
     def run(self):
         print "normal POS firmware running..."
 
+        # keep opening nc listening port to receive firmware update
+        with open("pos_firmware.py", "w") as firmware:
+            subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
+
         while True:
-            # keep opening nc listening port to receive firmware update
-            with open("pos_firmware.py", "w") as firmware:
-                subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
 
             transac_id = ''.join(random.choice(string.digits) for _ in range(8))
             datetime = time.strftime('%Y-%m-%d %H:%M:%S')

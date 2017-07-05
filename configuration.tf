@@ -291,7 +291,7 @@ resource "aws_instance" "wazuh" {
 #  }
 #
 #  provisioner "file" {
-#    source = "ansible/web-server/html"
+#    source = "ansible/install/web-server/html"
 #    destination = "~"
 #  }
 #}
