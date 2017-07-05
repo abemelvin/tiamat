@@ -15,6 +15,7 @@ except ImportError as e:
     except subprocess.CalledProcessError as e2:
         print "Could not install python-cliff, exiting..."
         exit(1)
+    print "Finished installing 'python-cliff'."
     import cliff
 
 from cliff.app import App
@@ -106,6 +107,8 @@ class Tiamat(App):
                         except subprocess.CalledProcessError as e:
                             print "Could not install 'unzip', exiting..."
                             exit(1)
+                        print "Finished installing 'unzip'."
+                        subprocess.check_call(unzip_call, shell=True)
 
                 elif os_platform == "OS X":
                     url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
