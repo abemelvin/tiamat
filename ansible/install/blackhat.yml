@@ -12,3 +12,5 @@
       raw: sudo apt-get install -y python-simplejson
   roles:
     - { role: mutt_blackhat }
+    - { role: wazuh_agent_blackhat }
+    - { role: packetbeat }

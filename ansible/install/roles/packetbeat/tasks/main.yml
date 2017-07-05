@@ -32,8 +32,8 @@
     owner: root
     group: root
     mode: 0644
-- name: enable and start packetbeat
+- name: enable and restart packetbeat
   service:
     name: packetbeat
     enabled: yes
-    state: started
+    state: restarted

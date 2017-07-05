@@ -31,6 +31,7 @@ class Tiamat(App):
             'deploy': Deploy,
             'destroy': Destroy,
             'ansible': Ansible,
+            'wazuh': Wazuh,
             'get elk files': ElkFiles,
             'elk': Elk,
             'show active servers': ShowActive,
@@ -223,17 +224,23 @@ class Deploy(Command):
             state.ip["ansible"] = result[ansible_ip_beg:ansible_ip_end]
 
             # parse elk ip
-            if 'elk' in deploy_server_list:
-                elk_ip_beg = result.find("elk ip") + 9
-                elk_ip_end = result.find("\n", elk_ip_beg)
-                state.ip["elk"] = result[elk_ip_beg:elk_ip_end]
+            elk_ip_beg = result.find("elk ip") + 9
+            elk_ip_end = result.find("\n", elk_ip_beg)
+            state.ip["elk"] = result[elk_ip_beg:elk_ip_end]
+
+            # parse wazuh ip
+            wazuh_ip_beg = result.find("wazuh ip") + 11
+            wazuh_ip_end = result.find("\n", wazuh_ip_beg)
+            state.ip["wazuh"] = result[wazuh_ip_beg:wazuh_ip_end]
 
             is_deployed = True
 
             state.active_server_list = deploy_server_list
             state.active_server_list.append('ansible')
+            state.active_server_list.append('elk')
+            state.active_server_list.append('wazuh')
 
-            with open("global_state.json", "w") as global_state:
+            with open("global_state.json", "w+") as global_state:
                 json.dump(state, global_state)
             global_state.close()
         else:
@@ -269,6 +276,20 @@ class Ansible(Command):
             return
 
         ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
+        subprocess.check_call(ssh_call, shell=True)
+
+class Wazuh(Command):
+    """Open a nested Wazuh shell"""
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global state
+        if "wazuh" not in state.ip.keys():
+            self.app.stdout.write("Error: Wazuh IP unavailable.\n")
+            return
+
+        ssh_call = "ssh -i key ubuntu@" + state.ip["wazuh"]
         subprocess.check_call(ssh_call, shell=True)
 
 
@@ -401,8 +422,8 @@ class GlobalState:
 
 if __name__ == '__main__':
     # global state variables
-    full_server_list = ["blackhat", "contractor", "elk", "ftp",
-                        "mail", "payments", "wazuh"]
+    full_server_list = ["blackhat", "contractor", "ftp",
+                        "mail", "payments"]
 
     if isfile("global_state.json"):
         is_deployed = True

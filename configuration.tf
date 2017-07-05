@@ -189,60 +189,50 @@ resource "aws_instance" "ansible" {
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 key",
-      #"ansible-playbook install/wazuh.yml",
-      #"ansible-playbook install/elastic_stack.yml",
-      #"ansible-playbook install/filebeat.yml",
-      #"ansible-playbook install/packetbeat.yml",
-      #"ansible-playbook install/metricbeat.yml",
-      #"ansible-playbook scripts/index.yml",
-      #"ansible-playbook install/webapp.yml",
-      #"ansible-playbook install/mail.yml",
-      #"ansible-playbook install/contractor.yml",
-      #"ansible-playbook install/blackhat.yml",
-      #"ansible-playbook install/ftp.yml",
-      #"ansible-playbook install/ldap.yml",
+      "ansible-playbook install/wazuh.yml",
+      "ansible-playbook install/elastic_stack.yml",
       "echo provisioning complete"
     ]
   }
 }
 
-#resource "aws_instance" "elk" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.large"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.11"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.elk.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#    }
-#}
+resource "aws_instance" "elk" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.large"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "key"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.11"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
-#resource "aws_instance" "wazuh" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.large"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.12"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.wazuh.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#    }
-#}
+  connection {
+    host = "${aws_instance.elk.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("key")}"
+    agent = false
+  }
+}
+
+resource "aws_instance" "wazuh" {
+  ami = "ami-f4cc1de2"
+  instance_type = "t2.medium"
+  security_groups = ["${aws_security_group.terraform.id}"]
+  key_name = "key"
+  subnet_id = "${aws_subnet.terraform.id}"
+  associate_public_ip_address = true
+  private_ip = "10.0.0.12"
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+
+  connection {
+    host = "${aws_instance.wazuh.public_ip}"
+    type = "ssh"
+    user = "ubuntu"
+    private_key = "${file("key")}"
+    agent = false
+  }
+}
 
 #resource "aws_instance" "contractor" {
 #  ami = "ami-f4cc1de2"
@@ -372,14 +362,14 @@ output "ansible ip" {
   value = "${aws_instance.ansible.public_ip}"
 }
 
-#output "elk ip" {
-#  value = "${aws_instance.elk.public_ip}"
-#}
+output "elk ip" {
+  value = "${aws_instance.elk.public_ip}"
+}
 
-#output "wazuh ip" {
-#  value = "${aws_instance.wazuh.public_ip}"
-#}
-#
+output "wazuh ip" {
+  value = "${aws_instance.wazuh.public_ip}"
+}
+
 #output "contractor ip" {
 #  value = "${aws_instance.contractor.public_ip}"
 #}
