@@ -79,8 +79,7 @@ class Tiamat(App):
             exit(1)
 
         if not find_executable('terraform'):
-            ans = raw_input("Error: Terraform is not installed or missing in search path.\n \
-            Do you want to install it via Tiamat? y/n ")
+            ans = raw_input("Could not find Terraform binary in PATH, download? (y/n): ")
 
             if ans == 'y' or ans == 'yes':
                 is_64bits = sys.maxsize > 2 ** 32
@@ -101,7 +100,7 @@ class Tiamat(App):
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
-                        print "Did not find 'unzip', installing..."
+                        print "Did not find 'unzip', installing...",
                         try:
                             subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
                         except subprocess.CalledProcessError as e:
@@ -158,7 +157,7 @@ class Tiamat(App):
             # print find_executable('terraform')
 
         try:
-            subprocess.check_call("chmod 0600 key", shell=True)
+            subprocess.check_call("sudo chmod 0600 key", shell=True)
         except subprocess.CalledProcessError as e:
             print e
             exit(1)
