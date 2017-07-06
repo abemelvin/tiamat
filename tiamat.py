@@ -100,13 +100,13 @@ class Tiamat(App):
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
-                        print "Did not find 'unzip', installing...",
+                        sys.stdout.write("Did not find 'unzip', installing...")
                         try:
                             subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
                         except subprocess.CalledProcessError as e:
                             print "Could not install 'unzip', exiting..."
                             exit(1)
-                        print "Finished installing 'unzip'."
+                        sys.stdout.write("Finished installing 'unzip'.")
                         subprocess.check_call(unzip_call, shell=True)
 
                 elif os_platform == "OS X":
