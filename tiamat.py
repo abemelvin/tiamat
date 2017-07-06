@@ -9,13 +9,13 @@ from os.path import isfile, join
 try:
     import cliff
 except ImportError as e:
-    print "Did not find 'python-cliff', installing...",
+    sys.stdout.write("Did not find 'python-cliff', installing...")
     try:
         subprocess.check_call("sudo apt-get -y install python-cliff > /dev/null", shell=True)
     except subprocess.CalledProcessError as e2:
         print "Could not install python-cliff, exiting..."
         exit(1)
-    print "Finished installing 'python-cliff'."
+    sys.stdout.write("Finished installing 'python-cliff'.")
     import cliff
 
 from cliff.app import App
@@ -94,9 +94,9 @@ class Tiamat(App):
                     else:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "linux_386.zip?_ga=2.137897971.2126347023.1497377866-658368258.1496936210"
-                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null"
+                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null"
+                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
@@ -112,9 +112,9 @@ class Tiamat(App):
                 elif os_platform == "OS X":
                     url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
                         "_darwin_amd64.zip?_ga=2.76410710.2126347023.1497377866-658368258.1496936210"
-                    curl_call = "curl " + url + " -o " + local_file_path + " > /dev/null"
+                    curl_call = "curl " + url + " -o " + local_file_path + " > /dev/null 2>&1"
                     subprocess.check_call(curl_call, shell=True)
-                    unzip_call = "unzip " + local_file_path + "-d " + local_path + " > /dev/null"
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path + " > /dev/null 2>&1"
                     try: 
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
