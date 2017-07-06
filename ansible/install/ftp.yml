@@ -13,3 +13,4 @@
   roles:
    - { role: vsftpd }
    - { role: wazuh_agent_ftp }
+   - { role: packetbeat }

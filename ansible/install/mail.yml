@@ -17,3 +17,4 @@
    - { role: apache }
    - { role: squirrelmail }
    - { role: wazuh_agent_mail }
+   - { role: packetbeat }

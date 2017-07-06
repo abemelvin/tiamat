@@ -38,6 +38,12 @@
   until: result.stdout.find("acknowledged") != -1
   retries: 5
   delay: 10
+- name: load packetbeat elasticsearch template
+  shell: "curl -XPUT 'http://localhost:9200/_template/packetbeat' -H 'Content-Type: application/json' -d@/etc/packetbeat/packetbeat.template.json"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
 - name: enable memory locking
   template:
     src: elasticsearch.yml.j2

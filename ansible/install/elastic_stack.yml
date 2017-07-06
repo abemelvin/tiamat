@@ -11,10 +11,11 @@
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
   roles:
-   - { role: java }
-   - { role: elasticsearch }
-   - { role: logstash2 }
-   - { role: kibana2 }
+    - { role: java }
+    - { role: packetbeat }
+    - { role: elasticsearch }
+    - { role: logstash2 }
+    - { role: kibana2 }
 
 - hosts: wazuh
   remote_user: ubuntu

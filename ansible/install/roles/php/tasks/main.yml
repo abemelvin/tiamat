@@ -18,13 +18,13 @@
 #    name: php5-cli
 #    state: present
 - name: install php-mysql
- apt:
-   name: php-mysql
-   state: present
+  apt:
+    name: php-mysql
+    state: present
 - name: install php-curl
- apt:
-   name: php-curl
-   state: present
+  apt:
+    name: php-curl
+    state: present
 #- name: install php5-mcrypt
 #  apt:
 #    name: php5-mcrypt

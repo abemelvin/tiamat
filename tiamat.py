@@ -9,7 +9,13 @@ from os.path import isfile, join
 try:
     import cliff
 except ImportError as e:
-    subprocess.check_call("pip install cliff", shell=True)
+    sys.stdout.write("Did not find 'python-cliff', installing...")
+    try:
+        subprocess.check_call("sudo apt-get -y install python-cliff > /dev/null", shell=True)
+    except subprocess.CalledProcessError as e2:
+        print "Could not install python-cliff, exiting..."
+        exit(1)
+    sys.stdout.write("Finished installing 'python-cliff'.\n")
     import cliff
 
 from cliff.app import App
@@ -73,8 +79,7 @@ class Tiamat(App):
             exit(1)
 
         if not find_executable('terraform'):
-            ans = raw_input("Error: Terraform is not installed or missing in search path.\n \
-            Do you want to install it via Tiamat? y/n ")
+            ans = raw_input("Could not find Terraform binary in PATH, download? (y/n): ")
 
             if ans == 'y' or ans == 'yes':
                 is_64bits = sys.maxsize > 2 ** 32
@@ -89,23 +94,27 @@ class Tiamat(App):
                     else:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "linux_386.zip?_ga=2.137897971.2126347023.1497377866-658368258.1496936210"
-                    wget_call = "wget " + url + " -O " + local_file_path
+                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    unzip_call = "unzip " + local_file_path + " -d " + local_path
-                    try: 
+                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
+                    try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
-                        print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
-                        print "You can also manually extract terraform into tiamat/ and restart this program."
-                        print "Exiting..."
-                        exit(1)
+                        sys.stdout.write("Did not find 'unzip', installing...")
+                        try:
+                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
+                        except subprocess.CalledProcessError as e:
+                            print "Could not install 'unzip', exiting..."
+                            exit(1)
+                        sys.stdout.write("Finished installing 'unzip'.\n")
+                        subprocess.check_call(unzip_call, shell=True)
 
                 elif os_platform == "OS X":
                     url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8" + \
                         "_darwin_amd64.zip?_ga=2.76410710.2126347023.1497377866-658368258.1496936210"
-                    curl_call = "curl " + url + " -o " + local_file_path
+                    curl_call = "curl " + url + " -o " + local_file_path + " > /dev/null 2>&1"
                     subprocess.check_call(curl_call, shell=True)
-                    unzip_call = "unzip " + local_file_path + "-d " + local_path
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path + " > /dev/null 2>&1"
                     try: 
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
