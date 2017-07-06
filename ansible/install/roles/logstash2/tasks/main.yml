@@ -6,8 +6,14 @@
   apt:
     name: logstash
     state: present
-- name: download logstash wazuh config
-  raw: curl -so /etc/logstash/conf.d/01-wazuh.conf https://raw.githubusercontent.com/wazuh/wazuh/2.0/extensions/logstash/01-wazuh.conf
+- name: copy logstash wazuh config
+  template:
+    src: 01-wazuh.conf.j2
+    dest: /etc/logstash/conf.d/01-wazuh.conf
+    owner: root
+    group: root
+    mode: 0644
+  #raw: curl -so /etc/logstash/conf.d/01-wazuh.conf https://raw.githubusercontent.com/wazuh/wazuh/2.0/extensions/logstash/01-wazuh.conf
 - name: download logstash wazuh template
   raw: curl -so /etc/logstash/wazuh-elastic5-template.json https://raw.githubusercontent.com/wazuh/wazuh/2.0/extensions/elasticsearch/wazuh-elastic5-template.json
 - name: enable and start logstash

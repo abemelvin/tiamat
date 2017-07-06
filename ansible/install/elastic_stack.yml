@@ -12,7 +12,7 @@
       raw: sudo apt-get install -y python-simplejson
   roles:
     - { role: java }
-  #  - { role: packetbeat }
+    - { role: packetbeat }
     - { role: elasticsearch }
     - { role: logstash2 }
     - { role: kibana2 }
