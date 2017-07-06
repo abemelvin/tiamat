@@ -9,7 +9,7 @@ from os.path import isfile, join
 try:
     import cliff
 except ImportError as e:
-    print "Did not find 'python-cliff', installing..."
+    print "Did not find 'python-cliff', installing...",
     try:
         subprocess.check_call("sudo apt-get -y install python-cliff > /dev/null", shell=True)
     except subprocess.CalledProcessError as e2:
