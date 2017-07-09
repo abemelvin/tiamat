@@ -10,6 +10,15 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 blackhat'
+    - name: update /etc/hostname
+      raw: echo "blackhat" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname blackhat
   roles:
     - { role: mutt_blackhat }
     - { role: wazuh_agent_blackhat }

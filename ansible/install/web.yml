@@ -2,7 +2,7 @@
 #
 # set up the web server
 #
-- hosts: webapp
+- hosts: web
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -10,6 +10,15 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 web'
+    - name: update /etc/hostname
+      raw: echo "web" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname web
   roles:
    - { role: apache }
    - { role: php }

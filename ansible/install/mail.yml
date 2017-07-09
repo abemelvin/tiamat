@@ -10,6 +10,15 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 mail'
+    - name: update /etc/hostname
+      raw: echo "mail" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname mail
   roles:
    - { role: postfix }
    - { role: dovecot }

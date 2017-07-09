@@ -10,7 +10,7 @@ ubuntu@10.0.0.14
 [mail]
 ubuntu@10.0.0.15
 
-[webapp]
+[web]
 ubuntu@10.0.0.16
 
 [ldap]

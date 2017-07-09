@@ -117,7 +117,7 @@ resource "aws_route53_zone" "terraform" {
 
 resource "aws_security_group" "terraform" {
   name = "terraform"
-  description = "allow all traffic"
+  description = "only allow ssh, http, https"
   vpc_id = "${aws_vpc.terraform.id}"
   depends_on = ["aws_vpc.terraform"]
 

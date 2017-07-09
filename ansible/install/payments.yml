@@ -10,6 +10,15 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 payments'
+    - name: update /etc/hostname
+      raw: echo "payments" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname payments
   roles:
    - { role: mysql }
    - { role: apache }

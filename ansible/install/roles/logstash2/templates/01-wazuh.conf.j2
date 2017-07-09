@@ -2,14 +2,15 @@
 ## Remote Wazuh Manager - Filebeat input
 input {
     beats {
-        port => "5000"
+        port => 5000
         codec => "json_lines"
         #ssl => false
         #ssl_certificate => "/etc/logstash/logstash.crt"
         #ssl_key => "/etc/logstash/logstash.key"
     }
     beats {
-        port => "5044"
+        tags => ["packetbeat"]
+        port => 5044
         #ssl => false
         #ssl_certificate => "/etc/pki/tls/certs/logstash-forwarder.crt"
         #ssl_key => "/etc/pki/tls/private/logstash-forwarder.key"
@@ -24,7 +25,7 @@ input {
 #   }
 #}
 filter {
-    if [port] == "5000" {
+    if "packetbeat" not in [tags] {
         geoip {
             source => "srcip"
             target => "GeoLocation"
@@ -40,7 +41,19 @@ filter {
     }
 }
 output {
-    if [port] == "5000" {
+    if "packetbeat" in [tags] {
+        elasticsearch {
+            hosts => ["localhost:9200"]
+            sniffing => true
+#            manage_template => false
+            index => "packetbeat-%{+YYYY.MM.dd}"
+            document_type => "%{[@metadata][type]}"
+            template => "/etc/packetbeat/packetbeat.template.json"
+            template_name => "packetbeat"
+            template_overwrite => true
+        }
+    }
+    else {
         elasticsearch {
             hosts => ["localhost:9200"]
             index => "wazuh-alerts-%{+YYYY.MM.dd}"
@@ -49,15 +62,6 @@ output {
 #           template => "/etc/logstash/wazuh-elastic2-template.json"
             template_name => "wazuh"
             template_overwrite => true
-        }
-    }
-    else if [port] == "5044" {
-        elasticsearch {
-            hosts => ["localhost:9200"]
-            sniffing => true
-            manage_template => false
-            index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-            document_type => "%{[@metadata][type]}"
         }
     }
 }
