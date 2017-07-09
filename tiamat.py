@@ -176,11 +176,6 @@ class Tiamat(App):
                 self.LOG.debug('got an error: %s', err)
 
 
-def main(argv=sys.argv[1:]):
-    shell = Tiamat()
-    return shell.run(argv)
-
-
 class Deploy(Command):
     """Apply the environment configuration"""
     log = logging.getLogger(__name__)
@@ -198,20 +193,20 @@ class Deploy(Command):
             output = output.upper()
         self.app.stdout.write(output)
 
-        global is_deployed
+        global state
         global deploy_server_list
-        if not is_deployed:
+        if not state.is_deployed:
             try:
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
             except subprocess.CalledProcessError as e:
-                if e == 0:
+                if e.returncode == 0:
                     pass
-                if e == 1:
+                if e.returncode == 1:
                     print "\nError predicted by terraform plan. Please check the configuration before deployment."
                     ans = raw_input("Do you want to deploy anyway? y/n ")
                     if ans != 'y' and ans != 'yes':
                         return
-                if e == 2:
+                if e.returncode == 2:
                     pass
 
             p = subprocess.Popen("terraform apply", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -234,7 +229,6 @@ class Deploy(Command):
             # parse ansible ip
             ansible_ip_beg = result.find("ansible ip") + 13
             ansible_ip_end = result.find("\n", ansible_ip_beg)
-            global state
             state.ip["ansible"] = result[ansible_ip_beg:ansible_ip_end]
 
             # parse elk ip
@@ -247,7 +241,7 @@ class Deploy(Command):
             wazuh_ip_end = result.find("\n", wazuh_ip_beg)
             state.ip["wazuh"] = result[wazuh_ip_beg:wazuh_ip_end]
 
-            is_deployed = True
+            state.is_deployed = True
 
             state.active_server_list = deploy_server_list
             state.active_server_list.append('ansible')
@@ -255,7 +249,7 @@ class Deploy(Command):
             state.active_server_list.append('wazuh')
 
             with open("global_state.json", "w+") as global_state:
-                json.dump(state, global_state)
+                json.dump(state.__dict__, global_state)
             global_state.close()
         else:
             self.app.stdout.write("Error: environment already deployed.\n")
@@ -269,13 +263,13 @@ class Destroy(Command):
         self.log.debug('debugging')
         self.app.stdout.write('start destroying environment...\n')
         subprocess.call("terraform destroy", shell=True)
-        global is_deployed
         global state
-        is_deployed = False
+        state.is_deployed = False
         state.ip.clear()
         state.active_server_list = []
-        if isfile('global_state.json'):
-            os.remove('global_state.json')
+        with open("global_state.json", "w+") as global_state:
+            json.dump(state.__dict__, global_state)
+        global_state.close()
 
 
 class Ansible(Command):
@@ -290,7 +284,11 @@ class Ansible(Command):
             return
 
         ssh_call = "ssh -i key ubuntu@" + state.ip["ansible"]
-        subprocess.check_call(ssh_call, shell=True)
+        try:
+            subprocess.check_call(ssh_call, shell=True)
+        except subprocess.CalledProcessError as err:
+            print err
+
 
 class Wazuh(Command):
     """Open a nested Wazuh shell"""
@@ -412,6 +410,7 @@ class ShowServers(Command):
         for server in deploy_server_list:
             print "-", server
 
+
 class ShowAvailableServers(Command):
     """show the list of servers to be deployed"""
     log = logging.getLogger(__name__)
@@ -432,20 +431,30 @@ class GlobalState:
     def __init__(self):
         self.active_server_list = []
         self.ip = {}
+        self.is_deployed = False
 
+
+def main(argv=sys.argv[1:]):
+    shell = Tiamat()
+    try:
+        return_code = shell.run(argv)
+    finally:
+        with open("global_state.json", "w+") as global_state:
+            json.dump(state.__dict__, global_state)
+    return return_code
 
 if __name__ == '__main__':
     # global state variables
-    full_server_list = ["blackhat", "contractor", "ftp",
+    available_server_list = ["blackhat", "contractor", "ftp",
                         "mail", "payments", "web"]
 
     if isfile("global_state.json"):
-        is_deployed = True
+        state = GlobalState()
         with open("global_state.json", "r") as global_state:
-            state = json.load(global_state)
+            d = json.load(global_state)
+            state.__dict__.update(d)
 
     else:
-        is_deployed = False
         state = GlobalState()
 
     deploy_server_list = [f.split('_')[0] for f in listdir('.') if isfile(f) and f[-2:] == 'tf']
