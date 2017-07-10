@@ -6,13 +6,13 @@
   apt:
     name: apt-transport-https
     state: present
-- name: add the elastic gpg key
+- name: add elastic gpg key
   apt_key:
-    url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+    url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
     state: present
-- name: add the elastic repository
+- name: add elastic repository
   apt_repository:
-    repo: deb https://packages.elastic.co/beats/apt stable main
+    repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
     state: present
 - name: update apt cache
   apt:

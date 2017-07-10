@@ -9,7 +9,7 @@ input {
         #ssl_key => "/etc/logstash/logstash.key"
     }
     beats {
-        tags => ["packetbeat"]
+        tags => ["beats"]
         port => 5044
         #ssl => false
         #ssl_certificate => "/etc/pki/tls/certs/logstash-forwarder.crt"
@@ -25,7 +25,7 @@ input {
 #   }
 #}
 filter {
-    if "packetbeat" not in [tags] {
+    if "beats" not in [tags] {
         geoip {
             source => "srcip"
             target => "GeoLocation"
@@ -41,16 +41,13 @@ filter {
     }
 }
 output {
-    if "packetbeat" in [tags] {
+    if "beats" in [tags] {
         elasticsearch {
             hosts => ["localhost:9200"]
             sniffing => true
-#            manage_template => false
-            index => "packetbeat-%{+YYYY.MM.dd}"
+            manage_template => false
+            index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
             document_type => "%{[@metadata][type]}"
-            template => "/etc/packetbeat/packetbeat.template.json"
-            template_name => "packetbeat"
-            template_overwrite => true
         }
     }
     else {

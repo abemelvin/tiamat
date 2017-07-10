@@ -25,3 +25,4 @@
     - { role: mpack }
     - { role: wazuh_agent_contractor }
     - { role: packetbeat }
+    - { role: metricbeat }

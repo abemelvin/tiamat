@@ -23,3 +23,4 @@
     - { role: mutt_blackhat }
     - { role: wazuh_agent_blackhat }
     - { role: packetbeat }
+    - { role: metricbeat }
