@@ -22,6 +22,7 @@
   roles:
     - { role: java }
     - { role: packetbeat }
+    - { role: metricbeat }
     - { role: elasticsearch }
     - { role: logstash2 }
     - { role: kibana2 }
