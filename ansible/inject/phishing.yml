@@ -7,6 +7,7 @@
 # 4. login Target webserver as contractor
 # 5. upload shell file to implement command injection 
 # 6. run system command as root on web server
+# -----------------------------------------------
 # 7. inject malicious software on posfirmware
 # 8. get credentials
 

