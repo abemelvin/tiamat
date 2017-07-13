@@ -11,7 +11,7 @@ try:
 except ImportError as e:
     sys.stdout.write("Did not find 'python-cliff', installing...")
     try:
-        subprocess.check_call("sudo apt-get -y install python-cliff > /dev/null", shell=True)
+        subprocess.check_call("pip install cliff", shell=True)
     except subprocess.CalledProcessError as e2:
         print "Could not install python-cliff, exiting..."
         exit(1)
@@ -130,8 +130,10 @@ class Tiamat(App):
                     else:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "windows_386.zip?_ga=2.176148193.2126347023.1497377866-658368258.1496936210"
+
                     wget_call = "wget " + url + " -O " + local_path
                     subprocess.check_call(wget_call, shell=True)  # check this command
+
                     unzip_call = "unzip " + local_file_path + "-d " + local_path
                     try: 
                         subprocess.check_call(unzip_call, shell=True)
@@ -157,7 +159,8 @@ class Tiamat(App):
             # print find_executable('terraform')
 
         try:
-            subprocess.check_call("chmod 0600 key", shell=True)
+            if os_platform != "Windows":
+                subprocess.check_call("chmod 0600 key", shell=True)
         except subprocess.CalledProcessError as e:
             print e
             exit(1)
@@ -195,7 +198,11 @@ class Deploy(Command):
 
         global state
         global deploy_server_list
+
         if not state.is_deployed:
+            if len(deploy_server_list) == 0:
+                print "Error: deployment list is empty."
+
             try:
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
             except subprocess.CalledProcessError as e:
@@ -243,7 +250,7 @@ class Deploy(Command):
 
             state.is_deployed = True
 
-            state.active_server_list = deploy_server_list
+            state.active_server_list = list(deploy_server_list)
             state.active_server_list.append('ansible')
             state.active_server_list.append('elk')
             state.active_server_list.append('wazuh')
@@ -252,7 +259,8 @@ class Deploy(Command):
                 json.dump(state.__dict__, global_state)
             global_state.close()
         else:
-            self.app.stdout.write("Error: environment already deployed.\n")
+            self.app.stdout.write("Error: environment already deployed. To re-deploy an environment" +
+                                  ", please apply destroy first.\n")
 
 
 class Destroy(Command):
@@ -355,8 +363,11 @@ class ShowActive(Command):
     def take_action(self, parsed_args):
         self.log.debug('debugging')
         global state
-        for server in state.active_server_list:
-            print server
+        if len(state.active_server_list) == 0:
+            print "no active server."
+        else:
+            for server in state.active_server_list:
+                print server
 
 
 class AddServers(Command):
@@ -371,6 +382,7 @@ class AddServers(Command):
     def take_action(self, parsed_args):
         self.log.debug('debugging')
         global deploy_server_list
+        parsed_args.server_name = parsed_args.server_name.lower()
         if parsed_args.server_name not in deploy_server_list:
             config_file_path = "overrides/" + parsed_args.server_name + "_override.tf"
             if not isfile(config_file_path):
@@ -467,4 +479,6 @@ if __name__ == '__main__':
     elk_logs_path = ""
     os_platform = ""
 
-    sys.exit(main(sys.argv[1:]))
+    returncode = main(sys.argv[1:])
+    print "Tiamat exiting. Please make sure idle servers have been shut down."
+    sys.exit(returncode)
