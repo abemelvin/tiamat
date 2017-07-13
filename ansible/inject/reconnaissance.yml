@@ -1,0 +1,55 @@
+---
+#
+# Stage IV: Internal reconnaissance
+#     - System user discovery: identify primary user, currently logged in user, and set
+#       of users that use a system
+#     - List documents and files on the system (by extension)
+#     - Display victim network configuration
+#     - List services in use and running processes on victim system
+#     - List accounts on victim system, including administrators
+#     - List current network connections and connected network shares
+#     - List other systems on the victim network according to group
+#     - List information about the OS and hardware (e.g. version, patches, hotfixes,
+#       service packs, and architecture)
+#
+
+- name: system user discovery
+  hosts: web
+  tasks:
+    - name: display user login history to identify primary user
+      raw: arr=$(users); for i in "${arr[@]}"; do last "$i"; done
+    - name: identify currently logged in users
+      raw: who
+    - name: identify system users
+      raw: w
+    - name: identify system administrators
+      raw: grep 'x:0:' /etc/passwd
+- name: system file discovery
+  hosts: web
+  tasks:
+    - name: list documents and files
+      raw: find . -type f
+- name: system network discovery
+  hosts: web
+  tasks:
+    - name: display network configuration
+      raw: ifconfig; netstat -r
+    - name: list network connections
+      raw: lspci
+#    - name: list connected network shares/systems
+#      raw: 
+- name: system process discovery
+  hosts: web
+  tasks:
+    - name: list services in use
+      raw: service --status-all
+    - name: list running processes
+      raw: ps -A
+- name: system OS/hardware discovery
+  hosts: web
+  tasks:
+#    - name: list OS information
+#      raw: uname -a; zip -r kernel_files.zip /etc
+    # TODO: ftp the zip file
+    - name: list hardware information
+      raw: lscpu; lshw; hwinfo; lsblk; df -H

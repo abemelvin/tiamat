@@ -1,8 +1,8 @@
 ---
 #
-# set up the web server
+# Playbook to install the ELK stack
 #
-- hosts: webapp
+- hosts: elk
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -11,9 +11,8 @@
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
   roles:
-   - { role: apache }
-   - { role: php }
-   - { role: mysql }
-   - { role: web_app }
-   - { role: wazuh_agent_web }
-   - { role: packetbeat }
+   - { role: java }
+   - { role: elasticsearch }
+   - { role: kibana }
+   - { role: nginx }
+   - { role: logstash }

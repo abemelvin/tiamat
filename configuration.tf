@@ -43,81 +43,9 @@ resource "aws_route53_zone" "terraform" {
   depends_on = ["aws_vpc.terraform"]
 }
 
-#resource "aws_route53_record" "wazuh" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "wazuh.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.wazuh.private_ip}"]
-#  depends_on = ["aws_instance.wazuh", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "contractor" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "contractor.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.contractor.private_ip}"]
-#  depends_on = ["aws_instance.contractor", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "blackhat" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "blackhat.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.blackhat.private_ip}"]
-#  depends_on = ["aws_instance.blackhat", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "ftp" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "ftp.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.ftp.private_ip}"]
-#  depends_on = ["aws_instance.ftp", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "ldap" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "ldap.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.ldap.private_ip}"]
-#  depends_on = ["aws_instance.ldap", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "mail_A" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "mail.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.mail.private_ip}"]
-#  depends_on = ["aws_instance.mail", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "mail_MX" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "fazio.com"
-#  type = "MX"
-#  ttl = "300"
-#  records = ["50 mail.fazio.com"]
-#  depends_on = ["aws_instance.mail", "aws_route53_zone.terraform"]
-#}
-#
-#resource "aws_route53_record" "webapp" {
-#  zone_id = "${aws_route53_zone.terraform.zone_id}"
-#  name = "webapp.fazio.com"
-#  type = "A"
-#  ttl = "300"
-#  records = ["${aws_instance.webapp.private_ip}"]
-#  depends_on = ["aws_instance.webapp", "aws_route53_zone.terraform"]
-#}
-
 resource "aws_security_group" "terraform" {
   name = "terraform"
-  description = "allow all traffic"
+  description = "only allow ssh, http, https"
   vpc_id = "${aws_vpc.terraform.id}"
   depends_on = ["aws_vpc.terraform"]
 
@@ -165,8 +93,7 @@ resource "aws_instance" "ansible" {
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.10"
-  #depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.wazuh", "aws_instance.contractor", "aws_instance.mail", "aws_instance.webapp", "aws_instance.ldap", "aws_instance.blackhat", "aws_instance.ftp"]
-  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform"]
+  depends_on = ["aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk", "aws_instance.wazuh"]
 
   connection {
     host = "${aws_instance.ansible.public_ip}"
@@ -174,7 +101,7 @@ resource "aws_instance" "ansible" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
-    }
+  }
 
   provisioner "file" {
     source = "ansible/"
@@ -183,6 +110,8 @@ resource "aws_instance" "ansible" {
 
   provisioner "remote-exec" {
     inline = [
+      "sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 ansible/g' /etc/hosts",
+      "sudo hostname ansible",
       "sudo apt-add-repository ppa:ansible/ansible -y",
       "sudo apt-get update -y",
       "sudo apt-get install ansible -y",
@@ -190,7 +119,7 @@ resource "aws_instance" "ansible" {
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 key",
       "ansible-playbook install/wazuh.yml",
-      "ansible-playbook install/elastic_stack.yml",
+      "ansible-playbook install/elk.yml",
       "echo provisioning complete"
     ]
   }
@@ -234,130 +163,6 @@ resource "aws_instance" "wazuh" {
   }
 }
 
-#resource "aws_instance" "contractor" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.micro"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.14"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.contractor.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#  }
-#}
-
-#resource "aws_instance" "mail" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.small"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.15"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.mail.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#  }
-#}
-
-#resource "aws_instance" "webapp" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.small"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.16"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.webapp.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#  }
-#
-#  provisioner "file" {
-#    source = "ansible/install/web-server/html"
-#    destination = "~"
-#  }
-#}
-
-#resource "aws_instance" "ldap" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.small"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.17"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.ldap.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#  }
-#}
-
-#resource "aws_instance" "blackhat" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.micro"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.18"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.blackhat.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#  }
-#
-#  provisioner "file" {
-#    source = "scripts/"
-#    destination = "~"
-#  }
-#}
-
-#resource "aws_instance" "ftp" {
-#  ami = "ami-f4cc1de2"
-#  instance_type = "t2.micro"
-#  security_groups = ["${aws_security_group.terraform.id}"]
-#  key_name = "key"
-#  subnet_id = "${aws_subnet.terraform.id}"
-#  associate_public_ip_address = true
-#  private_ip = "10.0.0.19"
-#  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
-#
-#  connection {
-#    host = "${aws_instance.ftp.public_ip}"
-#    type = "ssh"
-#    user = "ubuntu"
-#    private_key = "${file("key")}"
-#    agent = false
-#  }
-#}
-
 output "ansible ip" {
   value = "${aws_instance.ansible.public_ip}"
 }
@@ -369,27 +174,3 @@ output "elk ip" {
 output "wazuh ip" {
   value = "${aws_instance.wazuh.public_ip}"
 }
-
-#output "contractor ip" {
-#  value = "${aws_instance.contractor.public_ip}"
-#}
-#
-#output "mail ip" {
-#  value = "${aws_instance.mail.public_ip}"
-#}
-#
-#output "webapp ip" {
-#  value = "${aws_instance.webapp.public_ip}"
-#}
-#
-#output "ldap ip" {
-#  value = "${aws_instance.ldap.public_ip}"
-#}
-#
-#output "blackhat ip" {
-#  value = "${aws_instance.blackhat.public_ip}"
-#}
-#
-#output "ftp ip" {
-#  value = "${aws_instance.ftp.public_ip}"
-#}

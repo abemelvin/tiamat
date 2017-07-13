@@ -2,6 +2,14 @@
 #
 # install elasticsearch
 #
+- name: stop packetbeat
+  service:
+    name: packetbeat
+    state: stopped
+- name: stop metricbeat
+  service:
+    name: metricbeat
+    state: stopped
 - name: install curl
   apt:
     name: curl
@@ -44,6 +52,16 @@
   until: result.stdout.find("acknowledged") != -1
   retries: 5
   delay: 10
+- name: delete old packetbeat documents from setup
+  shell: "curl -XDELETE 'http://localhost:9200/packetbeat-*'"
+- name: load metricbeat elasticsearch template
+  shell: "curl -H 'Content-Type: application/json' -XPUT 'http://localhost:9200/_template/metricbeat' -d@/etc/metricbeat/metricbeat.template.json"
+  register: result
+  until: result.stdout.find("acknowledged") != -1
+  retries: 5
+  delay: 10
+- name: delete old metricbeat documents from setup
+  shell: "curl -XDELETE 'http://localhost:9200/metricbeat-*'"
 - name: enable memory locking
   template:
     src: elasticsearch.yml.j2

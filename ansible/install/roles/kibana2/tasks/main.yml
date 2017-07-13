@@ -55,5 +55,21 @@
   service:
     name: nginx
     state: restarted
-#- name: load packetbeat kibana templates
-#  shell: ./etc/packetbeat/scripts/import_dashboards -user tiamat -pass threat-detection
+#- name: install unzip
+#  apt:
+#    name: unzip
+#    state: present
+#- name: download beats kibana dashboards
+#  raw: curl -L -O http://download.elastic.co/beats/dashboards/beats-dashboards-1.3.1.zip
+#- name: unzip dashboards
+#  raw: unzip beats-dashboards-1.3.1.zip
+#- name: load dashboards
+#  raw: ./beats-dashboards-1.3.1/load.sh
+- name: load packetbeat dashboards
+  command: ./scripts/import_dashboards
+  args:
+    chdir: /usr/share/packetbeat
+- name: load metricbeat dashboards
+  command: ./scripts/import_dashboards
+  args:
+    chdir: /usr/share/metricbeat

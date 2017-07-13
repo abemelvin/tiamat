@@ -1,8 +1,8 @@
 ---
 #
-# set up the wazuh server
+# set up the payment server
 #
-- hosts: wazuh
+- hosts: payments
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -14,11 +14,16 @@
       lineinfile:
         path: /etc/hosts
         regexp: '^127\.0\.0\.1'
-        line: '127.0.0.1 wazuh'
+        line: '127.0.0.1 payments'
     - name: update /etc/hostname
-      raw: echo "wazuh" > /etc/hostname
+      raw: echo "payments" > /etc/hostname
     - name: persist new hostname
-      raw: hostname wazuh
+      raw: hostname payments
   roles:
-   - { role: wazuh_server }
-   - { role: filebeat2 }
+   - { role: mysql }
+   - { role: apache }
+   - { role: phpmyadmin }
+   - { role: payment }
+   - { role: wazuh_agent_payments }
+   - { role: packetbeat }
+   - { role: metricbeat }

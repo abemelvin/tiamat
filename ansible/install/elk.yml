@@ -1,6 +1,6 @@
 ---
 #
-# Playbook to install the ELK stack
+# install elastic stack
 #
 - hosts: elk
   remote_user: ubuntu
@@ -10,9 +10,26 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 elk'
+    - name: update /etc/hostname
+      raw: echo "elk" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname elk
   roles:
-   - { role: java }
-   - { role: elasticsearch }
-   - { role: kibana }
-   - { role: nginx }
-   - { role: logstash }
+    - { role: java }
+    - { role: packetbeat }
+    - { role: metricbeat }
+    - { role: elasticsearch }
+    - { role: logstash2 }
+    - { role: kibana2 }
+
+- hosts: wazuh
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  roles:
+    - { role: wazuh-api }

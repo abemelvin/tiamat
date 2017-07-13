@@ -4,15 +4,16 @@ input {
     beats {
         port => 5000
         codec => "json_lines"
-        ssl => false
-        ssl_certificate => "/etc/logstash/logstash.crt"
-        ssl_key => "/etc/logstash/logstash.key"
+        #ssl => false
+        #ssl_certificate => "/etc/logstash/logstash.crt"
+        #ssl_key => "/etc/logstash/logstash.key"
     }
     beats {
+        tags => ["beats"]
         port => 5044
-        ssl => false
-        ssl_certificate => "/etc/pki/tls/certs/logstash-forwarder.crt"
-        ssl_key => "/etc/pki/tls/private/logstash-forwarder.key"
+        #ssl => false
+        #ssl_certificate => "/etc/pki/tls/certs/logstash-forwarder.crt"
+        #ssl_key => "/etc/pki/tls/private/logstash-forwarder.key"
     }
 }
 ## Local Wazuh Manager - JSON file input
@@ -24,21 +25,32 @@ input {
 #   }
 #}
 filter {
-    geoip {
-        source => "srcip"
-        target => "GeoLocation"
-        fields => ["city_name", "continent_code", "country_code2", "country_name", "region_name", "location"]
-    }
-    date {
-        match => ["timestamp", "ISO8601"]
-        target => "@timestamp"
-    }
-    mutate {
-        remove_field => [ "timestamp", "beat", "fields", "input_type", "tags", "count", "@version", "log", "offset", "type"]
+    if "beats" not in [tags] {
+        geoip {
+            source => "srcip"
+            target => "GeoLocation"
+            fields => ["city_name", "continent_code", "country_code2", "country_name", "region_name", "location"]
+        }
+        date {
+            match => ["timestamp", "ISO8601"]
+            target => "@timestamp"
+        }
+        mutate {
+            remove_field => [ "timestamp", "beat", "fields", "input_type", "tags", "count", "@version", "log", "offset", "type"]
+        }
     }
 }
 output {
-    if [port] == 5000 {
+    if "beats" in [tags] {
+        elasticsearch {
+            hosts => ["localhost:9200"]
+            sniffing => true
+            manage_template => false
+            index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
+            document_type => "%{[@metadata][type]}"
+        }
+    }
+    else {
         elasticsearch {
             hosts => ["localhost:9200"]
             index => "wazuh-alerts-%{+YYYY.MM.dd}"
@@ -47,15 +59,6 @@ output {
 #           template => "/etc/logstash/wazuh-elastic2-template.json"
             template_name => "wazuh"
             template_overwrite => true
-        }
-    }
-    else if [port] == 5044 {
-        elasticsearch {
-            hosts => ["localhost:9200"]
-            sniffing => true
-            manage_template => false
-            index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-            document_type => "%{[@metadata][type]}"
         }
     }
 }

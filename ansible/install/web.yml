@@ -1,8 +1,8 @@
 ---
 #
-# set up the mail server
+# set up the web server
 #
-- hosts: mail
+- hosts: web
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -14,17 +14,16 @@
       lineinfile:
         path: /etc/hosts
         regexp: '^127\.0\.0\.1'
-        line: '127.0.0.1 mail'
+        line: '127.0.0.1 web'
     - name: update /etc/hostname
-      raw: echo "mail" > /etc/hostname
+      raw: echo "web" > /etc/hostname
     - name: persist new hostname
-      raw: hostname mail
+      raw: hostname web
   roles:
-   - { role: postfix }
-   - { role: dovecot }
-   - { role: postgresql }
    - { role: apache }
-   - { role: squirrelmail }
-   - { role: wazuh_agent_mail }
+   - { role: php }
+   - { role: mysql }
+   - { role: web_app }
+   - { role: wazuh_agent_web }
    - { role: packetbeat }
    - { role: metricbeat }

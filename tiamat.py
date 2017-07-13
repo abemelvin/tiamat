@@ -13,7 +13,7 @@ except ImportError as e:
     try:
         subprocess.check_call("pip install cliff", shell=True)
     except subprocess.CalledProcessError as e2:
-        print "Could not install python-cliff, exiting..."
+        print "Could not install 'python-cliff', exiting..."
         exit(1)
     sys.stdout.write("Finished installing 'python-cliff'.\n")
     import cliff
@@ -246,7 +246,7 @@ class Deploy(Command):
             # parse wazuh ip
             wazuh_ip_beg = result.find("wazuh ip") + 11
             wazuh_ip_end = result.find("\n", wazuh_ip_beg)
-            state.ip["wazuh"] = result[wazuh_ip_beg:wazuh_ip_end]
+            state.ip["wazuh"] = str(result[wazuh_ip_beg:wazuh_ip_end])
 
             state.is_deployed = True
 
@@ -310,7 +310,10 @@ class Wazuh(Command):
             return
 
         ssh_call = "ssh -i key ubuntu@" + state.ip["wazuh"]
-        subprocess.check_call(ssh_call, shell=True)
+        try:
+            subprocess.check_call(ssh_call, shell=True)
+        except subprocess.CalledProcessError as err:
+            print err
 
 
 class ElkFiles(Command):
