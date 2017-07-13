@@ -19,12 +19,18 @@
     state: directory
     owner: ftp
     mode: 0555
-- name: create an anonymous subdirectory
+- name: create an anonymous upload subdirectory
   file:
     path: /var/ftp/upload
     state: directory
     owner: ftp
     mode: 0777
+- name: create an anonymous download subdirectory
+  file:
+    path: /var/ftp/download
+    state: directory
+    owner: ftp
+    mode: 0777    
 - name: restart vsftpd
   service:
     name: vsftpd
