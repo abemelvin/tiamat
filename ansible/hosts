@@ -24,3 +24,6 @@ ubuntu@10.0.0.19
 
 [payments]
 ubuntu@10.0.0.20
+
+[download]
+download@10.0.0.21

@@ -1,0 +1,23 @@
+---
+#
+# set up the download server
+#
+- hosts: download
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  gather_facts: no
+  pre_tasks:
+    - name: install python2
+      raw: sudo apt-get install -y python-simplejson
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 download'
+    - name: update /etc/hostname
+      raw: echo "download" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname download
+  roles:
+   - { role: vsftpd }
