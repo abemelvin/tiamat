@@ -24,4 +24,11 @@ ubuntu@10.0.0.19
 
 [payments]
 ubuntu@10.0.0.20
+
+<<<<<<< HEAD
+[sales]
+ubuntu@10.0.0.21
+=======
+[download]
+download@10.0.0.21
 >>>>>>> aec2262bb314fe19eee8ebb8e3cf53277288be3c
