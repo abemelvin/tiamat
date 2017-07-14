@@ -4,7 +4,7 @@
 #
 - name: install kibana - takes awhile
   apt:
-    name: kibana=5.4.3
+    name: kibana
     state: present
 - name: install wazuh app plugin - takes awhile
   raw: /usr/share/kibana/bin/kibana-plugin install https://packages.wazuh.com/wazuhapp/wazuhapp.zip

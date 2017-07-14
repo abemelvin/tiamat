@@ -1,8 +1,8 @@
 ---
 #
-# set up the web server
+# set up the point of sales device
 #
-- hosts: web
+- hosts: sales
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -14,17 +14,12 @@
       lineinfile:
         path: /etc/hosts
         regexp: '^127\.0\.0\.1'
-        line: '127.0.0.1 web'
+        line: '127.0.0.1 sales'
     - name: update /etc/hostname
-      raw: echo "web" > /etc/hostname
+      raw: echo "sales" > /etc/hostname
     - name: persist new hostname
-      raw: hostname web
+      raw: hostname sales
   roles:
-    - { role: zip }
-    - { role: apache }
-    - { role: php }
-    - { role: mysql }
-    - { role: web_app }
-    - { role: wazuh_agent_web }
+    - { role: sales }
     - { role: packetbeat }
     - { role: metricbeat }

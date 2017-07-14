@@ -13,7 +13,7 @@
 - name: allow mysql
   ufw:
     rule: allow
-    port: 3309
+    port: 3306
 - name: allow http
   ufw:
     rule: allow
@@ -33,11 +33,11 @@
   apt:
     name: python-mysqldb
     state: present
-- name: move the firmware file 
-  raw: mv /home/ubuntu/payment-server/pos_firmware /home/ubuntu/pos_firmware
-- name: move the log file  
-  raw: mv /home/ubuntu/payment-server/log_file /home/ubuntu/log_file
-- name: move the payment generator
-  raw: mv /home/ubuntu/payment-server/server.py /home/ubuntu/server.py 
+#- name: move the firmware file 
+#  raw: mv /home/ubuntu/payment-server/pos_firmware /home/ubuntu/pos_firmware
+#- name: move the log file  
+#  raw: mv /home/ubuntu/payment-server/log_file /home/ubuntu/log_file
+#- name: move the payment generator
+#  raw: mv /home/ubuntu/payment-server/payment_server.py /home/ubuntu/payment_server.py 
 - name: start processing payments
-  shell: nohup python server.py >/dev/null 2>&1 &
+  shell: nohup python /home/ubuntu/payments-server/payment_server.py >/dev/null 2>&1 &

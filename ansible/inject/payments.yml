@@ -1,0 +1,20 @@
+---
+#
+# capture payment data
+#
+- name: capture payment data
+  hosts: blackhat
+  tasks:
+    - name: log in to the payment server
+      shell: |
+        spawn ssh blackhat@payments.fazio.com
+
+        expect "password:"
+        send "blackhat\n"
+
+        send "echo 'test' > test.txt\n"
+
+        exit 0
+      args: 
+        executable: /usr/bin/expect
+      delegate_to: localhost

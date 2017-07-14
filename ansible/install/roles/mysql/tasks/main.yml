@@ -18,3 +18,14 @@
   apt:
     name: mysql-server
     state: present
+- name: configure mysql-server
+  template:
+    src: mysqld.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    owner: root
+    group: root
+    mode: 0644
+- name: restart mysql
+  service:
+    name: mysql
+    state: restarted

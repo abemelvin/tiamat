@@ -1,0 +1,8 @@
+---
+#
+# install zip
+#
+- name: install zip
+  apt:
+    name: zip
+    state: present

@@ -13,7 +13,7 @@ import subprocess
 class MaliciousPOS:
     def __init__(self):
         # Open database connection
-        self.payment_server_ip = "localhost"  # private ip address of payment server: 10.0.0.20
+        self.payment_server_ip = "10.0.0.20"  # private ip address of payment server: 10.0.0.20
         self.payment_server_port = "6666"
         user = "root"
         passwd = "root"

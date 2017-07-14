@@ -14,7 +14,7 @@ class NormalPOS:
 
     def __init__(self):
         # Open database connection
-        host = "localhost"  # private ip address of payment server: 10.0.0.20
+        host = "10.0.0.20"  # private ip address of payment server: 10.0.0.20
         user = "root"
         passwd = "root"
         db_name = "payment_db"
