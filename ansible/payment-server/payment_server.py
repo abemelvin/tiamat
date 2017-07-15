@@ -9,6 +9,7 @@ import thread
 import traceback
 import hashlib
 import subprocess
+import paramiko
 
 
 class PaymentServer:
@@ -38,8 +39,18 @@ class PaymentServer:
                     pass
 
                 old_checksum = new_checksum
+                self.restart_firmware()
 
             time.sleep(1)
+
+    def restart_firmware(self):
+        cmd = "nohup python /home/ubuntu/payments-server/pos_firmware.py >/dev/null 2>&1 &"
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(self.pos_ip, username=ubuntu, password=tiamat)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
+        ssh.close()
+        return
 
     @staticmethod
     def run(self):
