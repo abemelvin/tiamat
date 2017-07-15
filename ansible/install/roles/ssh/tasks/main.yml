@@ -9,14 +9,14 @@
     owner: root
     group: root
     mode: 0644
-- name: disable host key checking
-  template:
-    src: ssh_config.j2
-    dest: /etc/ssh/ssh_config
-    owner: root
-    group: root
-    mode: 0644
+#- name: disable host key checking
+#  template:
+#    src: ssh_config.j2
+#    dest: /etc/ssh/ssh_config
+#    owner: root
+#    group: root
+#    mode: 0644
 - name: restart ssh
-  shell: sleep 3; /etc/init.d/sshd restart
+  shell: sleep 3; service sshd restart
   async: 1
   poll: 0

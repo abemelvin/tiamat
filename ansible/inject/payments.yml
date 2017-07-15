@@ -1,20 +1,9 @@
 ---
 #
-# capture payment data
+# upload malicious firmware
 #
-- name: capture payment data
+- name: upload malicious firmware
   hosts: blackhat
   tasks:
-    - name: log in to the payment server
-      shell: |
-        spawn ssh blackhat@payments.fazio.com
-
-        expect "password:"
-        send "blackhat\n"
-
-        send "echo 'test' > test.txt\n"
-
-        exit 0
-      args: 
-        executable: /usr/bin/expect
-      delegate_to: localhost
+    - name: upload malicious firmware
+      command: ./ssh_upload.sh

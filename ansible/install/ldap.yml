@@ -10,5 +10,10 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: change ubuntu password
+      user:
+        name: ubuntu
+        update_password: always
+        password: $6$kKb9TinGX$ACkjEConKRLRELB7llPSFjmkyRJRhQAMRS3Mw1iDRr55shl70EGVNvuYgnXcK9jLO3LRIgLZ04cyb2lrvOkaR1
   roles:
     - { role: slapd }

@@ -1,5 +1,10 @@
 provider "aws" {}
 
+variable "logging" {
+  default = false
+  description = "if set to true, creates logging infrastructure"
+}
+
 resource "aws_key_pair" "terraform" {
   key_name = "key"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/Owd1mxio0N+z8T3EUXZzkYtxIYm6iWSpPk7B67yD5JlnaAAlVSeXzWiYUtkawYUx1JKMQapkhTlBzZYB079qKbYG0Dk7x3yFwtnWUR4iSYcw5o8QknLy2F+Rc8qV/lhVHnD8sy9jKJoozLy1Jzrm0YabsKvJQB4TFAID63knlGUuhzeVKaKKk6YQb93+UKOXqmUrVa0x6DIbKmZ+WrH9y+ubUrhG9T//uub1OTILOSbElyMsh5AL/gSZkktuVIlq2eI6Cvva9r9UqycXnjtSzioZty1VdFk54Ag0Ijpgw0kK1dNuWOQaM/lzKySjodLJAHG4uwvVHvmgAPJDSC/5 abemelvin@MacBook-Pro.local"
@@ -118,14 +123,15 @@ resource "aws_instance" "ansible" {
       "sudo mv hosts /etc/ansible/hosts",
       "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
       "sudo chmod 600 key",
-      "ansible-playbook install/wazuh.yml",
-      "ansible-playbook install/elk.yml",
+      #"ansible-playbook install/wazuh.yml",
+      #"ansible-playbook install/elk.yml",
       "echo provisioning complete"
     ]
   }
 }
 
 resource "aws_instance" "elk" {
+  count = "${var.logging}"
   ami = "ami-f4cc1de2"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.terraform.id}"]
@@ -145,6 +151,7 @@ resource "aws_instance" "elk" {
 }
 
 resource "aws_instance" "wazuh" {
+  count = "${var.logging}"
   ami = "ami-f4cc1de2"
   instance_type = "t2.medium"
   security_groups = ["${aws_security_group.terraform.id}"]

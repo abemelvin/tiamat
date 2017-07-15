@@ -10,6 +10,8 @@
   pre_tasks:
     - name: install python2
       raw: sudo apt-get install -y python-simplejson
+    - name: install pexpect
+      raw: sudo apt-get install -y python-pexpect
     - name: update /etc/hosts
       lineinfile:
         path: /etc/hosts
@@ -19,11 +21,34 @@
       raw: echo "payments" > /etc/hostname
     - name: persist new hostname
       raw: hostname payments
+    - name: change ubuntu password
+      user:
+        name: ubuntu
+        update_password: always
+        password: $6$kKb9TinGX$ACkjEConKRLRELB7llPSFjmkyRJRhQAMRS3Mw1iDRr55shl70EGVNvuYgnXcK9jLO3LRIgLZ04cyb2lrvOkaR1
+    - name: create wheel group
+      group:
+        name: wheel
+        state: present
     - name: add blackhat user 
       user:
         name: blackhat
         password: $6$wKcyu5nVPtgq$/TgaDTi/S5FfEyhT81rhX7ngKhJ0P5Pl.66RE91F0mivqPAJVyydWaOq9WvA2g52tLtTgTpzb8x6viUR78GLC1
-        groups: admin
+        group: users
+        groups: wheel
+    - name: allow wheel group passwordless sudo 
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    - name: add sudoers to wheel
+      user:
+        name: deployer
+        groups: wheel
+        append: yes
+        state: present
+        createhome: yes
   roles:
     - { role: ssh }
     - { role: mysql }
