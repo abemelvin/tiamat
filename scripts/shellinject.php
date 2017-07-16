@@ -44,7 +44,7 @@ $loginValues = array(
 $shellValues = array(
     'invoice' => '@'.realpath($shellPath)
 );
-
+echo "Start Login Web Server.\n";
 echo "Username:", $username, "Password:", $password, "\n";
 
 //Initiate cURL.
