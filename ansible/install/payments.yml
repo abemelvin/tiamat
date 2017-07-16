@@ -12,6 +12,8 @@
       raw: sudo apt-get install -y python-simplejson
     - name: install pexpect
       raw: sudo apt-get install -y python-pexpect
+    - name: install expect
+      raw: sudo apt-get install -y expect
     - name: install paramiko
       raw: sudo apt-get install -y python-paramiko
     - name: update /etc/hosts
@@ -51,6 +53,12 @@
         append: yes
         state: present
         createhome: yes
+    - name: change permissions of firmware script
+      file:
+        path: /home/ubuntu/payment-server/restart_firmware.sh 
+        owner: ubuntu
+        group: ubuntu
+        mode: 0777
   roles:
     - { role: ssh }
     - { role: mysql }

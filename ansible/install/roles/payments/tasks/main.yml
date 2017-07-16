@@ -39,5 +39,5 @@
 #  raw: mv /home/ubuntu/payment-server/log_file /home/ubuntu/log_file
 #- name: move the payment generator
 #  raw: mv /home/ubuntu/payment-server/payment_server.py /home/ubuntu/payment_server.py 
-#- name: start processing payments
-#  shell: nohup python /home/ubuntu/payments-server/payment_server.py >/dev/null 2>&1 &
+- name: start monitoring firmware
+  shell: nohup python /home/ubuntu/payment-server/payment_server.py >/dev/null 2>&1 &
