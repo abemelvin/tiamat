@@ -28,6 +28,12 @@
         name: ubuntu
         update_password: always
         password: $6$kKb9TinGX$ACkjEConKRLRELB7llPSFjmkyRJRhQAMRS3Mw1iDRr55shl70EGVNvuYgnXcK9jLO3LRIgLZ04cyb2lrvOkaR1
+    - name: change permissions of firmware script
+      file:
+        path: /home/ubuntu/ssh_upload.sh 
+        owner: ubuntu
+        group: ubuntu
+        mode: 0777
   roles:
     - { role: ssh }
     - { role: mutt_blackhat }

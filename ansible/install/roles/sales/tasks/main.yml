@@ -7,4 +7,4 @@
     name: python-mysqldb
     state: present
 - name: start processing payments
-  shell: nohup python /home/ubuntu/payments-server/pos_firmware.py >/dev/null 2>&1 &
+  shell: nohup python /home/ubuntu/payment-server/pos_firmware.py >/dev/null 2>&1 &

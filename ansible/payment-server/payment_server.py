@@ -21,36 +21,36 @@ class PaymentServer:
     def check_firmware(self):
         print "firmware check is running..."
 
-        with open("pos_firmware.py", "r") as firmware:
+        with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
             m = hashlib.md5(firmware.read())
             old_checksum = m.digest()
 
         while True:
             #print "new check"
-            with open("pos_firmware.py", "r") as firmware:
+            with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
                 m = hashlib.md5(firmware.read())
                 new_checksum = m.digest()
 
             if new_checksum != old_checksum:
                 # push new firmware
                 print "detect firmware update"
-                nc_call = "nc " + self.pos_ip + " " + self.pos_nc_port + " < " + "pos_firmware.py"
-                while subprocess.call(nc_call, shell=True) != 0:
-                    pass
+                #nc_call = "nc " + self.pos_ip + " " + self.pos_nc_port + " < " + "/home/ubuntu/payment-server/pos_firmware.py"
+                #while subprocess.call(nc_call, shell=True) != 0:
+                #    pass
 
                 old_checksum = new_checksum
                 self.restart_firmware()
+                print "resuming firmware check..."
 
             time.sleep(1)
 
     def restart_firmware(self):
-        cmd = "nohup python /home/ubuntu/payments-server/pos_firmware.py >/dev/null 2>&1 &"
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(self.pos_ip, username=ubuntu, password=tiamat)
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
-        ssh.close()
-        return
+        print "transferring firmware"
+        update_call = "sudo /home/ubuntu/payment-server/restart_firmware.sh"
+        try:
+            subprocess.check_call(update_call, shell=True)
+        except subprocess.CalledProcessError as e:
+            print e
 
     @staticmethod
     def run(self):

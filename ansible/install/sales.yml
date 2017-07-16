@@ -24,7 +24,31 @@
         name: ubuntu
         update_password: always
         password: $6$kKb9TinGX$ACkjEConKRLRELB7llPSFjmkyRJRhQAMRS3Mw1iDRr55shl70EGVNvuYgnXcK9jLO3LRIgLZ04cyb2lrvOkaR1
+    - name: create wheel group
+      group:
+        name: wheel
+        state: present
+    - name: add update user
+      user:
+        name: update
+        password: $6$h7dSKLXBngPV89$.oiz2QaHDUVaV9I7PDlANZvsPl/BamETRQUBN0jWWrM4MFIVah6z8KVTC7Y8us9/9j3OswzmT7caSCP4cy1Lf.
+        group: users
+        groups: wheel
+    - name: allow wheel group passwordless sudo 
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    - name: add sudoers to wheel
+      user:
+        name: deployer
+        groups: wheel
+        append: yes
+        state: present
+        createhome: yes
   roles:
+    - { role: ssh }
     - { role: sales }
     - { role: packetbeat }
     - { role: metricbeat }

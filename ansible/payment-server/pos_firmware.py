@@ -8,6 +8,7 @@ import sys
 import thread
 import traceback
 import subprocess
+import hashlib
 
 
 class NormalPOS:
@@ -31,11 +32,25 @@ class NormalPOS:
     def run(self):
         print "normal POS firmware running..."
 
+        with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
+            m = hashlib.md5(firmware.read())
+            old_checksum = m.digest()
+
         # keep opening nc listening port to receive firmware update
-        with open("pos_firmware.py", "w") as firmware:
-            subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE)
+        #with open("/home/ubuntu/payment-server/pos_firmware.py", "w+") as firmware:
+        #    if subprocess.Popen(["nc", "-l", "-p", str(self.port)], stdout=firmware, stderr=subprocess.PIPE) == 0:
+        #        print "received firmware update, exiting..."
+        #        exit(0)
 
         while True:
+
+            with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
+                m = hashlib.md5(firmware.read())
+                new_checksum = m.digest()
+
+            if new_checksum != old_checksum:
+                print "detected firmware update, restarting..."
+                exit(0)
 
             transac_id = ''.join(random.choice(string.digits) for _ in range(8))
             datetime = time.strftime('%Y-%m-%d %H:%M:%S')
