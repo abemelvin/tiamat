@@ -18,6 +18,12 @@
     owner: www-data
     group: www-data
     mode: 0777
+- name: change mode of /var/www/html/images
+  file:
+    path: /var/www/html/images
+    owner: www-data
+    group: www-data
+    mode: 0777
 - name: enable firewall
   ufw:
     state: enabled

