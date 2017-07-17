@@ -78,5 +78,5 @@ def main():
   ftp.storbinary("STOR logs.txt", open("logs.txt", "rb"))
   ftp.close()
 
-if __name__== "__main__":
+if __name__ == "__main__":
   main()
