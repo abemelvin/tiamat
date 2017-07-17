@@ -1,7 +1,7 @@
 import ftplib
 
 def main():
-  host = "download.fazio.com"
+  host = "downloads.fazio.com"
   port = 21
   username = "anonymous"
   password = "contractor@fazio.com"
