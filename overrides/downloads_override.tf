@@ -1,13 +1,13 @@
-resource "aws_route53_record" "download" {
+resource "aws_route53_record" "downloads" {
   zone_id = "${aws_route53_zone.terraform.zone_id}"
-  name = "download.fazio.com"
+  name = "downloads.fazio.com"
   type = "A"
   ttl = "300"
-  records = ["${aws_instance.download.private_ip}"]
-  depends_on = ["aws_instance.download", "aws_route53_zone.terraform"]
+  records = ["${aws_instance.downloads.private_ip}"]
+  depends_on = ["aws_instance.downloads", "aws_route53_zone.terraform"]
 }
 
-resource "aws_instance" "download" {
+resource "aws_instance" "downloads" {
   ami = "ami-f4cc1de2"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
@@ -18,7 +18,7 @@ resource "aws_instance" "download" {
   depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
 
   connection {
-    host = "${aws_instance.download.public_ip}"
+    host = "${aws_instance.downloads.public_ip}"
     type = "ssh"
     user = "ubuntu"
     private_key = "${file("key")}"
@@ -26,6 +26,6 @@ resource "aws_instance" "download" {
   }
 }
 
-output "download ip" {
-  value = "${aws_instance.download.public_ip}"
+output "downloads ip" {
+  value = "${aws_instance.downloads.public_ip}"
 }

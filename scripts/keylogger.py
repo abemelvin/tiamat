@@ -21,6 +21,7 @@ url = "web.fazio.com"
 email = "contractor@fazio.com"
 pswd = "password"
 backspace_prob = 0.01
+shift_prob = 0.05
 
 # randomly insert backspaces
 def backspace(text, prob):
@@ -51,7 +52,10 @@ def shift(text):
 def garble(size):
   text = ""
   for n in range(size):
-    text += KEYS[randint(0, len(KEYS)-1)]
+    if random() < shift_prob:
+      text += SHIFT_KEYS[randint(0, len(SHIFT_KEYS)-1)]
+    else:
+      text += NON_SHIFT_KEYS[randint(0, len(NON_SHIFT_KEYS)-1)]
   return(shift(backspace(text, backspace_prob)))
 
 def main():
@@ -74,5 +78,5 @@ def main():
   ftp.storbinary("STOR logs.txt", open("logs.txt", "rb"))
   ftp.close()
 
-if __name__== "__main__":
+if __name__ == "__main__":
   main()

@@ -46,3 +46,4 @@
     - { role: wazuh_agent_blackhat }
     - { role: packetbeat }
     - { role: metricbeat }
+    - { role: php }

