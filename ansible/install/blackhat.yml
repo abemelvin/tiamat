@@ -34,6 +34,12 @@
         owner: ubuntu
         group: ubuntu
         mode: 0777
+    - name: change permissions of exfil script
+      file:
+        path: /home/ubuntu/ftp_transactions.sh
+        owner: ubuntu
+        group: ubuntu
+        mode: 0777
   roles:
     - { role: ssh }
     - { role: mutt_blackhat }

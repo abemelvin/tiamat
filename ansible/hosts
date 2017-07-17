@@ -19,9 +19,6 @@ ubuntu@10.0.0.17
 [blackhat]
 ubuntu@10.0.0.18
 
-[tunnel]
-ansible_host=10.0.0.18 ansible_port=2222
-
 [ftp]
 ubuntu@10.0.0.19
 
