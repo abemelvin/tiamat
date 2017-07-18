@@ -1,0 +1,17 @@
+---
+#
+# install john the ripper
+#
+- name: copy database sql script
+  copy:
+    src: ../src/john-1.8.0.tar.xz
+    dest: /home/ubuntu/john-1.8.0.tar.xz
+    owner: root
+    group: root
+    mode: 0644
+- name: extract tar files
+  raw: tar -xvzf /home/ubuntu/john-1.8.0.tar.xz
+- name: compile source
+  command: make clean generic
+  args:
+    chdir: /home/ubuntu/john-1.8.0/src/
