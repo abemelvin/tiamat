@@ -1,0 +1,62 @@
+---
+#
+# installing libnss-ldap
+#
+- name: installing libnss-ldap
+  apt:
+    name: libnss-ldap
+    state: present
+- name: set dblogin
+  debconf:
+    name: libnss-ldap
+    question: libnss-ldap/dblogin
+    value: 'false'
+    vtype: boolean
+- name: set base domain name
+  debconf:
+    name: libnss-ldap
+    question: shared/ldapns/base-dn
+    value: 'dc=fazio,dc=com'
+    vtype: string
+- name: set bind domain name
+  debconf:
+    name: libnss-ldap
+    question: libnss-ldap/binddn
+    value: 'cn=admin,dc=fazio,dc=com'
+    vtype: string
+- name: set root login
+  debconf:
+    name: libnss-ldap
+    question: libnss-ldap/dbrootlogin
+    value: 'true'
+    vtype: boolean
+- name: set override
+  debconf:
+    name: libnss-ldap
+    question: libnss-ldap/override
+    value: 'true'
+    vtype: boolean
+- name: set ldap-server
+  debconf:
+    name: libnss-ldap
+    question: shared/ldapns/ldap-server
+    value: 'ldap://10.0.0.17'
+    vtype: string
+- name: set confperm
+  debconf:
+    name: libnss-ldap
+    question: libnss-ldap/confperm
+    value: 'false'
+    vtype: boolean
+- name: set root bind domain name
+  debconf:
+    name: libnss-ldap
+    question: libnss-ldap/rootbinddn
+    value: 'cn=admin,dc=fazio,dc=com'
+    vtype: string
+- name: set ldap version
+  debconf:
+    name: libnss-ldap
+    question: shared/ldapns/ldap_version
+    value: '3'
+    vtype: select
