@@ -47,8 +47,8 @@ def main():
   f1.close()
 
   f2 = open("logs_decoded.txt", "a+")
-  f2.write("username: " + creds[0] + "\r\n")
-  f2.write("password: " + creds[1] + "\r\n")
+  f2.write(creds[0] + "\r\n")
+  f2.write(creds[1] + "\r\n")
   f2.close()
 
 if __name__ == "__main__":
