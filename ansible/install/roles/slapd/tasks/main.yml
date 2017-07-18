@@ -59,3 +59,5 @@
     owner: root
     group: root
     mode: 0644
+- name: add the authentication database
+  raw: ldapadd -x -D cn=admin,dc=fazio,dc=com -W -f /home/ubuntu/add_content.ldif
