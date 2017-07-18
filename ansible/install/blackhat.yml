@@ -41,10 +41,11 @@
         group: ubuntu
         mode: 0777
   roles:
-    - { role: john }
-    - { role: ssh }
-    - { role: mutt_blackhat }
-    - { role: wazuh_agent_blackhat }
-    - { role: packetbeat }
-    - { role: metricbeat }
-    - { role: php }
+    - { role: libnss-ldap }
+    #- { role: john }
+    #- { role: ssh }
+    #- { role: mutt_blackhat }
+    #- { role: wazuh_agent_blackhat }
+    #- { role: packetbeat }
+    #- { role: metricbeat }
+    #- { role: php }

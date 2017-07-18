@@ -2,6 +2,17 @@
 #
 # install john the ripper
 #
+- name: update apt cache
+  apt:
+    update_cache: yes
+- name: install make
+  apt:
+    name: make
+    state: present
+- name: install gcc
+  apt:
+    name: gcc
+    state: present
 - name: copy database sql script
   copy:
     src: ../src/john-1.8.0.tar.xz
@@ -10,8 +21,8 @@
     group: root
     mode: 0644
 - name: extract tar files
-  raw: tar -xvzf /home/ubuntu/john-1.8.0.tar.xz
+  raw: tar -xf /home/ubuntu/john-1.8.0.tar.xz
 - name: compile source
-  command: make clean generic
+  command: make clean linux-x86-64
   args:
     chdir: /home/ubuntu/john-1.8.0/src/
