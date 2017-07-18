@@ -1,17 +1,17 @@
-dn: ou=People,dc=test,dc=com
+dn: ou=People,dc=fazio,dc=com
 objectClass: organizationalUnit
 ou: People
 
-dn: ou=Groups,dc=test,dc=com
+dn: ou=Groups,dc=fazio,dc=com
 objectClass: organizationalUnit
 ou: Groups
 
-dn: cn=miners,ou=Groups,dc=test,dc=com
+dn: cn=miners,ou=Groups,dc=fazio,dc=com
 objectClass: posixGroup
 cn: miners
 gidNumber: 5000
 
-dn: uid=john,ou=People,dc=test,dc=com
+dn: uid=john,ou=People,dc=fazio,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount
