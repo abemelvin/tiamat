@@ -19,6 +19,28 @@
       raw: echo "web" > /etc/hostname
     - name: persist new hostname
       raw: hostname web
+    - name: create wheel group
+      group:
+        name: wheel
+        state: present
+    - name: add www-data user 
+      user:
+        name: web
+        group: users
+        groups: wheel
+    - name: allow wheel group passwordless sudo 
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    - name: add sudoers to wheel
+      user:
+        name: deployer
+        groups: wheel
+        append: yes
+        state: present
+        createhome: yes
     - name: change ubuntu password
       user:
         name: ubuntu
