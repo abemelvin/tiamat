@@ -59,5 +59,15 @@
     owner: root
     group: root
     mode: 0644
+- name: copy ldif file to ldap server
+  copy:
+    src: ../scripts/add_content.ldif
+    dest: /home/ubuntu/add_content.ldif
+    owner: root
+    group: root
+    mode: 0644
 - name: add the authentication database
-  raw: ldapadd -x -D cn=admin,dc=fazio,dc=com -W -f /home/ubuntu/add_content.ldif
+  expect:
+    command: ldapadd -x -D cn=admin,dc=fazio,dc=com -W -f /home/ubuntu/add_content.ldif
+    responses:
+      (?i)password: "password"
