@@ -60,3 +60,57 @@
     question: shared/ldapns/ldap_version
     value: '3'
     vtype: select
+- name: ldap root password
+  debconf:
+    name: libnss-ldap
+    question: shared/ldapns/ldap_version
+    value: '3'
+    vtype: select
+
+- name: copy the ldap.conf file
+  template:
+    src: ldap.conf
+    dest: /etc
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure client
+  raw: auth-client-config -t nss -p lac_ldap
+
+- name: configure account
+  template:
+    src: common-account
+    dest: /etc/pam.d
+    owner: root
+    group: root
+    mode: 0644
+- name: configure auth
+  template:
+    src: common-auth
+    dest: /etc/pam.d
+    owner: root
+    group: root
+    mode: 0644
+- name: configure password
+  template:
+    src: common-password
+    dest: /etc/pam.d
+    owner: root
+    group: root
+    mode: 0644
+- name: configure session
+  template:
+    src: common-session
+    dest: /etc/pam.d
+    owner: root
+    group: root
+    mode: 0644
+- name: configure session noninteractive
+  template:
+    src: common-session-noninteractive
+    dest: /etc/pam.d
+    owner: root
+    group: root
+    mode: 0644
+

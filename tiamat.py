@@ -438,7 +438,8 @@ class ShowAvailableServers(Command):
             for row in available_server_list:
                 print "-", row.split('_')[0]
         else:
-            print "Didn't find any servers available for deployment, someone deleted all the files in the 'tiamat/terraform/overrides/' directory!"
+            print "Didn't find any servers available for deployment, someone deleted all the files in the " \
+                  "'tiamat/terraform/overrides/' directory!"
 
 
 class GlobalState:
@@ -459,25 +460,20 @@ def main(argv=sys.argv[1:]):
 
 if __name__ == '__main__':
     # global state variables
-    available_server_list = ["blackhat", "contractor", "ftp",
-                        "mail", "payments", "web"]
 
     if isfile("global_state.json"):
         state = GlobalState()
         with open("global_state.json", "r") as global_state:
             d = json.load(global_state)
             state.__dict__.update(d)
-
     else:
         state = GlobalState()
 
     deploy_server_list = [f.split('_')[0] for f in listdir('.') if isfile(f) and f[-2:] == 'tf']
     deploy_server_list.append("ansible")
 
-    try:
+    if "configuration.tf" in deploy_server_list:
         deploy_server_list.remove('configuration.tf')
-    except ValueError:
-        pass
 
     elk_logs_path = ""
     os_platform = ""
