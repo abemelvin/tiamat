@@ -24,6 +24,28 @@
         name: ubuntu
         update_password: always
         password: $6$kKb9TinGX$ACkjEConKRLRELB7llPSFjmkyRJRhQAMRS3Mw1iDRr55shl70EGVNvuYgnXcK9jLO3LRIgLZ04cyb2lrvOkaR1
+    - name: create wheel group
+      group:
+        name: wheel
+        state: present
+    - name: add www-data user 
+      user:
+        name: www-data
+        group: users
+        groups: wheel
+    - name: allow wheel group passwordless sudo 
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    - name: add sudoers to wheel
+      user:
+        name: deployer
+        groups: wheel
+        append: yes
+        state: present
+        createhome: yes
   roles:
     - { role: zip }
     - { role: apache }

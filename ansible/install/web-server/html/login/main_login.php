@@ -52,26 +52,26 @@ if (isset($_SESSION['username'])) {
             </tr>
             <tr>
               <th scope="row">2</th>
-              <td>target</td>
+              <td>target@fazio.com</td>
               <td>target</td>
             </tr>
             <tr>
               <th scope="row">3</th>
-              <td>contractor</td>
+              <td>contractor@fazio.com</td>
               <td>password</td>
             </tr>            <tr>
               <th scope="row">4</th>
-              <td>vendor-1</td>
+              <td>vendor-1@fazio.com</td>
               <td>vendor-1</td>
             </tr>
             <tr>
               <th scope="row">5</th>
-              <td>vendor-2</td>
+              <td>vendor-2@fazio.com</td>
               <td>vendor-2</td>
             </tr>
             <tr>
               <th scope="row">6</th>
-              <td>vendor-3</td>
+              <td>vendor-3@fazio.com</td>
               <td>vendor-3</td>
             </tr>
           </tbody>
