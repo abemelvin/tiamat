@@ -1,0 +1,6 @@
+---
+#
+# start tcpdump
+#
+- name: start tcpdump
+  shell: sudo nohup tcpdump -i eth0 > network_logs.txt 2>&1 &

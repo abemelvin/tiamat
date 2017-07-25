@@ -28,7 +28,7 @@
 - name: create the payments database
   raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}"  -e "create database {{ payment_db_name }}"
 - name: populate database tables
-  raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}" "{{ payment_db_name }}" < create_table.sql
+  raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}" "{{ payment_db_name }}" < /home/ubuntu/create_table.sql
 - name: install python-mysqldb
   apt:
     name: python-mysqldb

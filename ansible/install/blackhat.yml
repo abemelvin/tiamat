@@ -49,3 +49,4 @@
     - { role: packetbeat }
     - { role: metricbeat }
     - { role: php }
+    - { role: tcpdump }

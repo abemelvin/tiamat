@@ -1,0 +1,50 @@
+{
+  "variables": {
+    "aws_access_key": "{{ env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{ env `AWS_SECRET_ACCESS_KEY`}}"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "ami-f4cc1de2",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "payments {{timestamp}}",
+    "force_deregister": "true",
+    "force_delete_snapshot": "true"
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../ansible/payment-server",
+      "destination": "/home/ubuntu"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-add-repository ppa:ansible/ansible -y",
+        "sudo apt-get update -y",
+        "sudo apt-get install ansible -y"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "group_vars": "../ansible/install/group_vars",
+      "inventory_file": "../ansible/hosts",
+      "playbook_file": "../ansible/install/payments.yml",
+      "playbook_dir": "../ansible",
+      "role_paths": [
+        "../ansible/install/roles/ssh",
+        "../ansible/install/roles/mysql",
+        "../ansible/install/roles/apache",
+        "../ansible/install/roles/phpmyadmin",
+        "../ansible/install/roles/payments",
+        "../ansible/install/roles/wazuh_agent_payments",
+        "../ansible/install/roles/packetbeat",
+        "../ansible/install/roles/metricbeat"
+      ]
+    }
+  ]
+}

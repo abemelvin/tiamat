@@ -44,6 +44,7 @@ class NormalPOS:
 
         while True:
 
+            skip = 0
             with open("/home/ubuntu/payment-server/pos_firmware.py", "r") as firmware:
                 m = hashlib.md5(firmware.read())
                 new_checksum = m.digest()
@@ -66,15 +67,19 @@ class NormalPOS:
             try:
                 # Execute the SQL command
                 self.cursor.execute(sql)
+            except (MySQLdb.Error, MySQLdb.Warning) as e:
+                print(e)
+                skip = 1
 
-                # Commit your changes in the database
-                self.db.commit()
-
-                print "one record inserted."
-            except Exception as e:
-                traceback.print_exc(e)
-                # Rollback in case there is any error
-                self.db.rollback()
+            if skip == 0:
+                try:
+                    # Commit your changes in the database
+                    self.db.commit()
+                    print "one record inserted."
+                except Exception as e:
+                    traceback.print_exc(e)
+                    # Rollback in case there is any error
+                    self.db.rollback()
 
             # assume interval is drawn from exp distribution
             interval = random.expovariate(0.1)
