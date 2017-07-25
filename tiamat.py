@@ -259,6 +259,7 @@ class Build(Command):
                 if parsed_args.machine in filename:
                     print "Building " + filename + "..."
                     build_call = "packer build " + filename
+                    print "build call=", build_call
                     p = subprocess.Popen(build_call, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     result = ""
                     while True:

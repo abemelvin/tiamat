@@ -32,9 +32,9 @@
     - { role: logstash2 }
     - { role: kibana2 }
 
-- hosts: wazuh
-  remote_user: ubuntu
-  become: yes
-  become_user: root
-  roles:
-    - { role: wazuh-api }
+#- hosts: wazuh
+#  remote_user: ubuntu
+#  become: yes
+#  become_user: root
+#  roles:
+ #   - { role: wazuh-api }
