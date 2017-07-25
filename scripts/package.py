@@ -1,6 +1,12 @@
 import ftplib
+import sys
 
-def main():
+def main(argv):
+  if len(argv) == 0:
+    print("Error! No argument(s) specified.")
+    return
+  inputfile = argv[0]
+
   host = "downloads.fazio.com"
   port = 21
   username = "anonymous"
@@ -9,8 +15,8 @@ def main():
   ftp.connect(host, port)
   ftp.login()
   ftp.cwd("download")
-  ftp.storbinary("STOR keylogger.py", open("keylogger.py", "rb"))
+  ftp.storbinary("STOR " + inputfile, open(inputfile, "rb"))
   ftp.close()
 
-if __name__== "__main__":
-  main()
+if __name__ == "__main__":
+  main(sys.argv[1:])

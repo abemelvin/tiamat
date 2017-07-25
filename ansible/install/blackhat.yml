@@ -41,7 +41,7 @@
         group: ubuntu
         mode: 0777
   roles:
-    #- { role: libnss-ldap }
+    - { role: libnss-ldap }
     #- { role: john }
     - { role: ssh }
     - { role: mutt_blackhat }

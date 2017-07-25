@@ -65,6 +65,7 @@ class Tiamat(App):
 
         # start dependencies check
         environment_errors = list()
+        # print os.environ["AWS_DEFAULT_REGION"]
         if "AWS_ACCESS_KEY_ID" not in os.environ:
             environment_errors.append("Environment variable AWS_ACCESS_KEY_ID is missing. Please check your ~/.bash_profile.")
 
@@ -152,8 +153,9 @@ class Tiamat(App):
                     print "Exiting..."
                     exit(1)
 
-                os.environ["PATH"] += os.pathsep + os.getcwd()
-                print "Added", os.getcwd(), "to your PATH variable."
+                # os.environ["PATH"] += os.pathsep + os.getcwd()
+                # print "Added", os.getcwd(), "to your PATH variable."
+                print "Please exit Tiamat and add the current directory to your PATH variable."
 
             else:
                 exit(1)
@@ -312,6 +314,13 @@ class Deploy(Command):
         parser.add_argument('--caps', action='store_true')
         return parser
 
+    @staticmethod
+    def parse_ip(result, server):
+        target = server + " ip"
+        ip_beg = result.find(target) + len(target) + 3
+        ip_end = result.find("\n", ip_beg)
+        return result[ip_beg:ip_end]
+
     def take_action(self, parsed_args):
         self.log.debug('debugging')
         output = 'start deploying environment ' + parsed_args.config_name + '\n'
@@ -356,27 +365,16 @@ class Deploy(Command):
                 subprocess.call("terraform destroy", shell=True)
                 return
 
-            # parse ansible ip
-            ansible_ip_beg = result.find("ansible ip") + 13
-            ansible_ip_end = result.find("\n", ansible_ip_beg)
-            state.ip["ansible"] = result[ansible_ip_beg:ansible_ip_end]
-
-            # parse elk ip
-            elk_ip_beg = result.find("elk ip") + 9
-            elk_ip_end = result.find("\n", elk_ip_beg)
-            state.ip["elk"] = result[elk_ip_beg:elk_ip_end]
-
-            # parse wazuh ip
-            wazuh_ip_beg = result.find("wazuh ip") + 11
-            wazuh_ip_end = result.find("\n", wazuh_ip_beg)
-            state.ip["wazuh"] = str(result[wazuh_ip_beg:wazuh_ip_end])
+            # parse deployed servers ip
+            for server in deploy_server_list:
+                state.ip[server] = Deploy.parse_ip(result, server)
 
             state.is_deployed = True
 
             state.active_server_list = list(deploy_server_list)
-            state.active_server_list.append('ansible')
-            state.active_server_list.append('elk')
-            state.active_server_list.append('wazuh')
+            # state.active_server_list.append('ansible')
+            # state.active_server_list.append('elk')
+            # state.active_server_list.append('wazuh')
 
             with open("global_state.json", "w+") as global_state:
                 json.dump(state.__dict__, global_state)
@@ -493,7 +491,7 @@ class ShowActive(Command):
             print "no active server."
         else:
             for server in state.active_server_list:
-                print server
+                print '-', server + ":", state.ip[server]
 
 
 class AddServers(Command):
@@ -562,7 +560,8 @@ class ShowAvailableServers(Command):
             for row in available_server_list:
                 print "-", row.split('_')[0]
         else:
-            print "Didn't find any servers available for deployment, someone deleted all the files in the 'tiamat/terraform/overrides/' directory!"
+            print "Didn't find any servers available for deployment, someone deleted all the files in the " \
+                  "'tiamat/terraform/overrides/' directory!"
 
 class RunBook(Command):
     log = logging.getLogger(__name__)
@@ -608,24 +607,20 @@ def main(argv=sys.argv[1:]):
 
 if __name__ == '__main__':
     # global state variables
-    available_server_list = ["blackhat", "contractor", "ftp",
-                        "mail", "payments", "web"]
 
     if isfile("global_state.json"):
         state = GlobalState()
         with open("global_state.json", "r") as global_state:
             d = json.load(global_state)
             state.__dict__.update(d)
-
     else:
         state = GlobalState()
 
     deploy_server_list = [f.split('_')[0] for f in listdir('.') if isfile(f) and f[-2:] == 'tf']
+    deploy_server_list.append("ansible")
 
-    try:
+    if "configuration.tf" in deploy_server_list:
         deploy_server_list.remove('configuration.tf')
-    except ValueError:
-        pass
 
     elk_logs_path = ""
     os_platform = ""

