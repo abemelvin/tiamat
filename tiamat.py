@@ -3,7 +3,6 @@ import os
 import logging
 import subprocess
 import json
-import pexpect
 from os import listdir
 from os.path import isfile, join
 
@@ -63,6 +62,9 @@ class Tiamat(App):
         elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
             os_platform = "Windows"
 
+        is_64bits = sys.maxsize > 2 ** 32
+        global local_path
+
         # start dependencies check
         environment_errors = list()
         # print os.environ["AWS_DEFAULT_REGION"]
@@ -86,9 +88,7 @@ class Tiamat(App):
             ans = raw_input("Could not find Terraform binary in PATH, download? (y/n): ")
 
             if ans == 'y' or ans == 'yes':
-                is_64bits = sys.maxsize > 2 ** 32
-                #local_path = raw_input("Please input full local file directory --> ")
-                local_path = os.getcwd()
+
                 local_file_path = local_path + '/terraform.zip'
 
                 if os_platform == "Linux":
@@ -163,6 +163,54 @@ class Tiamat(App):
             pass
             # print find_executable('terraform')
 
+        if not find_executable('packer'):
+            ans = raw_input("Could not find packer binary in PATH, download? (y/n): ")
+
+            if ans == 'y' or ans == 'yes':
+                # local_file_path = local_path + '/packer.zip' # specify suffix
+
+                if os_platform == "Linux":
+                    if is_64bits:
+                        url = "https://releases.hashicorp.com/packer/1.0.3/packer_1.0.3_linux_amd64.zip?_ga=" \
+                              "2.71732304.212414705.1501080103-1241354470.1501080103"
+                        local_file_path = local_path + '/packer_1.0.3_linux_amd64.zip'
+                    else:
+                        url = "https://releases.hashicorp.com/packer/1.0.3/packer_1.0.3_linux_386.zip?_ga=" \
+                              "2.75875030.212414705.1501080103-1241354470.1501080103"
+                        local_file_path = local_path + '/packer_1.0.3_linux_386.zip'
+                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
+                    subprocess.check_call(wget_call, shell=True)  # check this command
+                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
+                    try:
+                        subprocess.check_call(unzip_call, shell=True)
+                    except subprocess.CalledProcessError as e:
+                        sys.stdout.write("Did not find 'unzip', installing...")
+                        try:
+                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
+                        except subprocess.CalledProcessError as e:
+                            print "Could not install 'unzip', exiting..."
+                            exit(1)
+                        sys.stdout.write("Finished installing 'unzip'.\n")
+                        subprocess.check_call(unzip_call, shell=True)
+
+                elif os_platform == "OS X":
+                    url = "https://releases.hashicorp.com/packer/1.0.3/packer_1.0.3_darwin_amd64.zip?_ga=" \
+                          "2.79659095.212414705.1501080103-1241354470.1501080103"
+                    local_file_path = local_path + '/packer_1.0.3_darwin_amd64.zip'
+                    curl_call = "curl " + url + " -o " + local_file_path + " > /dev/null 2>&1"
+                    subprocess.check_call(curl_call, shell=True)
+                    unzip_call = "unzip " + local_file_path + "-d " + local_path + " > /dev/null 2>&1"
+                    try:
+                        subprocess.check_call(unzip_call, shell=True)
+                    except subprocess.CalledProcessError as e:
+                        print "Failed to unzip terraform, maybe you don't have 'unzip' installed?"
+                        print "You can also manually extract terraform into tiamat/ and restart this program."
+                        print "Exiting..."
+                        exit(1)
+
+            else:
+                exit(1)
+
         try:
             if os_platform != "Windows":
                 subprocess.check_call("chmod 0600 key", shell=True)
@@ -195,6 +243,7 @@ class Tiamat(App):
             self.LOG.debug('clean_up %s', cmd.__class__.__name__)
             if err:
                 self.LOG.debug('got an error: %s', err)
+
 
 class Build(Command):
     log = logging.getLogger(__name__)
@@ -305,6 +354,7 @@ class Build(Command):
                                     file.write(filedata)
         os.chdir("..")
 
+
 class Deploy(Command):
     """Apply the environment configuration"""
     log = logging.getLogger(__name__)
@@ -376,8 +426,8 @@ class Deploy(Command):
             # state.active_server_list.append('ansible')
             # state.active_server_list.append('elk')
             # state.active_server_list.append('wazuh')
-
-            with open("global_state.json", "w+") as global_state:
+            global local_path
+            with open(local_path + "/global_state.json", "w+") as global_state:
                 json.dump(state.__dict__, global_state)
             global_state.close()
         else:
@@ -394,10 +444,11 @@ class Destroy(Command):
         self.app.stdout.write('start destroying environment...\n')
         subprocess.call("terraform destroy", shell=True)
         global state
+        global local_path
         state.is_deployed = False
         state.ip.clear()
         state.active_server_list = []
-        with open("global_state.json", "w+") as global_state:
+        with open(local_path + "/global_state.json", "w+") as global_state:
             json.dump(state.__dict__, global_state)
         global_state.close()
 
@@ -564,6 +615,7 @@ class ShowAvailableServers(Command):
             print "Didn't find any servers available for deployment, someone deleted all the files in the " \
                   "'tiamat/terraform/overrides/' directory!"
 
+
 class RunBook(Command):
     log = logging.getLogger(__name__)
 
@@ -602,13 +654,15 @@ def main(argv=sys.argv[1:]):
     try:
         return_code = shell.run(argv)
     finally:
-        with open("global_state.json", "w+") as global_state:
+        global local_path
+        with open(local_path + "/global_state.json", "w+") as global_state:
             json.dump(state.__dict__, global_state)
     return return_code
 
 if __name__ == '__main__':
     # global state variables
 
+    local_path = os.getcwd()
     if isfile("global_state.json"):
         state = GlobalState()
         with open("global_state.json", "r") as global_state:
@@ -627,7 +681,7 @@ if __name__ == '__main__':
     os_platform = ""
 
     returncode = main(sys.argv[1:])
-    os.remove("global_state.json")
+    # os.remove("global_state.json") # save it in main directory
     for filename in os.listdir("."):
         if ".tf" in filename:
             os.remove(filename)
