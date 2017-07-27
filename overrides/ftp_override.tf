@@ -8,7 +8,7 @@ resource "aws_route53_record" "ftp" {
 }
 
 resource "aws_instance" "ftp" {
-  ami = "ami-f4cc1de2"
+  ami = "ami-520a5529"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

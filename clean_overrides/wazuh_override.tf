@@ -15,7 +15,18 @@ resource "aws_instance" "wazuh" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
-    }
+  }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/wazuh.yml"
+    ]
+  }
 }
 
 output "wazuh ip" {

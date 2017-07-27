@@ -1,5 +1,5 @@
 resource "aws_instance" "wazuh" {
-  ami = "ami-f4cc1de2"
+  ami = "ami-4cf4a937"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

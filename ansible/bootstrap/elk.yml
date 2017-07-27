@@ -1,0 +1,19 @@
+---
+#
+# bootstrap elk
+#
+- hosts: localhost
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  gather_facts: no
+  pre_tasks:
+    - name: update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.0\.1'
+        line: '127.0.0.1 elk'
+    - name: update /etc/hostname
+      raw: echo "elk" > /etc/hostname
+    - name: persist new hostname
+      raw: hostname elk

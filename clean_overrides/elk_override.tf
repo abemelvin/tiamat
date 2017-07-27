@@ -16,6 +16,17 @@ resource "aws_instance" "elk" {
     private_key = "${file("key")}"
     agent = false
     }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/elk.yml"
+    ]
+  }
 }
 
 output "elk ip" {

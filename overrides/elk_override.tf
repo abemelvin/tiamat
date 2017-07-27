@@ -1,5 +1,5 @@
 resource "aws_instance" "elk" {
-  ami = "ami-f4cc1de2"
+  ami = "ami-a3fba6d8"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

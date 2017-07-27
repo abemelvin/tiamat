@@ -199,110 +199,71 @@ class Tiamat(App):
 class Build(Command):
     log = logging.getLogger(__name__)
 
-    def get_parser(self, prog_name):
-        parser = super(Build, self).get_parser(prog_name)
-        parser.add_argument('machine')
-        return parser
+    #def get_parser(self, prog_name):
+    #    parser = super(Build, self).get_parser(prog_name)
+    #    parser.add_argument('machine')
+    #    return parser
 
     def take_action(self, parsed_args):
-        os.chdir("packer")
+        print("The build process will use AWS EBS to create all images from scratch.")
+        print("This process may take a long time. It will also erase previous AMI numbers from your Terraform configuration files.")
+        ans = raw_input("Continue? (y/n): ")
+        if ans != 'y':
+            print("Discontinuing build.")
+            return
+        os.chdir("images")
         ami_list = list()
-        if parsed_args.machine == 'all':
-            for filename in os.listdir("."):
-                print "Building " + filename + "..."
-                build_call = "packer build " + filename
-                p = subprocess.Popen(build_call, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                result = ""
-                while True:
-                    output = p.stdout.readline()
-                    result += output
-                    if output == '' and p.poll() is not None:
-                        break
-                    if output:
-                        print output.strip()
-                    
-                id_begin = result.find("amazon-ebs: AMI: ami-") + 17
-                id_end = result.find("amazon-ebs: AMI: ami-") + 29
-                ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
-            os.chdir("../terraform")
-            for row in ami_list:
-                if row[0] == 'ansible':
-                    with open('configuration.tf', 'r') as file:
-                        filedata = file.read()
-                    filedata = filedata.replace('(ansible-ami)', row[1])
-                    with open('../overrides/configuration.tf', 'w') as file:
-                        file.write(filedata)
-                    with open('../configuration.tf', 'w') as file:
-                        file.write(filedata)
-                elif row[0] == 'elk':
-                    with open('elk_override.tf', 'r') as file:
-                        filedata = file.read()
-                    filedata = filedata.replace('(elk-ami)', row[1])
-                    with open('../elk_override.tf', 'w') as file:
-                        file.write(filedata)
-                elif row[0] == 'wazuh':
-                    with open('wazuh_override.tf', 'r') as file:
-                        filedata = file.read()
-                    filedata = filedata.replace('(wazuh-ami)', row[1])
-                    with open('../wazuh_override.tf', 'w') as file:
-                        file.write(filedata)
-                else:
-                    for filename in os.listdir("."):
-                        if row[0] in filename:
-                            with open(filename, 'r') as file:
-                                filedata = file.read()
-                            filedata = filedata.replace('(build-ami)', row[1])
-                            with open('../overrides/' + filename, 'w') as file:
-                                file.write(filedata)
-        else:
-            for filename in os.listdir("."):
-                if parsed_args.machine in filename:
-                    print "Building " + filename + "..."
-                    build_call = "packer build " + filename
-                    print "build call=", build_call
-                    p = subprocess.Popen(build_call, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    result = ""
-                    while True:
-                        output = p.stdout.readline()
-                        result += output
-                        if output == '' and p.poll() is not None:
-                            break
-                        if output:
-                            print output.strip()
-                    
-                    id_begin = result.find("amazon-ebs: AMI: ami-") + 17
-                    id_end = result.find("amazon-ebs: AMI: ami-") + 29
-                    ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
-                os.chdir("../terraform")
-                for row in ami_list:
-                    if row[0] == 'ansible':
-                        with open('configuration.tf', 'r') as file:
+        #if parsed_args.machine == 'all':
+        for filename in os.listdir("."):
+            print "Building " + filename + "..."
+            build_call = "packer build " + filename
+            p = subprocess.Popen(build_call, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = ""
+            while True:
+                output = p.stdout.readline()
+                result += output
+                if output == '' and p.poll() is not None:
+                    break
+                if output:
+                    print output.strip()
+                
+            id_begin = result.find("amazon-ebs: AMI: ami-") + 17
+            id_end = result.find("amazon-ebs: AMI: ami-") + 29
+            ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
+        os.chdir("../clean_overrides")
+        for row in ami_list:
+            if row[0] == 'ansible':
+                with open('configuration.tf', 'r') as file:
+                    filedata = file.read()
+                filedata = filedata.replace('(ansible-ami)', row[1])
+                with open('../overrides/configuration.tf', 'w') as file:
+                    file.write(filedata)
+                with open('../configuration.tf', 'w') as file:
+                    file.write(filedata)
+            elif row[0] == 'elk':
+                with open('elk_override.tf', 'r') as file:
+                    filedata = file.read()
+                filedata = filedata.replace('(elk-ami)', row[1])
+                with open('../overrides/elk_override.tf', 'w') as file:
+                    file.write(filedata)
+                with open('../elk_override.tf', 'w') as file:
+                    file.write(filedata)
+            elif row[0] == 'wazuh':
+                with open('wazuh_override.tf', 'r') as file:
+                    filedata = file.read()
+                filedata = filedata.replace('(wazuh-ami)', row[1])
+                with open('../overrides/wazuh_override.tf', 'w') as file:
+                    file.write(filedata)
+                with open('../wazuh_override.tf', 'w') as file:
+                    file.write(filedata)
+            else:
+                for filename in os.listdir("."):
+                    if row[0] in filename:
+                        with open(filename, 'r') as file:
                             filedata = file.read()
-                        filedata = filedata.replace('(ansible-ami)', row[1])
-                        with open('../overrides/configuration.tf', 'w') as file:
+                        filedata = filedata.replace('(build-ami)', row[1])
+                        with open('../overrides/' + filename, 'w') as file:
                             file.write(filedata)
-                        with open('../configuration.tf', 'w') as file:
-                            file.write(filedata)
-                    elif row[0] == 'elk':
-                        with open('elk_override.tf', 'r') as file:
-                            filedata = file.read()
-                        filedata = filedata.replace('(elk-ami)', row[1])
-                        with open('../elk_override.tf', 'w') as file:
-                            file.write(filedata)
-                    elif row[0] == 'wazuh':
-                        with open('wazuh_override.tf', 'r') as file:
-                            filedata = file.read()
-                        filedata = filedata.replace('(wazuh-ami)', row[1])
-                        with open('../wazuh_override.tf', 'w') as file:
-                            file.write(filedata)
-                    else:
-                        for filename in os.listdir("."):
-                            if row[0] in filename:
-                                with open(filename, 'r') as file:
-                                    filedata = file.read()
-                                filedata = filedata.replace('(build-ami)', row[1])
-                                with open('../overrides/' + filename, 'w') as file:
-                                    file.write(filedata)
         os.chdir("..")
 
 class Deploy(Command):

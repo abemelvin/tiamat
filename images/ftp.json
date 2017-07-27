@@ -1,0 +1,40 @@
+{
+  "variables": {
+    "aws_access_key": "{{ env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{ env `AWS_SECRET_ACCESS_KEY`}}"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "ami-f4cc1de2",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "ftp {{timestamp}}",
+    "force_deregister": "true",
+    "force_delete_snapshot": "true"
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-add-repository ppa:ansible/ansible -y",
+        "sudo apt-get update -y",
+        "sudo apt-get install ansible -y"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "inventory_file": "../ansible/hosts",
+      "playbook_file": "../ansible/install/ftp.yml",
+      "playbook_dir": "../ansible",
+      "role_paths": [
+        "../ansible/install/roles/vsftpd",
+        "../ansible/install/roles/wazuh_agent_ftp",
+        "../ansible/install/roles/packetbeat",
+        "../ansible/install/roles/metricbeat"
+      ]
+    }
+  ]
+}
