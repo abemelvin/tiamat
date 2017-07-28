@@ -26,6 +26,11 @@ resource "aws_instance" "sales" {
   }
 
   provisioner "file" {
+    source = "ansible/payment-server"
+    destination = "~"
+  }
+
+  provisioner "file" {
     source = "ansible"
     destination = "/home/ubuntu"
   }

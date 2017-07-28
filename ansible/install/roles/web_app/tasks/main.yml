@@ -59,7 +59,7 @@
 - name: create the database
   raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}"  -e "create database {{ db_name }}"
 - name: populate the database
-  raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}" "{{ db_name }}" < target_exemplar.sql
+  raw: mysql -u "{{ mysql_root }}" -p"{{ mysql_pass }}" "{{ db_name }}" < /home/ubuntu/target_exemplar.sql
 - name: restart apache
   service:
     name: apache2

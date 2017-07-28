@@ -30,12 +30,14 @@ resource "aws_instance" "payments" {
     destination = "~"
   }
 
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 payments/g' /etc/hosts",
-      "sudo hostname payments",
-      "sudo nohup python /home/ubuntu/payment-server/payment_server.py >/dev/null 2>&1 &",
-      "sleep 1"
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/payments.yml"
     ]
   }
 }

@@ -8,7 +8,7 @@ resource "aws_route53_record" "downloads" {
 }
 
 resource "aws_instance" "downloads" {
-  ami = "ami-f4cc1de2"
+  ami = "(build-ami)"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"

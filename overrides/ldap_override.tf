@@ -8,7 +8,7 @@ resource "aws_route53_record" "ldap" {
 }
 
 resource "aws_instance" "ldap" {
-  ami = "ami-f4cc1de2"
+  ami = "ami-786c3203"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -23,6 +23,12 @@ resource "aws_instance" "ldap" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/ldap.yml"
+    ]
   }
 }
 

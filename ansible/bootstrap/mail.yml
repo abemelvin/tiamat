@@ -1,0 +1,21 @@
+---
+#
+# bootstrap mail server
+#
+- hosts: mail
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  gather_facts: no
+  pre_tasks:
+    - name: install python2
+      raw: sudo apt-get install -y python-simplejson
+#    - name: update /etc/hosts
+#      lineinfile:
+#        path: /etc/hosts
+#        regexp: '^127\.0\.0\.1'
+#        line: '127.0.0.1 mail'
+#    - name: update /etc/hostname
+#      raw: echo "mail" > /etc/hostname
+#    - name: persist new hostname
+#      raw: hostname mail

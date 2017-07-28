@@ -1,21 +1,19 @@
 ---
 #
-# bootstrap wazuh
+# bootstrap ftp
 #
 - hosts: localhost
   remote_user: ubuntu
   become: yes
   become_user: root
   gather_facts: no
-  pre_tasks:
+  tasks:
     - name: update /etc/hosts
       lineinfile:
         path: /etc/hosts
         regexp: '^127\.0\.0\.1'
-        line: '127.0.0.1 wazuh'
+        line: '127.0.0.1 ftp'
     - name: update /etc/hostname
-      raw: echo "wazuh" > /etc/hostname
+      raw: echo "ftp" > /etc/hostname
     - name: persist new hostname
-      raw: hostname wazuh
-  roles:
-    - { role: wazuh-api }
+      raw: hostname ftp

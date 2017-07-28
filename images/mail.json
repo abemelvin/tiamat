@@ -9,18 +9,13 @@
     "secret_key": "{{user `aws_secret_key`}}",
     "region": "us-east-1",
     "source_ami": "ami-f4cc1de2",
-    "instance_type": "t2.micro",
+    "instance_type": "t2.small",
     "ssh_username": "ubuntu",
-    "ami_name": "blackhat {{timestamp}}",
+    "ami_name": "mail {{timestamp}}",
     "force_deregister": "true",
     "force_delete_snapshot": "true"
   }],
   "provisioners": [
-    {
-      "type": "file",
-      "source": "../scripts/",
-      "destination": "/home/ubuntu"
-    },
     {
       "type": "shell",
       "inline": [
@@ -31,17 +26,19 @@
     },
     {
       "type": "ansible-local",
+      "group_vars": "../ansible/install/group_vars",
       "inventory_file": "../ansible/hosts",
-      "playbook_file": "../ansible/install/blackhat.yml",
+      "playbook_file": "../ansible/install/mail.yml",
       "playbook_dir": "../ansible",
       "role_paths": [
-        "../ansible/install/roles/ssh",
-        "../ansible/install/roles/mutt_blackhat",
-        "../ansible/install/roles/wazuh_agent_blackhat",
+        "../ansible/install/roles/postfix",
+        "../ansible/install/roles/dovecot",
+        "../ansible/install/roles/postgresql",
+        "../ansible/install/roles/apache",
+        "../ansible/install/roles/squirrelmail",
+        "../ansible/install/roles/wazuh_agent_mail",
         "../ansible/install/roles/packetbeat",
-        "../ansible/install/roles/metricbeat",
-        "../ansible/install/roles/php",
-        "../ansible/install/roles/tcpdump"
+        "../ansible/install/roles/metricbeat"
       ]
     }
   ]

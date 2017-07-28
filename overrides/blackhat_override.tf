@@ -8,7 +8,7 @@ resource "aws_route53_record" "blackhat" {
 }
 
 resource "aws_instance" "blackhat" {
-  ami = "s output wil"
+  ami = "ami-e2752b99"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -28,6 +28,11 @@ resource "aws_instance" "blackhat" {
   provisioner "file" {
     source = "scripts/"
     destination = "~"
+  }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
   }
 
   provisioner "remote-exec" {

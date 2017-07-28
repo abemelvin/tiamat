@@ -8,7 +8,7 @@ resource "aws_route53_record" "ftp" {
 }
 
 resource "aws_instance" "ftp" {
-  ami = "ami-520a5529"
+  ami = "ami-386f3143"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -23,6 +23,17 @@ resource "aws_instance" "ftp" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
+  }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/ftp.yml"
+    ]
   }
 }
 

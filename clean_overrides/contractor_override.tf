@@ -24,6 +24,17 @@ resource "aws_instance" "contractor" {
     private_key = "${file("key")}"
     agent = false
   }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/contractor.yml"
+    ]
+  }
 }
 
 output "contractor ip" {

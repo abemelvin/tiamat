@@ -117,15 +117,6 @@ resource "aws_instance" "ansible" {
     inline = [
       "sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 ansible/g' /etc/hosts",
       "sudo hostname ansible"
-  #    "sudo apt-add-repository ppa:ansible/ansible -y",
-  #    "sudo apt-get update -y",
-  #    "sudo apt-get install ansible -y",
-  #    "sudo mv hosts /etc/ansible/hosts",
-  #    "sudo mv ansible.cfg /etc/ansible/ansible.cfg",
-  #    "sudo chmod 600 key",
-  #    #"ansible-playbook install/wazuh.yml",
-  #    #"ansible-playbook install/elk.yml",
-  #    "echo provisioning complete"
     ]
   }
 }

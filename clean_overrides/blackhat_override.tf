@@ -30,6 +30,11 @@ resource "aws_instance" "blackhat" {
     destination = "~"
   }
 
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "ansible-playbook /home/ubuntu/ansible/bootstrap/blackhat.yml"

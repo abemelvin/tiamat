@@ -58,11 +58,11 @@
     group: root
     mode: 0644
 - name: create postgresql user and mail database
-  raw: sudo -u postgres psql -f database.sql
+  raw: sudo -u postgres psql -f /home/ubuntu/database.sql
 - name: create database tables
-  raw: psql -U mailreader -d mail -f tables.sql
+  raw: psql -U mailreader -d mail -f /home/ubuntu/tables.sql
 - name: create virtual mailboxes
-  raw: psql -U mailreader -d mail -f mailbox.sql
+  raw: psql -U mailreader -d mail -f /home/ubuntu/mailbox.sql
 - name: create a new system user for dovecot
   user:
     name: vmail

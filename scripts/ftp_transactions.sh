@@ -20,7 +20,7 @@ expect "ftp>"
 send "lcd /home/blackhat\r"
 
 expect "ftp>"
-send "cd /uploads\r"
+send "cd /upload\r"
 
 expect "ftp>"
 send "put transactions.txt\r"

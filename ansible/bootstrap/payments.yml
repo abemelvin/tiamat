@@ -1,21 +1,21 @@
 ---
 #
-# bootstrap wazuh
+# start payment server
 #
 - hosts: localhost
   remote_user: ubuntu
   become: yes
   become_user: root
   gather_facts: no
-  pre_tasks:
+  tasks:
     - name: update /etc/hosts
       lineinfile:
         path: /etc/hosts
         regexp: '^127\.0\.0\.1'
-        line: '127.0.0.1 wazuh'
+        line: '127.0.0.1 payments'
     - name: update /etc/hostname
-      raw: echo "wazuh" > /etc/hostname
+      raw: echo "payments" > /etc/hostname
     - name: persist new hostname
-      raw: hostname wazuh
-  roles:
-    - { role: wazuh-api }
+      raw: hostname payments
+    - name: start monitoring firmware
+      shell: nohup python /home/ubuntu/payment-server/payment_server.py >/dev/null 2>&1 &

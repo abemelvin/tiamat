@@ -24,6 +24,12 @@ resource "aws_instance" "ldap" {
     private_key = "${file("key")}"
     agent = false
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/ldap.yml"
+    ]
+  }
 }
 
 output "ldap ip" {

@@ -17,7 +17,7 @@ resource "aws_route53_record" "mail_MX" {
 }
 
 resource "aws_instance" "mail" {
-  ami = "ami-f4cc1de2"
+  ami = "ami-269bc55d"
   instance_type = "t2.small"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -32,6 +32,17 @@ resource "aws_instance" "mail" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
+  }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/mail.yml"
+    ]
   }
 }
 

@@ -8,7 +8,7 @@ resource "aws_route53_record" "contractor" {
 }
 
 resource "aws_instance" "contractor" {
-  ami = "ami-6f144b14"
+  ami = "ami-e8722c93"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -23,6 +23,17 @@ resource "aws_instance" "contractor" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
+  }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/contractor.yml"
+    ]
   }
 }
 

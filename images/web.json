@@ -11,14 +11,14 @@
     "source_ami": "ami-f4cc1de2",
     "instance_type": "t2.micro",
     "ssh_username": "ubuntu",
-    "ami_name": "blackhat {{timestamp}}",
+    "ami_name": "web {{timestamp}}",
     "force_deregister": "true",
     "force_delete_snapshot": "true"
   }],
   "provisioners": [
     {
       "type": "file",
-      "source": "../scripts/",
+      "source": "../ansible/install/web-server/html",
       "destination": "/home/ubuntu"
     },
     {
@@ -31,17 +31,19 @@
     },
     {
       "type": "ansible-local",
+      "group_vars": "../ansible/install/group_vars",
       "inventory_file": "../ansible/hosts",
-      "playbook_file": "../ansible/install/blackhat.yml",
+      "playbook_file": "../ansible/install/web.yml",
       "playbook_dir": "../ansible",
       "role_paths": [
-        "../ansible/install/roles/ssh",
-        "../ansible/install/roles/mutt_blackhat",
-        "../ansible/install/roles/wazuh_agent_blackhat",
-        "../ansible/install/roles/packetbeat",
-        "../ansible/install/roles/metricbeat",
+        "../ansible/install/roles/zip",
+        "../ansible/install/roles/apache",
         "../ansible/install/roles/php",
-        "../ansible/install/roles/tcpdump"
+        "../ansible/install/roles/mysql",
+        "../ansible/install/roles/web_app",
+        "../ansible/install/roles/wazuh_agent_web",
+        "../ansible/install/roles/packetbeat",
+        "../ansible/install/roles/metricbeat"
       ]
     }
   ]

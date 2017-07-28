@@ -8,7 +8,7 @@ resource "aws_route53_record" "payments" {
 }
 
 resource "aws_instance" "payments" {
-  ami = "ami-3b0b5440"
+  ami = "ami-03633d78"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -30,12 +30,14 @@ resource "aws_instance" "payments" {
     destination = "~"
   }
 
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 payments/g' /etc/hosts",
-      "sudo hostname payments",
-      "sudo nohup python /home/ubuntu/payment-server/payment_server.py >/dev/null 2>&1 &",
-      "sleep 1"
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/payments.yml"
     ]
   }
 }

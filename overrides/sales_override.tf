@@ -8,7 +8,7 @@ resource "aws_route53_record" "sales" {
 }
 
 resource "aws_instance" "sales" {
-  ami = "ami-58025d23"
+  ami = "ami-dd9fc1a6"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -23,6 +23,11 @@ resource "aws_instance" "sales" {
     user = "ubuntu"
     private_key = "${file("key")}"
     agent = false
+  }
+
+  provisioner "file" {
+    source = "ansible/payment-server"
+    destination = "~"
   }
 
   provisioner "file" {

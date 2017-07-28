@@ -7,7 +7,7 @@ resource "aws_instance" "wazuh" {
   subnet_id = "${aws_subnet.terraform.id}"
   associate_public_ip_address = true
   private_ip = "10.0.0.12"
-  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform"]
+  depends_on = ["aws_route_table.terraform", "aws_security_group.terraform", "aws_subnet.terraform", "aws_instance.elk"]
 
   connection {
     host = "${aws_instance.wazuh.public_ip}"

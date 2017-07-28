@@ -24,6 +24,17 @@ resource "aws_instance" "ftp" {
     private_key = "${file("key")}"
     agent = false
   }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/ftp.yml"
+    ]
+  }
 }
 
 output "ftp ip" {

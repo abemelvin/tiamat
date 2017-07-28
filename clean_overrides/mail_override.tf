@@ -33,6 +33,17 @@ resource "aws_instance" "mail" {
     private_key = "${file("key")}"
     agent = false
   }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/mail.yml"
+    ]
+  }
 }
 
 output "mail ip" {

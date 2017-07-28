@@ -26,8 +26,14 @@ resource "aws_instance" "web" {
   }
 
   provisioner "file" {
-    source = "ansible/install/web-server/html"
-    destination = "~"
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/web.yml"
+    ]
   }
 }
 

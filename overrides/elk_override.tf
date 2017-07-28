@@ -1,5 +1,6 @@
 resource "aws_instance" "elk" {
-  ami = "ami-a3fba6d8"
+  count = "${var.logging}"
+  ami = "ami-636c3218"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.terraform.id}"]
   key_name = "key"
@@ -15,6 +16,17 @@ resource "aws_instance" "elk" {
     private_key = "${file("key")}"
     agent = false
     }
+
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook /home/ubuntu/ansible/bootstrap/elk.yml"
+    ]
+  }
 }
 
 output "elk ip" {
