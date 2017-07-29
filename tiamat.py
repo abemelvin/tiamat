@@ -153,9 +153,9 @@ class Tiamat(App):
                     print "Exiting..."
                     exit(1)
 
-                # os.environ["PATH"] += os.pathsep + os.getcwd()
-                # print "Added", os.getcwd(), "to your PATH variable."
-                print "Please exit Tiamat and add the current directory to your PATH variable."
+                os.environ["PATH"] += os.pathsep + os.getcwd()
+                print "Added", os.getcwd(), "to your PATH variable."
+                #print "Please exit Tiamat and add the current directory to your PATH variable."
 
             else:
                 exit(1)
