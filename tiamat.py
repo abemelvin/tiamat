@@ -282,7 +282,6 @@ class Build(Command):
                 id_begin = result.find("amazon-ebs: AMI: ami-") + 17
                 id_end = result.find("amazon-ebs: AMI: ami-") + 29
                 ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
-            break
         for row in ami_list:
             print row
         os.chdir("../clean_overrides")
