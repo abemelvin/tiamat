@@ -285,6 +285,7 @@ class Build(Command):
             ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
         for row in ami_list:
             if 'ami' not in row[0]:
+                print("There was an error building " + row[0] + ". Discarding AMI ID.")
                 ami_list.remove(row)
         os.chdir("../clean_overrides")
         for row in ami_list:
