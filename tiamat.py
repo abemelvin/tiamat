@@ -155,7 +155,6 @@ class Tiamat(App):
 
                 os.environ["PATH"] += os.pathsep + os.getcwd()
                 print "Added", os.getcwd(), "to your PATH variable."
-                #print "Please exit Tiamat and add the current directory to your PATH variable."
 
             else:
                 exit(1)
@@ -208,6 +207,9 @@ class Tiamat(App):
                         print "Exiting..."
                         exit(1)
 
+                os.environ["PATH"] += os.pathsep + os.getcwd()
+                print "Added", os.getcwd(), "to your PATH variable."
+
             else:
                 exit(1)
 
@@ -254,6 +256,8 @@ class Build(Command):
     #    return parser
 
     def take_action(self, parsed_args):
+        print("****************************** READ BEFORE BUILDING ******************************")
+        print("It is crucial to disable automatic sleep/hibernation on your computer. It will interrupt this process.")
         print("The build process will use AWS EBS to create all images from scratch.")
         print("This process may take a long time. It will also erase previous AMI numbers from your Terraform configuration files.")
         ans = raw_input("Continue? (y/n): ")
@@ -276,14 +280,12 @@ class Build(Command):
                 if output:
                     print output.strip()
             
-            if result.find("amazon-ebs: AMI: ami-") == 0:
-                pass
-            else:
-                id_begin = result.find("amazon-ebs: AMI: ami-") + 17
-                id_end = result.find("amazon-ebs: AMI: ami-") + 29
-                ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
+            id_begin = result.find("amazon-ebs: AMI: ami-") + 17
+            id_end = result.find("amazon-ebs: AMI: ami-") + 29
+            ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
         for row in ami_list:
-            print row
+            if 'ami' not in row[0]:
+                ami_list.remove(row)
         os.chdir("../clean_overrides")
         for row in ami_list:
             if row[0] == 'ansible':
