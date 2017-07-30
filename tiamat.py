@@ -106,9 +106,9 @@ class Tiamat(App):
                     else:
                         url = "https://releases.hashicorp.com/terraform/0.9.8/terraform_0.9.8_" + \
                             "linux_386.zip?_ga=2.137897971.2126347023.1497377866-658368258.1496936210"
-                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
+                    wget_call = "sudo wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
+                    unzip_call = "sudo unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
@@ -185,9 +185,9 @@ class Tiamat(App):
                         url = "https://releases.hashicorp.com/packer/1.0.3/packer_1.0.3_linux_386.zip?_ga=" \
                               "2.75875030.212414705.1501080103-1241354470.1501080103"
                         local_file_path = local_path + '/packer_1.0.3_linux_386.zip'
-                    wget_call = "wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
+                    wget_call = "sudo wget " + url + " -O " + local_file_path + " > /dev/null 2>&1"
                     subprocess.check_call(wget_call, shell=True)  # check this command
-                    unzip_call = "unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
+                    unzip_call = "sudo unzip " + local_file_path + " -d " + local_path + " > /dev/null 2>&1"
                     try:
                         subprocess.check_call(unzip_call, shell=True)
                     except subprocess.CalledProcessError as e:
