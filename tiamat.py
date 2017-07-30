@@ -22,7 +22,6 @@ except ImportError as e:
         exit(1)
     sys.stdout.write("Finished installing 'python-cliff'.\n")
 
-
 from cliff.app import App
 from cliff.command import Command
 from cliff.commandmanager import CommandManager
