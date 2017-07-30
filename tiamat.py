@@ -7,6 +7,17 @@ from os import listdir
 from os.path import isfile, join
 
 try:
+    import pip
+except ImportError:
+    sys.stdout.write("Did not find 'pip', installing...")
+    try:
+        subprocess.check_call("sudo easy_install pip", shell=True)
+    except subprocess.CalledProcessError:
+        print "Could not install 'pip', try installing manually and come back."
+        print "Exiting..."
+        exit(1)
+    sys.stdout.write("Finished installing 'pip'.\n")
+try:
     import cliff
 except ImportError as e:
     sys.stdout.write("Did not find 'python-cliff', installing...")
