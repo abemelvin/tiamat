@@ -1,10 +1,12 @@
 import importlib
+import datetime
 import site
 import sys
 import os
 import logging
 import subprocess
 import json
+import pexpect
 from os import listdir
 from os.path import isfile, join
 
@@ -48,7 +50,7 @@ class Tiamat(App):
             'destroy': Destroy,
             'ansible': Ansible,
             'wazuh': Wazuh,
-            'get elk files': ElkFiles,
+            'save logs': ElkFiles,
             'elk': Elk,
             'show active servers': ShowActive,
             'show deployment list': ShowServers,
@@ -279,17 +281,20 @@ class Build(Command):
         ami_list = list()
         #if parsed_args.machine == 'all':
         for filename in os.listdir("."):
-            print "Building " + filename + "..."
-            build_call = "packer build " + filename
-            p = subprocess.Popen(build_call, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            result = ""
-            while True:
-                output = p.stdout.readline()
-                result += output
-                if output == '' and p.poll() is not None:
-                    break
-                if output:
-                    print output.strip()
+            if os.path.splitext(filename)[1] == '.json':
+                print "Building " + filename + "..."
+                build_call = "packer build " + filename
+                p = subprocess.Popen(build_call, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                result = ""
+                while True:
+                    output = p.stdout.readline()
+                    result += output
+                    if output == '' and p.poll() is not None:
+                        break
+                    if output:
+                        print output.strip()
+            else:
+                print("Excluding file: " + filename)
             
             id_begin = result.find("amazon-ebs: AMI: ami-") + 17
             id_end = result.find("amazon-ebs: AMI: ami-") + 29
@@ -297,7 +302,7 @@ class Build(Command):
         for row in ami_list:
             if 'ami' not in row[1]:
                 print("There was an error building " + row[0] + ". Discarding AMI ID.")
-                ami_list.remove(row)
+                del row
         print("Successful builds:")
         for row in ami_list:
             print("- " + row[0] + ": " + row[1])
@@ -476,20 +481,55 @@ class ElkFiles(Command):
     """Copy log files from ELK server to local folder"""
     log = logging.getLogger(__name__)
 
-    def get_parser(self, prog_name):
-        parser = super(ElkFiles, self).get_parser(prog_name)
-        parser.add_argument('local_path')
-        return parser
+    #def get_parser(self, prog_name):
+    #    parser = super(ElkFiles, self).get_parser(prog_name)
+    #    parser.add_argument('local_path')
+    #    return parser
 
     def take_action(self, parsed_args):
         self.log.debug('debugging')
         global state
-        global elk_logs_path
+        #global elk_logs_path
         if "elk" not in state.ip.keys():
             self.app.stdout.write("Error: ELK IP unavailable.\n")
             return
 
-        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + elk_logs_path + ' ' + parsed_args.local_path
+        #trial = 1
+        #for filename in os.listdir("saved_logs"):
+        #    if filename == "trial" + str(trial):
+        #        trial += 1
+        #os.makedirs("trial" + str(trial))
+        #elk_logs_path = "trial" + str(trial)
+        elk_logs_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        os.makedirs("saved_logs/" + elk_logs_path)
+
+        # ssh into elk
+        child = pexpect.spawn('ssh -i key ubuntu@' + state.ip['elk'])
+        flag = child.expect(['key fingerprint', 'ubuntu@'])
+        if flag == 0:
+            child.sendline('yes')
+            child.expect('ubuntu@')
+        else:
+            pass
+
+        # curl elasticsearch for logs
+        child.sendline("curl -XGET 'http://localhost:9200/packetbeat-*/_search?pretty' > /home/ubuntu/packetbeat_logs")
+        child.expect('ubuntu@')
+        child.sendline("curl -XGET 'http://localhost:9200/metricbeat-*/_search?pretty' > /home/ubuntu/metricbeat_logs")
+        child.expect('ubuntu@')
+        child.sendline("curl -XGET 'http://localhost:9200/wazuh-alerts-*/_search?pretty' > /home/ubuntu/wazuh_logs")
+        child.expect('ubuntu@')
+
+        # log out of elk
+        child.sendline('logout')
+        child.close()
+
+        # secure copy log data
+        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/packetbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/packetbeat_logs.json'
+        subprocess.check_call(scp_call, shell=True)
+        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/metricbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/metricbeat_logs.json'
+        subprocess.check_call(scp_call, shell=True)
+        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/wazuh_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/wazuh_logs.json'
         subprocess.check_call(scp_call, shell=True)
 
 
@@ -656,6 +696,8 @@ if __name__ == '__main__':
 
     deploy_server_list = [f.split('_')[0] for f in listdir('.') if isfile(f) and f[-2:] == 'tf']
     deploy_server_list.append("ansible")
+    deploy_server_list.append("elk")
+    deploy_server_list.append("wazuh")
 
     if "configuration.tf" in deploy_server_list:
         deploy_server_list.remove('configuration.tf')

@@ -1,7 +1,7 @@
 provider "aws" {}
 
 variable "logging" {
-  default = false
+  default = true
   description = "if set to true, creates logging infrastructure"
 }
 
