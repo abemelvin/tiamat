@@ -223,7 +223,7 @@ class Tiamat(App):
 
         try:
             if os_platform != "Windows":
-                subprocess.check_call("chmod 0600 key", shell=True)
+                subprocess.check_call("sudo chmod 0600 key", shell=True)
         except subprocess.CalledProcessError as e:
             print e
             exit(1)
