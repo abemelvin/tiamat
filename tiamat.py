@@ -15,14 +15,14 @@ except ImportError:
     exit(1)
 try:
     import cliff
-except ImportError as e:
-    sys.stdout.write("Did not find 'python-cliff', installing...")
+except ImportError:
+    print("Did not find 'python-cliff', installing...")
     try:
         subprocess.check_call("pip install --user cliff >/dev/null 2>&1", shell=True)
-    except subprocess.CalledProcessError as e2:
-        print "Could not install 'python-cliff', exiting..."
+    except subprocess.CalledProcessError:
+        print("Could not install 'python-cliff', exiting...")
         exit(1)
-    sys.stdout.write("Finished installing 'python-cliff'.\n")
+    print("Finished installing 'python-cliff'.")
     reload(site)
     globals()['cliff'] = importlib.import_module('cliff')
 
@@ -298,6 +298,9 @@ class Build(Command):
             if 'ami' not in row[1]:
                 print("There was an error building " + row[0] + ". Discarding AMI ID.")
                 ami_list.remove(row)
+        print("Successful builds:")
+        for row in ami_list:
+            print("- " + row[0] + ": " + row[1])
         os.chdir("../clean_overrides")
         for row in ami_list:
             if row[0] == 'ansible':
