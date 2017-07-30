@@ -295,7 +295,7 @@ class Build(Command):
             id_end = result.find("amazon-ebs: AMI: ami-") + 29
             ami_list.append([os.path.splitext(filename)[0], result[id_begin:id_end]])
         for row in ami_list:
-            if 'ami' not in row[0]:
+            if 'ami' not in row[1]:
                 print("There was an error building " + row[0] + ". Discarding AMI ID.")
                 ami_list.remove(row)
         os.chdir("../clean_overrides")
