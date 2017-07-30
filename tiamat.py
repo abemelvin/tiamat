@@ -65,6 +65,9 @@ class Tiamat(App):
         global os_platform
         if sys.platform.startswith('linux'):
             os_platform = "Linux"
+            os.chdir("..")
+            subprocess.check_call("sudo chmod -R 777 tiamat", shell=True)
+            os.chdir("tiamat")
         elif sys.platform.startswith('darwin'):
             os_platform = "OS X"
         elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
