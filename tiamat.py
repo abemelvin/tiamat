@@ -9,19 +9,19 @@ from os.path import isfile, join
 try:
     import pip
 except ImportError:
-    sys.stdout.write("This tool requires 'pip' to install some dependencies. Try installing 'pip' and come back!")
+    print("This tool requires 'pip' to install some dependencies. Try installing 'pip' and come back!")
     exit(1)
 try:
     import cliff
 except ImportError as e:
     sys.stdout.write("Did not find 'python-cliff', installing...")
     try:
-        subprocess.check_call("pip install cliff", shell=True)
+        subprocess.check_call("pip install --user cliff", shell=True)
     except subprocess.CalledProcessError as e2:
         print "Could not install 'python-cliff', exiting..."
         exit(1)
     sys.stdout.write("Finished installing 'python-cliff'.\n")
-    import cliff
+
 
 from cliff.app import App
 from cliff.command import Command
