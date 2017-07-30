@@ -1,4 +1,5 @@
 import importlib
+import site
 import sys
 import os
 import logging
@@ -22,8 +23,8 @@ except ImportError as e:
         print "Could not install 'python-cliff', exiting..."
         exit(1)
     sys.stdout.write("Finished installing 'python-cliff'.\n")
-    finally:
-        globals()['cliff'] = importlib.import_module('cliff')
+    reload(site)
+    globals()['cliff'] = importlib.import_module('cliff')
 
 from cliff.app import App
 from cliff.command import Command
