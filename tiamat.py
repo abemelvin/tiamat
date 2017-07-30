@@ -9,14 +9,8 @@ from os.path import isfile, join
 try:
     import pip
 except ImportError:
-    sys.stdout.write("Did not find 'pip', installing...")
-    try:
-        subprocess.check_call("sudo easy_install pip", shell=True)
-    except subprocess.CalledProcessError:
-        print "Could not install 'pip', try installing manually and come back."
-        print "Exiting..."
-        exit(1)
-    sys.stdout.write("Finished installing 'pip'.\n")
+    sys.stdout.write("This tool requires 'pip' to install some dependencies. Try installing 'pip' and come back!")
+    exit(1)
 try:
     import cliff
 except ImportError as e:
