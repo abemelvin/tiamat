@@ -1,0 +1,421 @@
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 10,
+    "successful" : 10,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 250,
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH6QTqbYfLdcGDw_",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "rule" : {
+            "firedtimes" : 1,
+            "pci_dss" : [
+              "10.6.1"
+            ],
+            "level" : 3,
+            "description" : "New dpkg (Debian Package) requested to install.",
+            "groups" : [
+              "syslog",
+              "dpkg"
+            ],
+            "id" : "2901"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "name" : "windows-date-format"
+          },
+          "full_log" : "2017-07-28 05:19:03 install nodejs:amd64 <none> 6.11.1-2nodesource1~xenial1",
+          "hostname" : "wazuh",
+          "@timestamp" : "2017-07-28T05:19:05.000Z",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/dpkg.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH6QTqbYfLdcGDxB",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "rule" : {
+            "firedtimes" : 1,
+            "pci_dss" : [
+              "10.6.1",
+              "10.2.7"
+            ],
+            "level" : 7,
+            "groups" : [
+              "syslog",
+              "dpkg",
+              "config_changed"
+            ],
+            "description" : "New dpkg (Debian Package) installed.",
+            "id" : "2902"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "name" : "windows-date-format"
+          },
+          "full_log" : "2017-07-28 05:19:07 status installed man-db:amd64 2.7.5-1",
+          "hostname" : "wazuh",
+          "@timestamp" : "2017-07-28T05:19:07.000Z",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/dpkg.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH6QTqbYfLdcGDxC",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "rule" : {
+            "firedtimes" : 2,
+            "pci_dss" : [
+              "10.6.1",
+              "10.2.7"
+            ],
+            "level" : 7,
+            "description" : "New dpkg (Debian Package) installed.",
+            "groups" : [
+              "syslog",
+              "dpkg",
+              "config_changed"
+            ],
+            "id" : "2902"
+          },
+          "decoder" : {
+            "name" : "windows-date-format"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "full_log" : "2017-07-28 05:19:07 status installed nodejs:amd64 6.11.1-2nodesource1~xenial1",
+          "hostname" : "wazuh",
+          "@timestamp" : "2017-07-28T05:19:07.000Z",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/dpkg.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH6QTqbYfLdcGDxG",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "rule" : {
+            "firedtimes" : 2,
+            "pci_dss" : [
+              "10.6.1"
+            ],
+            "level" : 3,
+            "description" : "New dpkg (Debian Package) requested to install.",
+            "groups" : [
+              "syslog",
+              "dpkg"
+            ],
+            "id" : "2901"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "name" : "windows-date-format"
+          },
+          "full_log" : "2017-07-28 05:19:09 install wazuh-api:amd64 <none> 2.0.1-1xenial",
+          "hostname" : "wazuh",
+          "@timestamp" : "2017-07-28T05:19:09.000Z",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/dpkg.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH76TqbYfLdcGDxK",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "program_name" : "sudo",
+          "rule" : {
+            "firedtimes" : 3,
+            "pci_dss" : [
+              "10.2.5"
+            ],
+            "level" : 3,
+            "groups" : [
+              "pam",
+              "syslog"
+            ],
+            "description" : "PAM: Login session closed.",
+            "id" : "5502"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "parent" : "pam",
+            "name" : "pam"
+          },
+          "full_log" : "Jul 28 05:19:13 ip-172-31-79-16 sudo: pam_unix(sudo:session): session closed for user root",
+          "hostname" : "ip-172-31-79-16",
+          "@timestamp" : "2017-07-28T05:19:13.000Z",
+          "dstuser" : "root",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/auth.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH77TqbYfLdcGDxM",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "program_name" : "sudo",
+          "rule" : {
+            "firedtimes" : 3,
+            "pci_dss" : [
+              "10.2.5",
+              "10.2.2"
+            ],
+            "level" : 3,
+            "groups" : [
+              "syslog",
+              "sudo"
+            ],
+            "description" : "Successful sudo to ROOT executed",
+            "id" : "5402"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "parent" : "sudo",
+            "name" : "sudo"
+          },
+          "command" : "/bin/sh",
+          "full_log" : "Jul 28 05:19:13 ip-172-31-79-16 sudo:   ubuntu : TTY=unknown ; PWD=/tmp/packer-provisioner-ansible-local/597ac8c0-1509-a86b-c41c-b45c6294abbf ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-mchfkxywyleewcckvapmpwwbvvlmmsfl; /usr/bin/python /home/ubuntu/.ansible/tmp/ansible-tmp-1501219153.08-25833029609049/copy.py",
+          "srcuser" : "ubuntu",
+          "hostname" : "ip-172-31-79-16",
+          "@timestamp" : "2017-07-28T05:19:13.000Z",
+          "dstuser" : "root",
+          "tty" : "unknown",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/auth.log",
+          "pwd" : "/tmp/packer-provisioner-ansible-local/597ac8c0-1509-a86b-c41c-b45c6294abbf"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDH77TqbYfLdcGDxS",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "rule" : {
+            "firedtimes" : 5,
+            "pci_dss" : [
+              "10.6.1",
+              "10.2.7"
+            ],
+            "level" : 7,
+            "description" : "New dpkg (Debian Package) installed.",
+            "groups" : [
+              "syslog",
+              "dpkg",
+              "config_changed"
+            ],
+            "id" : "2902"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "name" : "windows-date-format"
+          },
+          "full_log" : "2017-07-28 05:19:11 status installed wazuh-api:amd64 2.0.1-1xenial",
+          "hostname" : "wazuh",
+          "@timestamp" : "2017-07-28T05:19:13.000Z",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/dpkg.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDII8TqbYfLdcGDxd",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "program_name" : "sudo",
+          "rule" : {
+            "firedtimes" : 6,
+            "pci_dss" : [
+              "10.2.5"
+            ],
+            "level" : 3,
+            "description" : "PAM: Login session closed.",
+            "groups" : [
+              "pam",
+              "syslog"
+            ],
+            "id" : "5502"
+          },
+          "decoder" : {
+            "parent" : "pam",
+            "name" : "pam"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "full_log" : "Jul 28 05:19:13 ip-172-31-79-16 sudo: pam_unix(sudo:session): session closed for user root",
+          "hostname" : "ip-172-31-79-16",
+          "@timestamp" : "2017-07-28T05:19:15.000Z",
+          "dstuser" : "root",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/auth.log"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDII8TqbYfLdcGDxj",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "program_name" : "sudo",
+          "rule" : {
+            "firedtimes" : 8,
+            "pci_dss" : [
+              "10.2.5",
+              "10.2.2"
+            ],
+            "level" : 3,
+            "description" : "Successful sudo to ROOT executed",
+            "groups" : [
+              "syslog",
+              "sudo"
+            ],
+            "id" : "5402"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "decoder" : {
+            "parent" : "sudo",
+            "name" : "sudo"
+          },
+          "command" : "/bin/sh",
+          "full_log" : "Jul 28 05:19:15 ip-172-31-79-16 sudo:   ubuntu : TTY=unknown ; PWD=/tmp/packer-provisioner-ansible-local/597ac8c0-1509-a86b-c41c-b45c6294abbf ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-cojmhatdlfxrxtxpzummixwckvtbgykv; /usr/bin/python /home/ubuntu/.ansible/tmp/ansible-tmp-1501219155.47-156238929288276/apt_key.py; rm -rf \"/home/ubuntu/.ansible/tmp/ansible-tmp-1501219155.47-156238929288276/\" > /dev/null 2>&1",
+          "srcuser" : "ubuntu",
+          "hostname" : "ip-172-31-79-16",
+          "@timestamp" : "2017-07-28T05:19:17.000Z",
+          "dstuser" : "root",
+          "tty" : "unknown",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/auth.log",
+          "pwd" : "/tmp/packer-provisioner-ansible-local/597ac8c0-1509-a86b-c41c-b45c6294abbf"
+        }
+      },
+      {
+        "_index" : "wazuh-alerts-2017.07.28",
+        "_type" : "wazuh",
+        "_id" : "AV2VDII8TqbYfLdcGDxl",
+        "_score" : 1.0,
+        "_source" : {
+          "agent" : {
+            "name" : "wazuh",
+            "id" : "000"
+          },
+          "manager" : {
+            "name" : "wazuh"
+          },
+          "program_name" : "sudo",
+          "rule" : {
+            "firedtimes" : 9,
+            "pci_dss" : [
+              "10.2.5",
+              "10.2.2"
+            ],
+            "level" : 3,
+            "description" : "Successful sudo to ROOT executed",
+            "groups" : [
+              "syslog",
+              "sudo"
+            ],
+            "id" : "5402"
+          },
+          "decoder" : {
+            "parent" : "sudo",
+            "name" : "sudo"
+          },
+          "source" : "/var/ossec/logs/alerts/alerts.json",
+          "command" : "/bin/sh",
+          "full_log" : "Jul 28 05:19:15 ip-172-31-79-16 sudo:   ubuntu : TTY=unknown ; PWD=/tmp/packer-provisioner-ansible-local/597ac8c0-1509-a86b-c41c-b45c6294abbf ; USER=root ; COMMAND=/bin/sh -c echo BECOME-SUCCESS-gswrfziygjafaeumtxbvibrtajbxoftg; /usr/bin/python /home/ubuntu/.ansible/tmp/ansible-tmp-1501219155.97-257698373832212/apt_repository.py; rm -rf \"/home/ubuntu/.ansible/tmp/ansible-tmp-1501219155.97-257698373832212/\" > /dev/null 2>&1",
+          "srcuser" : "ubuntu",
+          "hostname" : "ip-172-31-79-16",
+          "@timestamp" : "2017-07-28T05:19:17.000Z",
+          "dstuser" : "root",
+          "tty" : "unknown",
+          "host" : "ip-10-0-0-12",
+          "location" : "/var/log/auth.log",
+          "pwd" : "/tmp/packer-provisioner-ansible-local/597ac8c0-1509-a86b-c41c-b45c6294abbf"
+        }
+      }
+    ]
+  }
+}

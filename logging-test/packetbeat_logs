@@ -1,0 +1,435 @@
+{
+  "took" : 8,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1190,
+    "max_score" : 1.0,
+    "hits" : [
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIaUTqbYfLdcGDyI",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "tcp",
+          "source" : {
+            "port" : 36806,
+            "stats" : {
+              "net_bytes_total" : 76,
+              "net_packets_total" : 1
+            },
+            "ip" : "10.0.0.18"
+          },
+          "dest" : {
+            "port" : 5044,
+            "stats" : {
+              "net_bytes_total" : 56,
+              "net_packets_total" : 1
+            },
+            "ip" : "10.0.0.11"
+          },
+          "type" : "flow",
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:44.001Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:44.001Z",
+          "flow_id" : "EAT/////AP//////CP8AAAEKAAALCgAAErQTxo8",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIaUTqbYfLdcGDyJ",
+        "_score" : 1.0,
+        "_source" : {
+          "source" : {
+            "port" : 60224,
+            "stats" : {
+              "net_bytes_total" : 76,
+              "net_packets_total" : 1
+            },
+            "ip" : "127.0.0.1"
+          },
+          "transport" : "tcp",
+          "type" : "flow",
+          "dest" : {
+            "port" : 9200,
+            "stats" : {
+              "net_bytes_total" : 56,
+              "net_packets_total" : 1
+            },
+            "ip" : "127.0.0.1"
+          },
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:44.391Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:44.391Z",
+          "flow_id" : "EAT/////AP//////CP8AAAF/AAABfwAAAUDr8CM",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIaqTqbYfLdcGDyK",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "tcp",
+          "source" : {
+            "port" : 36808,
+            "stats" : {
+              "net_bytes_total" : 76,
+              "net_packets_total" : 1
+            },
+            "ip" : "10.0.0.18"
+          },
+          "dest" : {
+            "port" : 5044,
+            "stats" : {
+              "net_bytes_total" : 56,
+              "net_packets_total" : 1
+            },
+            "ip" : "10.0.0.11"
+          },
+          "type" : "flow",
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:45.003Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:45.003Z",
+          "flow_id" : "EAT/////AP//////CP8AAAEKAAALCgAAErQTyI8",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIaqTqbYfLdcGDyN",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "tcp",
+          "source" : {
+            "port" : 60230,
+            "stats" : {
+              "net_bytes_total" : 76,
+              "net_packets_total" : 1
+            },
+            "ip" : "127.0.0.1"
+          },
+          "type" : "flow",
+          "dest" : {
+            "port" : 9200,
+            "stats" : {
+              "net_bytes_total" : 56,
+              "net_packets_total" : 1
+            },
+            "ip" : "127.0.0.1"
+          },
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:46.322Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:46.322Z",
+          "flow_id" : "EAT/////AP//////CP8AAAF/AAABfwAAAUbr8CM",
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "final" : false,
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIaqTqbYfLdcGDyP",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "tcp",
+          "source" : {
+            "port" : 60234,
+            "stats" : {
+              "net_bytes_total" : 76,
+              "net_packets_total" : 1
+            },
+            "ip" : "127.0.0.1"
+          },
+          "type" : "flow",
+          "dest" : {
+            "port" : 9200,
+            "stats" : {
+              "net_bytes_total" : 56,
+              "net_packets_total" : 1
+            },
+            "ip" : "127.0.0.1"
+          },
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:46.358Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:46.358Z",
+          "flow_id" : "EAT/////AP//////CP8AAAF/AAABfwAAAUrr8CM",
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "final" : false,
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIaqTqbYfLdcGDyQ",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "tcp",
+          "source" : {
+            "port" : 36820,
+            "stats" : {
+              "net_bytes_total" : 76,
+              "net_packets_total" : 1
+            },
+            "ip" : "10.0.0.18"
+          },
+          "dest" : {
+            "port" : 5044,
+            "stats" : {
+              "net_bytes_total" : 56,
+              "net_packets_total" : 1
+            },
+            "ip" : "10.0.0.11"
+          },
+          "type" : "flow",
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:47.008Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "flow_id" : "EAT/////AP//////CP8AAAEKAAALCgAAErQT1I8",
+          "last_time" : "2017-07-30T19:49:47.008Z",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIc_TqbYfLdcGDya",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "udp",
+          "source" : {
+            "port" : 39297,
+            "stats" : {
+              "net_bytes_total" : 142,
+              "net_packets_total" : 2
+            },
+            "ip" : "10.0.0.11"
+          },
+          "type" : "flow",
+          "dest" : {
+            "port" : 53,
+            "stats" : {
+              "net_bytes_total" : 186,
+              "net_packets_total" : 2
+            },
+            "ip" : "10.0.0.2"
+          },
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:46.320Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:46.320Z",
+          "flow_id" : "EAL/////AP////8I//8AAAEKAAACCgAACzUAgZk",
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "final" : false,
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIddTqbYfLdcGDyc",
+        "_score" : 1.0,
+        "_source" : {
+          "transport" : "udp",
+          "source" : {
+            "stats" : {
+              "net_bytes_total" : 214,
+              "net_packets_total" : 2
+            },
+            "port" : 36672,
+            "ip" : "10.0.0.11"
+          },
+          "dest" : {
+            "port" : 53,
+            "stats" : {
+              "net_bytes_total" : 336,
+              "net_packets_total" : 2
+            },
+            "ip" : "10.0.0.2"
+          },
+          "type" : "flow",
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:31.633Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:31.633Z",
+          "flow_id" : "EAL/////AP////8I//8AAAEKAAACCgAACzUAQI8",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIddTqbYfLdcGDyl",
+        "_score" : 1.0,
+        "_source" : {
+          "source" : {
+            "port" : 34523,
+            "stats" : {
+              "net_bytes_total" : 188,
+              "net_packets_total" : 2
+            },
+            "ip" : "10.0.0.11"
+          },
+          "transport" : "udp",
+          "dest" : {
+            "port" : 53,
+            "stats" : {
+              "net_bytes_total" : 393,
+              "net_packets_total" : 2
+            },
+            "ip" : "10.0.0.2"
+          },
+          "type" : "flow",
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:32.455Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "flow_id" : "EAL/////AP////8I//8AAAEKAAACCgAACzUA24Y",
+          "last_time" : "2017-07-30T19:49:32.455Z",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      },
+      {
+        "_index" : "packetbeat-2017.07.30",
+        "_type" : "flow",
+        "_id" : "AV2VDIddTqbYfLdcGDyo",
+        "_score" : 1.0,
+        "_source" : {
+          "source" : {
+            "stats" : {
+              "net_bytes_total" : 174,
+              "net_packets_total" : 2
+            },
+            "port" : 49865,
+            "ip" : "10.0.0.11"
+          },
+          "transport" : "udp",
+          "type" : "flow",
+          "dest" : {
+            "port" : 53,
+            "stats" : {
+              "net_bytes_total" : 251,
+              "net_packets_total" : 2
+            },
+            "ip" : "10.0.0.2"
+          },
+          "tags" : [
+            "beats",
+            "beats_input_raw_event"
+          ],
+          "start_time" : "2017-07-30T19:49:35.863Z",
+          "@timestamp" : "2017-07-30T19:49:50.000Z",
+          "last_time" : "2017-07-30T19:49:35.863Z",
+          "flow_id" : "EAL/////AP////8I//8AAAEKAAACCgAACzUAycI",
+          "final" : false,
+          "beat" : {
+            "hostname" : "ip-10-0-0-11",
+            "name" : "ip-10-0-0-11",
+            "version" : "5.5.1"
+          },
+          "@version" : "1",
+          "host" : "ip-10-0-0-11"
+        }
+      }
+    ]
+  }
+}
