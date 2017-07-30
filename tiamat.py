@@ -18,7 +18,7 @@ try:
 except ImportError as e:
     sys.stdout.write("Did not find 'python-cliff', installing...")
     try:
-        subprocess.check_call("pip install --user cliff", shell=True)
+        subprocess.check_call("pip install --user cliff >/dev/null 2>&1", shell=True)
     except subprocess.CalledProcessError as e2:
         print "Could not install 'python-cliff', exiting..."
         exit(1)
@@ -117,7 +117,7 @@ class Tiamat(App):
                     except subprocess.CalledProcessError as e:
                         sys.stdout.write("Did not find 'unzip', installing...")
                         try:
-                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
+                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null 2>&1", shell=True)
                         except subprocess.CalledProcessError as e:
                             print "Could not install 'unzip', exiting..."
                             exit(1)
@@ -196,7 +196,7 @@ class Tiamat(App):
                     except subprocess.CalledProcessError as e:
                         sys.stdout.write("Did not find 'unzip', installing...")
                         try:
-                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null", shell=True)
+                            subprocess.check_call("sudo apt-get -y install unzip > /dev/null 2>&1", shell=True)
                         except subprocess.CalledProcessError as e:
                             print "Could not install 'unzip', exiting..."
                             exit(1)
