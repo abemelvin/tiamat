@@ -66,6 +66,15 @@
     owner: root
     group: root
     mode: 0644
+- name: copy access control file
+  template:
+    src: change_access.ldif
+    dest: /home/ubuntu
+    owner: root
+    group: root
+    mode: 0644
 - name: add the authentication database
   raw: ldapadd -x -D cn=admin,dc=fazio,dc=com -w password -f /home/ubuntu/add_content.ldif 
+- name: change access control
+  raw: sudo ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /home/ubuntu/change_access.ldif
   # ldapsearch -x -b 'dc=fazio,dc=com' '(objectclass=*)'  # test
