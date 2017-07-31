@@ -48,6 +48,7 @@
         createhome: yes
   roles:
     - { role: zip }
+    - { role: libnss-ldap}
     - { role: apache }
     - { role: php }
     - { role: mysql }
