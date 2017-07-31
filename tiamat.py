@@ -233,18 +233,20 @@ class Tiamat(App):
             print e
             exit(1)
 
-        with open('./overrides/configuration.tf', 'r') as file:
-            filedata = file.read()
-        with open('configuration.tf', 'w') as file:
-            file.write(filedata)
-        with open('./overrides/elk_override.tf', 'r') as file:
-            filedata = file.read()
-        with open('elk_override.tf', 'w') as file:
-            file.write(filedata)
-        with open('./overrides/wazuh_override.tf', 'r') as file:
-            filedata = file.read()
-        with open('wazuh_override.tf', 'w') as file:
-            file.write(filedata)
+        if 'overrides' not in os.listdir("."):
+            os.makedirs("overrides")
+        #with open('./overrides/configuration.tf', 'r') as file:
+        #    filedata = file.read()
+        #with open('configuration.tf', 'w') as file:
+        #    file.write(filedata)
+        #with open('./overrides/elk_override.tf', 'r') as file:
+        #    filedata = file.read()
+        #with open('elk_override.tf', 'w') as file:
+        #    file.write(filedata)
+        #with open('./overrides/wazuh_override.tf', 'r') as file:
+        #    filedata = file.read()
+        #with open('wazuh_override.tf', 'w') as file:
+        #    file.write(filedata)
         print "Welcome to Threat Instrumentation And Machine Automation Tool (TIAMAT)!"
         print "For a list of available commands, use 'help'. To exit, use 'quit'."
 
@@ -361,6 +363,20 @@ class Deploy(Command):
         return result[ip_beg:ip_end]
 
     def take_action(self, parsed_args):
+        
+        with open('./overrides/configuration.tf', 'r') as file:
+            filedata = file.read()
+        with open('configuration.tf', 'w') as file:
+            file.write(filedata)
+        with open('./overrides/elk_override.tf', 'r') as file:
+            filedata = file.read()
+        with open('elk_override.tf', 'w') as file:
+            file.write(filedata)
+        with open('./overrides/wazuh_override.tf', 'r') as file:
+            filedata = file.read()
+        with open('wazuh_override.tf', 'w') as file:
+            file.write(filedata)
+
         self.log.debug('debugging')
         output = 'start deploying environment ' + parsed_args.config_name + '\n'
         if parsed_args.caps:
