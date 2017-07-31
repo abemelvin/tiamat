@@ -2,5 +2,5 @@
 *.tfstate
 *.tfstate.backup
 *.DS_Store
-overrides/*
+overrides/*.tf
 saved_logs/*
