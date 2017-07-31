@@ -1,3 +1,4 @@
+*.tf
 *.tfstate
 *.tfstate.backup
 *.DS_Store
