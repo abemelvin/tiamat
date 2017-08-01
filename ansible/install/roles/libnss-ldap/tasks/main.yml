@@ -113,4 +113,7 @@
     owner: root
     group: root
     mode: 0644
-
+- name: install ldap-utils
+  apt:
+    name: ldap-utils
+    state: latest

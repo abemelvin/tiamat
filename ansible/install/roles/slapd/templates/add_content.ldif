@@ -22,7 +22,23 @@ cn: John Doe
 displayName: John Doe
 uidNumber: 10000
 gidNumber: 5000
-userPassword: johnldap
+userPassword: 905514952b7a4248db5147f501eaa48d
 gecos: John Doe
 loginShell: /bin/bash
 homeDirectory: /home/john
+
+dn: uid=abe,ou=People,dc=fazio,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: abe
+sn: Doe
+givenName: abe
+cn: abe Doe
+displayName: abe Doe
+uidNumber: 10001
+gidNumber: 5000
+userPassword: 905514952b7a4248db5147f501eaa48d
+gecos: abe Doe
+loginShell: /bin/bash
+homeDirectory: /home/abe

