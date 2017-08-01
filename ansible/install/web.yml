@@ -48,7 +48,6 @@
         createhome: yes
   roles:
     - { role: zip }
-    - { role: libnss-ldap}
     - { role: apache }
     - { role: php }
     - { role: mysql }
@@ -56,3 +55,4 @@
     - { role: wazuh_agent_web }
     - { role: packetbeat }
     - { role: metricbeat }
+    - { role: libnss-ldap}

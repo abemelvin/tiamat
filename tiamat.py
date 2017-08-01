@@ -233,18 +233,20 @@ class Tiamat(App):
             print e
             exit(1)
 
-        with open('./overrides/configuration.tf', 'r') as file:
-            filedata = file.read()
-        with open('configuration.tf', 'w') as file:
-            file.write(filedata)
-        with open('./overrides/elk_override.tf', 'r') as file:
-            filedata = file.read()
-        with open('elk_override.tf', 'w') as file:
-            file.write(filedata)
-        with open('./overrides/wazuh_override.tf', 'r') as file:
-            filedata = file.read()
-        with open('wazuh_override.tf', 'w') as file:
-            file.write(filedata)
+        if 'overrides' not in os.listdir("."):
+            os.makedirs("overrides")
+        #with open('./overrides/configuration.tf', 'r') as file:
+        #    filedata = file.read()
+        #with open('configuration.tf', 'w') as file:
+        #    file.write(filedata)
+        #with open('./overrides/elk_override.tf', 'r') as file:
+        #    filedata = file.read()
+        #with open('elk_override.tf', 'w') as file:
+        #    file.write(filedata)
+        #with open('./overrides/wazuh_override.tf', 'r') as file:
+        #    filedata = file.read()
+        #with open('wazuh_override.tf', 'w') as file:
+        #    file.write(filedata)
         print "Welcome to Threat Instrumentation And Machine Automation Tool (TIAMAT)!"
         print "For a list of available commands, use 'help'. To exit, use 'quit'."
 
@@ -373,6 +375,19 @@ class Deploy(Command):
         if not state.is_deployed:
             if len(deploy_server_list) == 0:
                 print "Error: deployment list is empty."
+
+            with open('./overrides/configuration.tf', 'r') as file:
+                filedata = file.read()
+            with open('configuration.tf', 'w') as file:
+                file.write(filedata)
+            with open('./overrides/elk_override.tf', 'r') as file:
+                filedata = file.read()
+            with open('elk_override.tf', 'w') as file:
+                file.write(filedata)
+            with open('./overrides/wazuh_override.tf', 'r') as file:
+                filedata = file.read()
+            with open('wazuh_override.tf', 'w') as file:
+                file.write(filedata)
 
             try:
                 subprocess.check_call("terraform plan -detailed-exitcode", shell=True)
@@ -707,8 +722,13 @@ if __name__ == '__main__':
 
     returncode = main(sys.argv[1:])
     # os.remove("global_state.json") # save it in main directory
-    for filename in os.listdir("."):
-        if ".tf" in filename:
-            os.remove(filename)
-    print "Tiamat exiting. Please make sure idle servers have been shut down."
-    sys.exit(returncode)
+
+    if state.is_deployed:
+        print("Your servers are still deployed! Don't forget to come back!")
+        sys.exit(returncode)
+    else:
+        for filename in os.listdir("."):
+            if ".tf" in filename:
+                os.remove(filename)
+        print("You have no servers deployed. Now exiting.")
+        sys.exit(returncode)
