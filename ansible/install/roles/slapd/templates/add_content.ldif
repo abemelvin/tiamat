@@ -6,10 +6,25 @@ dn: ou=Groups,dc=fazio,dc=com
 objectClass: organizationalUnit
 ou: Groups
 
+dn: cn=defaults,ou=SUDOers,dc=fazio,dc=com
+objectClass: top
+objectClass: sudoRole
+cn: defaults
+description: Default sudoOption's go here
+sudoOption: env_keep+=SSH_AUTH_SOCK
+
 dn: cn=miners,ou=Groups,dc=fazio,dc=com
 objectClass: posixGroup
 cn: miners
 gidNumber: 5000
+
+dn: cn=%miners,ou=SUDOers,dc=fazio,dc=com
+objectClass: top
+objectClass: sudoRole
+cn: %miners
+sudoUser: %miners
+sudoHost: ALL
+sudoCommand: ALL
 
 dn: uid=john,ou=People,dc=fazio,dc=com
 objectClass: inetOrgPerson
@@ -26,3 +41,19 @@ userPassword: johnldap
 gecos: John Doe
 loginShell: /bin/bash
 homeDirectory: /home/john
+
+dn: uid=abe,ou=People,dc=fazio,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: abe
+sn: Doe
+givenName: abe
+cn: abe Doe
+displayName: abe Doe
+uidNumber: 10001
+gidNumber: 5000
+userPassword: abeldap
+gecos: abe Doe
+loginShell: /bin/bash
+homeDirectory: /home/abe
