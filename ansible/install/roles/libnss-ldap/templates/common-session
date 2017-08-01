@@ -13,6 +13,7 @@
 # pam-auth-update(8) for details.
 
 # here are the per-package modules (the "Primary" block)
+session required    pam_mkhomedir.so skel=/etc/skel/ umask=0022
 session	[default=1]			pam_permit.so
 # here's the fallback if no module succeeds
 session	requisite			pam_deny.so
