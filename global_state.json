@@ -1,1 +1,1 @@
-{"ip": {}, "active_server_list": [], "is_deployed": false}
+{"ip": {"elk": "54.173.164.50", "ftp": "54.91.123.146", "wazuh": "184.73.102.235", "blackhat": "54.87.56.187", "sales": "34.207.203.26", "contractor": "34.207.226.208", "web": "34.229.212.29\u001b[0m", "ansible": "107.21.24.167", "payments": "34.207.106.89", "ldap": "34.229.183.114", "mail": "54.152.142.5"}, "active_server_list": ["ansible", "elk", "wazuh", "blackhat", "contractor", "ftp", "ldap", "mail", "payments", "sales", "web"], "is_deployed": true}

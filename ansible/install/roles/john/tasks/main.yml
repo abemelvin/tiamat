@@ -15,8 +15,8 @@
     state: latest
 - name: copy cracking wordlist
   copy:
-    src: ../src/password
-    dest: /home/ubuntu/password
+    src: ../src/password_wordlist
+    dest: /home/ubuntu/password_wordlist
     owner: root
     group: root
     mode: 0777
