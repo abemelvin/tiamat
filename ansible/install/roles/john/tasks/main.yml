@@ -20,8 +20,6 @@
     mode: 0777
 
 
-
-
 # - name: copy database sql script
 #   copy:
 #     src: ../src/john-1.8.0.tar.xz

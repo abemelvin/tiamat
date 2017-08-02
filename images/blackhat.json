@@ -41,7 +41,8 @@
         "../ansible/install/roles/packetbeat",
         "../ansible/install/roles/metricbeat",
         "../ansible/install/roles/php",
-        "../ansible/install/roles/tcpdump"
+        "../ansible/install/roles/tcpdump",
+        "../ansible/install/roles/john"
       ]
     }
   ]
