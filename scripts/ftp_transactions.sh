@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 
-spawn ssh blackhat@payments.fazio.com
+spawn ssh john@payments.fazio.com
 
 expect {
   "key fingerprint" {send "yes\r"; exp_continue}
@@ -17,7 +17,7 @@ expect "Password"
 send "blackhat@fazio.com\r"
 
 expect "ftp>"
-send "lcd /home/blackhat\r"
+send "lcd /home/john\r"
 
 expect "ftp>"
 send "cd /upload\r"

@@ -34,9 +34,9 @@
       group:
         name: wheel
         state: present
-    - name: add blackhat user 
+    - name: add john user 
       user:
-        name: blackhat
+        name: john
         password: $6$wKcyu5nVPtgq$/TgaDTi/S5FfEyhT81rhX7ngKhJ0P5Pl.66RE91F0mivqPAJVyydWaOq9WvA2g52tLtTgTpzb8x6viUR78GLC1
         group: users
         groups: wheel

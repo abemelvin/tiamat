@@ -44,7 +44,7 @@
         "../ansible/install/roles/wazuh_agent_web",
         "../ansible/install/roles/packetbeat",
         "../ansible/install/roles/metricbeat",
-        "../ansible/install/roles/libnss-ldap"
+        "../ansible/install/roles/filebeat"
       ]
     }
   ]

@@ -49,7 +49,6 @@ class Tiamat(App):
             'deploy': Deploy,
             'destroy': Destroy,
             'ansible': Ansible,
-            'wazuh': Wazuh,
             'save logs': ElkFiles,
             'elk': Elk,
             'show active servers': ShowActive,
@@ -473,25 +472,6 @@ class Ansible(Command):
         except subprocess.CalledProcessError as err:
             print err
 
-
-class Wazuh(Command):
-    """Open a nested Wazuh shell"""
-    log = logging.getLogger(__name__)
-
-    def take_action(self, parsed_args):
-        self.log.debug('debugging')
-        global state
-        if "wazuh" not in state.ip.keys():
-            self.app.stdout.write("Error: Wazuh IP unavailable.\n")
-            return
-
-        ssh_call = "ssh -i key ubuntu@" + state.ip["wazuh"]
-        try:
-            subprocess.check_call(ssh_call, shell=True)
-        except subprocess.CalledProcessError as err:
-            print err
-
-
 class ElkFiles(Command):
     """Copy log files from ELK server to local folder"""
     log = logging.getLogger(__name__)
@@ -532,7 +512,7 @@ class ElkFiles(Command):
         child.expect('ubuntu@')
         child.sendline("curl -XGET 'http://localhost:9200/packetbeat-*/_search?size=10000&pretty' > /home/ubuntu/packetbeat_logs")
         child.expect('ubuntu@')
-        child.sendline("curl -XGET 'http://localhost:9200/metricbeat-*/_search?size=100000&pretty' > /home/ubuntu/metricbeat_logs")
+        child.sendline("curl -XGET 'http://localhost:9200/metricbeat-*/_search?size=10000&pretty' > /home/ubuntu/metricbeat_logs")
         child.expect('ubuntu@')
         child.sendline("curl -XGET 'http://localhost:9200/wazuh-alerts-*/_search?size=10000&pretty' > /home/ubuntu/wazuh_logs")
         child.expect('ubuntu@')
