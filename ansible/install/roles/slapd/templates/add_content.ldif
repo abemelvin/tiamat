@@ -11,14 +11,6 @@ objectClass: posixGroup
 cn: miners
 gidNumber: 5000
 
-dn: cn=%miners,ou=SUDOers,dc=fazio,dc=com
-objectClass: top
-objectClass: sudoRole
-cn: %miners
-sudoUser: %miners
-sudoHost: ALL
-sudoCommand: ALL
-
 dn: uid=john,ou=People,dc=fazio,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
