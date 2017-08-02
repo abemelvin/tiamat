@@ -9,17 +9,17 @@
   apt:
     name: make
     state: present
-- name: install john-ripper
-  raw: sudo apt install john
+- name: install john
+  apt:
+    name: john
+    state: latest
 - name: copy cracking wordlist
   copy:
-    src: ../src/password
-    dest: /home/ubuntu/password
+    src: ../src/password_wordlist
+    dest: /home/ubuntu/password_wordlist
     owner: root
     group: root
     mode: 0777
-
-
 
 
 # - name: copy database sql script

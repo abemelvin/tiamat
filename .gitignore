@@ -7,3 +7,4 @@ saved_logs/*
 *.zip
 terraform
 packer
+global_state.json

