@@ -9,8 +9,10 @@
   apt:
     name: make
     state: present
-- name: install john-ripper
-  raw: sudo apt install john
+- name: install john
+  apt:
+    name: john
+    state: latest
 - name: copy cracking wordlist
   copy:
     src: ../src/password

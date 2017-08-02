@@ -55,4 +55,4 @@
     - { role: wazuh_agent_web }
     - { role: packetbeat }
     - { role: metricbeat }
-    - { role: libnss-ldap }
+    # - { role: libnss-ldap }

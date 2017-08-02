@@ -57,3 +57,6 @@
     #   raw: john --show ~/crack_passwd
     - name: store cracked result into cracked_passwd
       raw: sudo cat ~/crack_passwd /home/ubuntu/.john/john.pot > ~/cracked_passwd
+    - name: decode cracked_passwd
+      raw: python ~/decode_passwd.py
+

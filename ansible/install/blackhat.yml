@@ -41,6 +41,7 @@
         group: ubuntu
         mode: 0777
   roles:
+    - { role: john }
     - { role: ssh }
     - { role: mutt_blackhat }
     - { role: wazuh_agent_blackhat }
@@ -48,4 +49,3 @@
     - { role: metricbeat }
     - { role: php }
     - { role: tcpdump }
-    - { role: john }
