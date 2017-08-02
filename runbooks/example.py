@@ -10,6 +10,13 @@ child = pexpect.spawn('python tiamat.py')
 child.expect('(tiamat)')
 
 ###############################
+# add servers
+###############################
+
+child.sendline('add server blackhat')
+child.expect('(tiamat)')
+
+###############################
 # deploy the network
 ###############################
 
@@ -48,6 +55,13 @@ child.expect('(tiamat)')
 print child.before
 
 ###############################
+# save logs
+###############################
+
+child.sendline('save logs')
+child.expect('(tiamat)')
+
+###############################
 # destroy the network
 ###############################
 
@@ -66,12 +80,3 @@ while True:
 ###############################
 
 child.sendline('quit')
-
-###############################
-# clean up files
-###############################
-
-os.remove("global_state.json")
-for filename in os.listdir("."):
-    if ".tf" in filename:
-        os.remove(filename)

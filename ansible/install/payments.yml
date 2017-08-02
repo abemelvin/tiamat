@@ -37,7 +37,7 @@
     - name: add john user 
       user:
         name: john
-        password: $6$wKcyu5nVPtgq$/TgaDTi/S5FfEyhT81rhX7ngKhJ0P5Pl.66RE91F0mivqPAJVyydWaOq9WvA2g52tLtTgTpzb8x6viUR78GLC1
+        password: $6$Z6V3Oh9I$KiI0FDET.3rHNeXl3xhrq1DH8kKdA2JI3NhBHfSvdiohqE26G0kro3UxHnwuyplgjGEPYFokaBdYJNefFhwKw/
         group: users
         groups: wheel
     - name: allow wheel group passwordless sudo 
