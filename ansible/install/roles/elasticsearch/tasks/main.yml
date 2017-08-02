@@ -10,6 +10,10 @@
   service:
     name: metricbeat
     state: stopped
+- name: stop filebeat
+  service:
+    name: filebeat
+    state: stopped
 - name: install curl
   apt:
     name: curl

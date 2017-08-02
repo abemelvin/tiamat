@@ -33,6 +33,7 @@
       "role_paths": [
         "../ansible/install/roles/java",
         "../ansible/install/roles/elasticsearch",
+        "../ansible/install/roles/filebeat",
         "../ansible/install/roles/packetbeat",
         "../ansible/install/roles/metricbeat",
         "../ansible/install/roles/logstash2",

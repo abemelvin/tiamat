@@ -73,3 +73,7 @@
   command: ./scripts/import_dashboards
   args:
     chdir: /usr/share/metricbeat
+- name: load filebeat dashboards
+  command: ./scripts/import_dashboards
+  args:
+    chdir: /usr/share/filebeat

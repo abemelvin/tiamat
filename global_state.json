@@ -1,1 +1,1 @@
-{"ip": {"elk": "aws_key_pair.terraform: Creating...\u001b[0m", "ftp": "54.172.222.230", "wazuh": "s_key_pair.terraform: Creating...\u001b[0m", "blackhat": "54.173.225.181", "sales": "54.227.57.169", "contractor": "54.84.115.128", "ansible": "52.91.139.13", "web": "54.164.253.97\u001b[0m", "ldap": "34.202.9.180", "mail": "54.159.68.143", "payments": "34.230.27.140"}, "active_server_list": ["ansible", "elk", "wazuh", "blackhat", "contractor", "ftp", "ldap", "mail", "payments", "sales", "web"], "is_deployed": true}
+{"ip": {}, "active_server_list": [], "is_deployed": false}

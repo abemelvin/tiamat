@@ -68,3 +68,4 @@
     - { role: wazuh_agent_payments }
     - { role: packetbeat }
     - { role: metricbeat }
+    - { role: filebeat }

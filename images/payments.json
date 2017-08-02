@@ -43,7 +43,8 @@
         "../ansible/install/roles/payments",
         "../ansible/install/roles/wazuh_agent_payments",
         "../ansible/install/roles/packetbeat",
-        "../ansible/install/roles/metricbeat"
+        "../ansible/install/roles/metricbeat",
+        "../ansible/install/roles/filebeat"
       ]
     }
   ]

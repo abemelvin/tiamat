@@ -528,11 +528,13 @@ class ElkFiles(Command):
             pass
 
         # curl elasticsearch for logs
-        child.sendline("curl -XGET 'http://localhost:9200/packetbeat-*/_search?pretty' > /home/ubuntu/packetbeat_logs")
+        child.sendline("curl -XGET 'http://localhost:9200/filebeat-*/_search?size=10000&pretty' > /home/ubuntu/filebeat_logs")
         child.expect('ubuntu@')
-        child.sendline("curl -XGET 'http://localhost:9200/metricbeat-*/_search?pretty' > /home/ubuntu/metricbeat_logs")
+        child.sendline("curl -XGET 'http://localhost:9200/packetbeat-*/_search?size=10000&pretty' > /home/ubuntu/packetbeat_logs")
         child.expect('ubuntu@')
-        child.sendline("curl -XGET 'http://localhost:9200/wazuh-alerts-*/_search?pretty' > /home/ubuntu/wazuh_logs")
+        child.sendline("curl -XGET 'http://localhost:9200/metricbeat-*/_search?size=100000&pretty' > /home/ubuntu/metricbeat_logs")
+        child.expect('ubuntu@')
+        child.sendline("curl -XGET 'http://localhost:9200/wazuh-alerts-*/_search?size=10000&pretty' > /home/ubuntu/wazuh_logs")
         child.expect('ubuntu@')
 
         # log out of elk
@@ -540,6 +542,8 @@ class ElkFiles(Command):
         child.close()
 
         # secure copy log data
+        scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/filebeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/filebeat_logs.json'
+        subprocess.check_call(scp_call, shell=True)
         scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/packetbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/packetbeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
         scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/metricbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/metricbeat_logs.json'

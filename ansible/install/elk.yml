@@ -28,6 +28,7 @@
     - { role: java }
     - { role: packetbeat }
     - { role: metricbeat }
+    - { role: filebeat }
     - { role: elasticsearch }
     - { role: logstash2 }
     - { role: kibana2 }
