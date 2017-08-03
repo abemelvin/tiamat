@@ -7,6 +7,8 @@ import os
 ###############################
 
 child = pexpect.spawn('python tiamat.py')
+child.expect('Password:')
+child.sendline('052416')
 child.expect('(tiamat)')
 
 ###############################

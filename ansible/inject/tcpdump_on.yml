@@ -1,0 +1,9 @@
+---
+#
+# start tcpdump
+#
+- name: start tcpdump
+  hosts: all
+  tasks:
+    - name: run tcpdump in background
+      shell: sudo nohup tcpdump -i eth0 -s0 -w capture.pcap 2>&1 &

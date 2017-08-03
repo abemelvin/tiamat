@@ -28,5 +28,16 @@ ubuntu@10.0.0.20
 [sales]
 ubuntu@10.0.0.21
 
-[downloads]
-ubuntu@10.0.0.22
+[experiment:children]
+contractor
+mail
+web
+ldap
+blackhat
+ftp
+payments
+sales
+
+[control:children]
+elk
+wazuh

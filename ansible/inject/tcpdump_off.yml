@@ -1,0 +1,9 @@
+---
+#
+# stop tcpdump
+#
+- name: stop tcpdump
+  hosts: all
+  tasks:
+    - name: kill tcpdump background process
+      shell: sudo kill $(ps -e | pgrep tcpdump)

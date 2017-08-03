@@ -4,6 +4,7 @@
 *.DS_Store
 overrides/*.tf
 saved_logs/*
+saved_pcaps/*
 *.zip
 terraform
 packer

@@ -1,5 +1,6 @@
 import importlib
 import datetime
+import time
 import site
 import sys
 import os
@@ -7,6 +8,7 @@ import logging
 import subprocess
 import json
 import pexpect
+import re
 from os import listdir
 from os.path import isfile, join
 
@@ -33,6 +35,10 @@ from cliff.command import Command
 from cliff.commandmanager import CommandManager
 from distutils.spawn import find_executable
 
+# https://stackoverflow.com/questions/14693701/how-can-i-remove-the-ansi-escape-sequences-from-a-string-in-python
+def escape_ansi(line):
+    ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+    return ansi_escape.sub('', line)
 
 class Tiamat(App):
 
@@ -50,6 +56,7 @@ class Tiamat(App):
             'destroy': Destroy,
             'ansible': Ansible,
             'save logs': ElkFiles,
+            'save pcaps': DownloadPcap,
             'elk': Elk,
             'show active servers': ShowActive,
             'show deployment list': ShowServers,
@@ -420,7 +427,7 @@ class Deploy(Command):
 
             # parse deployed servers ip
             for server in deploy_server_list:
-                state.ip[server] = Deploy.parse_ip(result, server)
+                state.ip[server] = escape_ansi(Deploy.parse_ip(result, server))
 
             state.is_deployed = True
 
@@ -510,27 +517,79 @@ class ElkFiles(Command):
         # curl elasticsearch for logs
         child.sendline("curl -XGET 'http://localhost:9200/filebeat-*/_search?size=10000&pretty' > /home/ubuntu/filebeat_logs")
         child.expect('ubuntu@')
+        print(child.before)
+        time.sleep(1)
         child.sendline("curl -XGET 'http://localhost:9200/packetbeat-*/_search?size=10000&pretty' > /home/ubuntu/packetbeat_logs")
         child.expect('ubuntu@')
+        print(child.before)
+        time.sleep(1)
         child.sendline("curl -XGET 'http://localhost:9200/metricbeat-*/_search?size=10000&pretty' > /home/ubuntu/metricbeat_logs")
         child.expect('ubuntu@')
+        print(child.before)
+        time.sleep(1)
         child.sendline("curl -XGET 'http://localhost:9200/wazuh-alerts-*/_search?size=10000&pretty' > /home/ubuntu/wazuh_logs")
         child.expect('ubuntu@')
+        print(child.before)
+        time.sleep(1)
 
         # log out of elk
         child.sendline('logout')
         child.close()
 
+        # ssh into ansible
+        child = pexpect.spawn('ssh -i key ubuntu@' + state.ip['ansible'])
+        flag = child.expect(['key fingerprint', 'ubuntu@'])
+        if flag == 0:
+            child.sendline('yes')
+            child.expect('ubuntu@')
+        else:
+            pass
+
+        # log out of ansible
+        child.sendline('logout')
+        child.close()
+
         # secure copy log data
+        scp_call = "scp -i key -r ubuntu@" + state.ip["ansible"] + ':' + '/home/ubuntu/ansible.log' + ' ' + 'saved_logs/' + elk_logs_path + '/ansible.log'
+        subprocess.check_call(scp_call, shell=True)
+        time.sleep(1)
         scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/filebeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/filebeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
+        time.sleep(1)
         scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/packetbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/packetbeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
+        time.sleep(1)
         scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/metricbeat_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/metricbeat_logs.json'
         subprocess.check_call(scp_call, shell=True)
+        time.sleep(1)
         scp_call = "scp -i key -r ubuntu@" + state.ip["elk"] + ':' + '/home/ubuntu/wazuh_logs' + ' ' + 'saved_logs/' + elk_logs_path + '/wazuh_logs.json'
         subprocess.check_call(scp_call, shell=True)
+        time.sleep(1)
 
+class DownloadPcap(Command):
+    """Connect to each server and download its .pcap file"""
+    log = logging.getLogger(__name__)
+
+    def take_action(self, parsed_args):
+        self.log.debug('debugging')
+        global state
+        pcaps_path = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        os.makedirs("saved_pcaps/" + pcaps_path)
+        
+        for server in state.ip:
+            if server != 'elk' and server != 'wazuh' and server != 'ansible':
+                print("Copying .pcap from " + server + ': ' + state.ip[server] + "...")
+                scp_call = "scp -i key -r ubuntu@" + state.ip[server] + ':' + '/home/ubuntu/capture.pcap' + ' ' + 'saved_pcaps/' + pcaps_path + '/' + server + '.pcap'
+                child = pexpect.spawn(scp_call)
+                flag = child.expect(['key fingerprint', pexpect.EOF])
+                if flag == 0:
+                    child.sendline('yes')
+                    child.expect(pexpect.EOF)
+                else:
+                    pass
+                child.close()
+                time.sleep(1)
+        print("Finished copying all pcaps to tiamat/saved_pcaps/.")
 
 class Elk(Command):
     """open the Elk Dashboard in user's default browser"""
