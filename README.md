@@ -3,10 +3,13 @@
 ## Table of contents
 
 1. [Installation](https://github.com/abemelvin/tiamat#1-installation-)   
-2. [Getting started](https://github.com/abemelvin/tiamat#2-getting-started-)   
-3. [Deploying the testbed](https://github.com/abemelvin/tiamat#3-deploying-the-testbed-)   
-4. [Provisioning the testbed](https://github.com/abemelvin/tiamat#4-provisioning-the-testbed-)   
-5. [Destroying the testbed](https://github.com/abemelvin/tiamat#5-destroying-the-testbed-)   
+2. [Getting started](https://github.com/abemelvin/tiamat#2-getting-started-)
+3. [Building machine images](https://github.com/abemelvin/tiamat#3-building-machine-images-)      
+4. [Deploying the testbed](https://github.com/abemelvin/tiamat#4-deploying-the-testbed-)   
+5. [Provisioning the testbed](https://github.com/abemelvin/tiamat#5-provisioning-the-testbed-)   
+6. [Destroying the testbed](https://github.com/abemelvin/tiamat#6-destroying-the-testbed-)   
+7. [Data collection and analysis](https://github.com/abemelvin/tiamat#7-data-collection-and-analysis-)   
+8. [Running the examplar attack scenario](https://github.com/abemelvin/tiamat#8-running-the-examplar-attack-scenario-) 
 
 ---
 
@@ -26,11 +29,19 @@ infrastructure needed to host your testbed. Terraform accesses various
 AWS APIs which require you to have a validated AWS account and to also
 specify your AWS access keys in your environment. Tiamat will check that
 your environment is correctly configured before allowing you to proceed
-to deployment. Tiamat will also check that your PATH variable contains a 
-valid Terraform executable, and will assist you in downloading an
-executable if one is not found.
+to deployment. 
 
-## 3. Deploying the testbed [↑](https://github.com/abemelvin/tiamat)
+Tiamat will also check that your PATH variable contains valid executables of Terraform and Packer (for image building),  and will assist you in downloading them if they are not found. 
+
+## 3. Building machine images [↑](https://github.com/abemelvin/tiamat)
+
+To build machine images before deployment, use the `build` command in
+
+the Tiamat shell.
+
+
+
+## 4. Deploying the testbed [↑](https://github.com/abemelvin/tiamat)
 
 Tiamat maintains a list of servers that are currently flagged to be deployed.
 You can view this list by running `show deployment list` in the Tiamat shell:
@@ -97,7 +108,17 @@ ansible ip = 54.242.186.67
 payments ip = 34.207.64.90
 ~~~
 
-## 4. Provisioning the testbed [↑](https://github.com/abemelvin/tiamat)
+At anytime, you can run `show active servers`  to view the the list of currently deployed servers and their public IP addresses:
+
+```
+(Tiamat) show active servers
+- ansible: 54.242.186.67
+- payments: 34.207.64.90
+```
+
+The global states including deployment status, active server list and their public IP addresses are saved in JSON format in global_state.json under the Tiamat directory. Please keep this file uncorrupted. In case of  unexpected errors regarding the global states, you may need to delete global_state.json manually.
+
+## 5. Provisioning the testbed [↑](https://github.com/abemelvin/tiamat)
 
 Once deployment is complete, you will need to provision the instantiated
 servers with the appropriate software packages. Automated provisioning
@@ -120,11 +141,9 @@ ubuntu@ip-10-0-0-10:~$ ansible-playbook install/payment_server.yml
 Once you have provisioned the testbed, you can interact with the environment
 as you see fit.
 
-## 5. Destroying the testbed [↑](https://github.com/abemelvin/tiamat)
+## 6. Destroying the testbed [↑](https://github.com/abemelvin/tiamat)
 
-Since your testbed is deployed on AWS, you will be charged based on the
-volume and length of your usage. Therefore, it is key to destroy the testbed
-once you are done with your experiments. To do this, run `destroy`:
+Since your testbed is deployed on AWS, you will be charged based on the volume and length of your usage. Therefore, it is key to destroy the testbed once you are done with your experiments. To do this, run `destroy`:
 
 ~~~
 (Tiamat) destroy
@@ -134,3 +153,87 @@ Terraform will confirm your intent to destroy one final time before the process
 is initiated. Try not to interrupt the destruction process once it has started,
 as it could prevent Terraform from halting gracefully and damage your state
 file in the process.
+
+## 7. Data collection and analysis [↑](https://github.com/abemelvin/tiamat)
+
+Tiamat utilizes the Elastic Stack (Elasticsearch, Logstash, Kibana) to perform log data integration, search, and visualization. It also incorporates Wazuh, a host-based intrusion detection system built on Elastic Stack to perform log analysis, integrity checking, rootkit detection, time-based alerting, and active response.
+
+When provisioning the system, you can paste the public IP address of elk/wazuh into a web browser to open the Kibana/Wazuh dashboard. The `elk` command also does the same work.
+
+To download the log files from ELK server to local folder, type in the following command:
+
+```
+(Tiamat) save logs
+```
+
+To download the .pcap file from each server, type in the following command:
+
+```
+(Tiamat) save pcaps
+```
+
+
+
+
+
+## 8. Running the examplar attack scenario [↑](https://github.com/abemelvin/tiamat)
+
+In this section, we run through an examplar attack scenario provided by Tiamat to demonstrate
+
+the use of the testbed. The system-under-test (SUT) consists of the following host machines:
+
+```
+(Tiamat) show deployment list
+- contractor
+- blackhat
+- mail
+- web
+- payments
+- sales
+- ftp
+- elk
+- wazuh
+```
+
+The attack pipeline is as follows:
+
+(insert image here)
+
+
+
+After deployment, we connect to Ansible and first execute the phishing playbook:
+
+```
+ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/phishing.yml
+```
+
+(insert output here)
+
+(corresponding to which steps in the pipeline above)
+
+
+
+Then we execute the password cracking playbook:
+
+```
+ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/cracking.yml
+```
+
+
+
+What takes place next is the injection of malicious POS firmware:
+
+```
+ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/firmware.yml
+```
+
+
+
+Finally, we let blackhat exfiltrate the unredacted transaction logs to the FTP server:
+
+```
+ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/transactions.yml
+```
+
+
+
