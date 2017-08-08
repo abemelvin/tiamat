@@ -197,7 +197,7 @@ the use of the testbed. The system-under-test (SUT) consists of the following ho
 
 The attack pipeline is as follows:
 
-(insert image here)
+
 
 
 
