@@ -39,8 +39,6 @@ To build machine images before deployment, use the `build` command in
 
 the Tiamat shell.
 
-
-
 ## 4. Deploying the testbed [↑](https://github.com/abemelvin/tiamat)
 
 Tiamat maintains a list of servers that are currently flagged to be deployed.
@@ -172,10 +170,6 @@ To download the .pcap file from each server, type in the following command:
 (Tiamat) save pcaps
 ```
 
-
-
-
-
 ## 8. Running the examplar attack scenario [↑](https://github.com/abemelvin/tiamat)
 
 In this section, we run through an examplar attack scenario provided by Tiamat to demonstrate
@@ -197,6 +191,8 @@ the use of the testbed. The system-under-test (SUT) consists of the following ho
 
 The attack pipeline is as follows:
 
+![Scenario](https://github.com/abemelvin/tiamat/blob/master/doc/img/Scenario.png?raw=true)
+
 
 
 
@@ -207,19 +203,13 @@ After deployment, we connect to Ansible and first execute the phishing playbook:
 ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/phishing.yml
 ```
 
-(insert output here)
-
-(corresponding to which steps in the pipeline above)
-
-
-
 Then we execute the password cracking playbook:
 
 ```
 ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/cracking.yml
 ```
 
-
+![Shell-injection](https://github.com/abemelvin/tiamat/blob/master/doc/img/Phishing%20and%20Shell%20injection.png?raw=true)
 
 What takes place next is the injection of malicious POS firmware:
 
@@ -227,13 +217,11 @@ What takes place next is the injection of malicious POS firmware:
 ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/firmware.yml
 ```
 
-
-
 Finally, we let blackhat exfiltrate the unredacted transaction logs to the FTP server:
 
 ```
 ubuntu@ip-10-0-0-10:~$ ansible-playbook inject/transactions.yml
 ```
 
-
+![Data-Exfiltration](https://github.com/abemelvin/tiamat/blob/master/doc/img/Transaction%20Data%20Exfiltration.png?raw=true)
 
